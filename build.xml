@@ -3,7 +3,7 @@
 	<property name="target" value="target"/>
     <property name="resources" value="resources"/>
 	<property name="lib" value="lib"/>
-    <property name="fmgui.app.jar" value="fmgui.jar"/>
+    <property name="opa-fmgui.app.jar" value="opa-fmgui.jar"/>
     <property environment="env"/>
 	<path id="source.compile.path">
 		<fileset dir="${lib}">
@@ -43,8 +43,8 @@
                 <include name="**/*"/>
             </fileset>
         </copy>
-        <jar jarfile="${target}/${fmgui.app.jar}" basedir="${target}/classes" manifest="${target}/classes/META-INF/MANIFEST.MF" />
-		<copy file="${target}/${fmgui.app.jar}" todir="." overwrite="true" />
+        <jar jarfile="${target}/${opa-fmgui.app.jar}" basedir="${target}/classes" manifest="${target}/classes/META-INF/MANIFEST.MF" />
+		<copy file="${target}/${opa-fmgui.app.jar}" todir="." overwrite="true" />
 	<jar destfile="${target}/help/fm-gui-consolehelp.jar"
 		 basedir="./help/consolehelp/"/>
 	<jar destfile="${target}/help/fm-gui-onlinehelp.jar"
@@ -54,6 +54,6 @@
 	    <delete dir="${target}"/>
 	</target>
 	<target name="build" description="Builds the Fabric Manager GUI application" depends="init,compile,createJar">
-		<echo message="Fabric Manager GUI application has been built: ${target}/${fmgui.app.jar}"/>
+		<echo message="Fabric Manager GUI application has been built: ${target}/${opa-fmgui.app.jar}"/>
 	</target>
 </project>
