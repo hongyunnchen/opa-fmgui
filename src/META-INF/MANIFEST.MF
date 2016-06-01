@@ -10,43 +10,6 @@ Intel-OPAFM-Version: 10.1.0.0.77
 Intel-Build-Id: 10_1_0_0_77
 Intel-Build-Date: 2016-04-05 09:59:45
 Main-Class: com.intel.stl.main.FMGuiApp
-Class-Path: . lib/antlr.jar 
- lib/dom4j.jar 
- lib/gritty.jar 
- lib/hibernate-commons-annotations.jar 
- lib/hibernate-core.jar 
- lib/hibernate-entitymanager.jar 
- lib/hibernate-jpa-2.1-api.jar 
- lib/hsqldb.jar lib/jandex.jar 
- lib/javassist.jar 
- lib/javax.mail.jar 
- lib/jboss-logging.jar 
- lib/jboss-logging-annotations.jar 
- lib/jboss-transaction-api_1.2_spec.jar  
- lib/jcommon.jar 
- lib/jfreechart.jar 
- lib/jgraphx.jar 
- lib/jhall.jar 
- lib/jsch.jar 
- lib/log4j-over-slf4j.jar 
- lib/logback-classic.jar 
- lib/logback-core.jar 
- lib/mbassador.jar 
- lib/slf4j-api.jar 
- lib/swingx-action.jar 
- lib/swingx-all.jar 
- lib/swingx-autocomplete.jar  
- lib/swingx-beaninfo.jar 
- lib/swingx-common.jar 
- lib/swingx-core.jar 
- lib/swingx-graphics.jar 
- lib/swingx-mavensupport.jar 
- lib/swingx-painters.jar 
- lib/swingx-plaf.jar 
- lib/swingx-testsupport.jar 
- lib/javahelp2.jar 
- help/fm-gui-consolehelp.jar 
- help/fm-gui-onlinehelp.jar 
 
 Name: com/intel/stl/
 Implementation-Vendor: Intel Corporation
