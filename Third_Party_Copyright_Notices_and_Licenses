@@ -36,14 +36,14 @@ Redistribution and use in source and binary forms, with or without modification,
 -- Disclaimer: 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE UNIVERSITY OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
-ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿ Pallas PMB License - 03021901
+ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Pallas PMB License - 03021901
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
 1. GENERAL DEFINITIONS
 This license defines terms and conditions as well as some other aspects
 for use of Pallas MPI Benchmark (further: PMB). The term "PMB" refers to
 full original package or sub-package (source code, binaries, source code
 and binaries). Cases where partial distribution of PMB is referred to are
-explicitly specified.ÿ You (either an individual or a single entity) are
+explicitly specified.ï¿½ You (either an individual or a single entity) are
 not required to sign or somehow acknowledge your use of PMB. However your
 use of PMB must fully comply to this license; any misuse automatically
 terminates this license and revokes from you any right to further use PMB.
@@ -51,11 +51,11 @@ You have no other rights on PMB except for non-exclusive rights listed
 here.
 2. COPYING
 You may make any number of unmodified copies of PMB for any purpose. You
-may make any number of modified copies for your own use.ÿ Distribution of
+may make any number of modified copies for your own use.ï¿½ Distribution of
 modified copies fall under terms of PARTIAL DISTRIBUTION(3).
 3. PARTIAL DISTRIBUTION
 Any partial distribution of PMB must include a notice saying that it is
-"Copyright (c) Pallas GmbH, Hermuelheimer Str.ÿ 10, 50321 Bruehl, Germany"
+"Copyright (c) Pallas GmbH, Hermuelheimer Str.ï¿½ 10, 50321 Bruehl, Germany"
 Any product or software package including PMB or part of it must include
 such notice.
 4. DISTRIBUTION WITH DIFFERENT TERMS
@@ -63,9 +63,9 @@ PMB may be distributed, leased or rented under different terms than
 defined by this license provided that:
 a) you (distributor) acquired your copy in compliance to this license
 b) your license is not less restrictive than this one, i.e. it doesn't
-ÿÿ allow anything prohibited by this license
+ï¿½ï¿½ allow anything prohibited by this license
 c) if your license allows further redistribution it must enforce inclusion
-ÿÿ of acknowledgement notice (3) in all distributions.
+ï¿½ï¿½ of acknowledgement notice (3) in all distributions.
 5. TERMS OF USE
 PMB's intended purpose is to assist in development, debugging,
 benchmarking and testing software for MPI. Any other use is hereby
@@ -96,7 +96,7 @@ operation of nuclear facilities, aircraft navigation, communication
 systems, or air traffic control machines in which case the failure of the
 Covered Code could lead to death, personal injury, or severe physical or
 environmental damage.
-ÿ
+ï¿½
 7. LIMITATION OF LIABILITY
 TO THE EXTENT NOT PROHIBITED BY LAW, IN NO EVENT SHALL Pallas OR ANY
 CONTRIBUTOR BE LIABLE FOR ANY DIRECT, INCIDENTAL, SPECIAL, INDIRECT,
@@ -112,7 +112,7 @@ APPLY TO YOU.
 9. GOVERNING LAW
 This License shall be governed and construed in accordance with the laws
 of Germany.
-ÿ
+ï¿½
 Acknowledgment
 YOU ACKNOWLEDGE THAT YOU HAVE READ THIS LICENSE, UNDERSTAND IT, AND AGREE
 TO BE BOUND BY ITS TERMS AND CONDITIONS. YOU ALSO AGREE THAT THE LICENSE
@@ -126,7 +126,7 @@ Copyright (c) 2003 Pallas, All Rights Reserved
 
 
 NASA OPEN SOURCE AGREEMENT VERSION 1.3
-ÿ
+ï¿½
 THIS OPEN SOURCE AGREEMENT ("AGREEMENT") DEFINES THE RIGHTS OF USE, REPRODUCTION, DISTRIBUTION, MODIFICATION AND REDISTRIBUTION OF CERTAIN COMPUTER SOFTWARE ORIGINALLY RELEASED BY THE UNITED STATES GOVERNMENT AS REPRESENTED BY THE GOVERNMENT AGENCY LISTED BELOW ("GOVERNMENT AGENCY"). THE UNITED STATES GOVERNMENT, AS REPRESENTED BY GOVERNMENT AGENCY, IS AN INTENDED THIRD-PARTY BENEFICIARY OF ALL SUBSEQUENT DISTRIBUTIONS OR REDISTRIBUTIONS OF THE SUBJECT SOFTWARE. ANYONE WHO USES, REPRODUCES, DISTRIBUTES, MODIFIES OR REDISTRIBUTES THE SUBJECT SOFTWARE, AS DEFINED HEREIN, OR ANY PART THEREOF, IS, BY THAT ACTION, ACCEPTING IN FULL THE RESPONSIBILITIES AND OBLIGATIONS CONTAINED IN THIS AGREEMENT. 
 Government Agency: _____________________________________ 
 Government Agency Original Software Designation: ______________ 
@@ -148,14 +148,14 @@ K. "Sale" means the exchange of the Subject Software for money or equivalent val
 L. "Subject Software" means the Original Software, Modifications, or any respective parts thereof. 
 M. "Use" means the application or employment of the Subject Software for any purpose. 
 2. GRANT OF RIGHTS 
-A. Under Non-Patent Rights:ÿÿSubject to the terms and conditions of this Agreement, each Contributor, with respect to its own contribution to the Subject Software, hereby grants to each Recipient a non-exclusive, world-wide, royalty-free license to engage in the following activities pertaining to the Subject Software: 
+A. Under Non-Patent Rights:ï¿½ï¿½Subject to the terms and conditions of this Agreement, each Contributor, with respect to its own contribution to the Subject Software, hereby grants to each Recipient a non-exclusive, world-wide, royalty-free license to engage in the following activities pertaining to the Subject Software: 
 1. Use 
 2. Distribution 
 3. Reproduction 
 4. Modification 
 5. Redistribution 
 6. Display 
-B. Under Patent Rights:ÿÿSubject to the terms and conditions of this Agreement, each Contributor, with respect to its own contribution to the Subject Software, hereby grants to each Recipient under Covered Patents a non-exclusive, world-wide, royalty-free license to engage in the following activities pertaining to the Subject Software: 
+B. Under Patent Rights:ï¿½ï¿½Subject to the terms and conditions of this Agreement, each Contributor, with respect to its own contribution to the Subject Software, hereby grants to each Recipient under Covered Patents a non-exclusive, world-wide, royalty-free license to engage in the following activities pertaining to the Subject Software: 
 
 1. Use 
 2. Distribution 
@@ -182,15 +182,15 @@ H. A Recipient may choose to offer, and to charge a fee for, warranty, support, 
 I. A Recipient may create a Larger Work by combining Subject Software with separate software not governed by the terms of this agreement and distribute the Larger Work as a single product. In such case, the Recipient must make sure Subject Software, or portions thereof, included in the Larger Work is subject to this Agreement. 
 J. Notwithstanding any provisions contained herein, Recipient is hereby put on notice that export of any goods or technical data from the United States may require some form of export license from the U.S. Government. Failure to obtain necessary export licenses may result in criminal liability under U.S. laws. Government Agency neither represents that a license shall not be required nor that, if required, it shall be issued. Nothing granted herein provides any such export license. 
 4. DISCLAIMER OF WARRANTIES AND LIABILITIES; WAIVER AND INDEMNIFICATION 
-A. No Warranty:ÿÿTHE SUBJECT SOFTWARE IS PROVIDED "AS IS" WITHOUT ANY WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY, INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR FREEDOM FROM INFRINGEMENT, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL BE ERROR FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF PROVIDED, WILL CONFORM TO THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN ANY MANNER, CONSTITUTE AN ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR RECIPIENT OF ANY RESULTS, RESULTING DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR ANY OTHER APPLICATIONS RESULTING FROM USE OF THE SUBJECT SOFTWARE. FURTHER, GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES AND LIABILITIES REGARDING THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE, AND DISTRIBUTES IT "AS IS." 
-B. Waiver and Indemnity:ÿÿRECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT'S USE OF THE SUBJECT SOFTWARE RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES, EXPENSES OR LOSSES ARISING FROM SUCH USE, INCLUDING ANY DAMAGES FROM PRODUCTS BASED ON, OR RESULTING FROM, RECIPIENT'S USE OF THE SUBJECT SOFTWARE, RECIPIENT SHALL INDEMNIFY AND HOLD HARMLESS THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY LAW. RECIPIENT'S SOLE REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE, UNILATERAL TERMINATION OF THIS AGREEMENT. 
+A. No Warranty:ï¿½ï¿½THE SUBJECT SOFTWARE IS PROVIDED "AS IS" WITHOUT ANY WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY, INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR FREEDOM FROM INFRINGEMENT, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL BE ERROR FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF PROVIDED, WILL CONFORM TO THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN ANY MANNER, CONSTITUTE AN ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR RECIPIENT OF ANY RESULTS, RESULTING DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR ANY OTHER APPLICATIONS RESULTING FROM USE OF THE SUBJECT SOFTWARE. FURTHER, GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES AND LIABILITIES REGARDING THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE, AND DISTRIBUTES IT "AS IS." 
+B. Waiver and Indemnity:ï¿½ï¿½RECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT. IF RECIPIENT'S USE OF THE SUBJECT SOFTWARE RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES, EXPENSES OR LOSSES ARISING FROM SUCH USE, INCLUDING ANY DAMAGES FROM PRODUCTS BASED ON, OR RESULTING FROM, RECIPIENT'S USE OF THE SUBJECT SOFTWARE, RECIPIENT SHALL INDEMNIFY AND HOLD HARMLESS THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY LAW. RECIPIENT'S SOLE REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE, UNILATERAL TERMINATION OF THIS AGREEMENT. 
 5. GENERAL TERMS 
-A. Termination:ÿÿThis Agreement and the rights granted hereunder will terminate automatically if a Recipient fails to comply with these terms and conditions, and fails to cure such noncompliance within thirty (30) days of becoming aware of such noncompliance. Upon termination, a Recipient agrees to immediately cease use and distribution of the Subject Software. All sublicenses to the Subject Software properly granted by the breaching Recipient shall survive any such termination of this Agreement. 
-B. Severability:ÿÿIf any provision of this Agreement is invalid or unenforceable under applicable law, it shall not affect the validity or enforceability of the remainder of the terms of this Agreement. 
-C. Applicable Law:ÿÿThis Agreement shall be subject to United States federal law only for all purposes, including, but not limited to, determining the validity of this Agreement, the meaning of its provisions and the rights, obligations and remedies of the parties. 
-D. Entire Understanding:ÿÿThis Agreement constitutes the entire understanding and agreement of the parties relating to release of the Subject Software and may not be superseded, modified or amended except by further written agreement duly executed by the parties. 
-E. Binding Authority:ÿÿBy accepting and using the Subject Software under this Agreement, a Recipient affirms its authority to bind the Recipient to all terms and conditions of this Agreement and that that Recipient hereby agrees to all terms and conditions herein. 
-F. Point of Contact:ÿÿAny Recipient contact with Government Agency is to be directed to the designated representative as follows: ___________________________________________________________. 
+A. Termination:ï¿½ï¿½This Agreement and the rights granted hereunder will terminate automatically if a Recipient fails to comply with these terms and conditions, and fails to cure such noncompliance within thirty (30) days of becoming aware of such noncompliance. Upon termination, a Recipient agrees to immediately cease use and distribution of the Subject Software. All sublicenses to the Subject Software properly granted by the breaching Recipient shall survive any such termination of this Agreement. 
+B. Severability:ï¿½ï¿½If any provision of this Agreement is invalid or unenforceable under applicable law, it shall not affect the validity or enforceability of the remainder of the terms of this Agreement. 
+C. Applicable Law:ï¿½ï¿½This Agreement shall be subject to United States federal law only for all purposes, including, but not limited to, determining the validity of this Agreement, the meaning of its provisions and the rights, obligations and remedies of the parties. 
+D. Entire Understanding:ï¿½ï¿½This Agreement constitutes the entire understanding and agreement of the parties relating to release of the Subject Software and may not be superseded, modified or amended except by further written agreement duly executed by the parties. 
+E. Binding Authority:ï¿½ï¿½By accepting and using the Subject Software under this Agreement, a Recipient affirms its authority to bind the Recipient to all terms and conditions of this Agreement and that that Recipient hereby agrees to all terms and conditions herein. 
+F. Point of Contact:ï¿½ï¿½Any Recipient contact with Government Agency is to be directed to the designated representative as follows: ___________________________________________________________. 
 
 
 JSch License
