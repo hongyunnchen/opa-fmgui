@@ -7,7 +7,6 @@ allprojects {
     sourceCompatibility = 1.7
 
     repositories {
-        xmvn()
         mavenCentral()
     }
 
