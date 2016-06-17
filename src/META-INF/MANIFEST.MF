@@ -1,0 +1,29 @@
+Manifest-Version: 1.0
+Ant-Version: Apache Ant 1.9.3
+Created-By: 1.7.0_71-b14 (Oracle Corporation)
+Application-Name: Intel Fabric Manager GUI 10.0
+Implementation-Title: Intel Fabric Manager GUI
+Implementation-Vendor: Intel Corporation
+Implementation-Version: 10.0.0.DEV
+Schema-Version: 37
+Intel-OPAFM-Version: 10.1.0.0.112
+Intel-Build-Id: 10_1_0_0_112
+Intel-Build-Date: 2016-05-14 08:54:41
+Main-Class: com.intel.stl.main.FMGuiApp
+
+Name: com/intel/stl/
+Implementation-Vendor: Intel Corporation
+Implementation-Title: Intel Fabric Manager GUI Core
+Implementation-Version: 10.0.0.DEV
+Specification-Vendor: Intel Corporation
+Specification-Title: com.intel.stl
+Specification-Version: 10.0.0.DEV
+
+Name: com/intel/stl/ui/
+Implementation-Vendor: Intel Corporation
+Implementation-Title: Intel Fabric Manager GUI GUI
+Implementation-Version: 10.0.0.DEV
+Specification-Vendor: Intel Corporation
+Specification-Title: com.intel.stl.ui
+Specification-Version: 10.0.0.DEV
+
