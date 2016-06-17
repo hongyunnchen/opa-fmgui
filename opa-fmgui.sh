@@ -52,7 +52,7 @@ JAVA_REQ=`echo 1.7 | sed -e 's;\.;0;g'`
 INSTDIR=`dirname $0`
 JAVA=nojava
 JAR=/usr/share/java/opa-fmgui/opa-fmgui.jar
-LIB=.:/usr/share/java/opa-fmgui/lib/*:/usr/share/java/opa-fmgui/help/*
+LIB=.:/usr/share/java/opa-fmgui/lib/*:/usr/share/java/opa-fmgui/gritty/*:/usr/share/java/opa-fmgui:/usr/share/java/opa-fmgui/help/*
 MAIN_CLASS=com.intel.stl.main.FMGuiApp
 
 if [ -n "$OPA_JAVA" ]; then

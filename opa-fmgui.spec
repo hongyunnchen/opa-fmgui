@@ -1,14 +1,48 @@
 #
 # Spec file for Package opa-fmgui
 #
-# Copyright (c) 2015 Intel Corporation
-#
+
+# Copyright (c) 2015, Intel Corporation
+# All rights reserved.
+# 
+# Redistribution and use in source and binary forms, with or without modification,
+# are permitted provided that the following conditions are met:
+# - Redistributions of source code must retain the above copyright notice,
+#   this list of conditions and the following disclaimer.
+# - Redistributions in binary form must reproduce the above copyright notice,
+#   this list of conditions and the following disclaimer in the documentation
+#   and/or other materials provided with the distribution.
+# - Neither the name of Intel Corporation nor the names of its contributors may
+#   be used to endorse or promote products derived from this software without
+#   specific prior written permission.
+# 
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+# ARE DISCLAIMED. IN NO EVENT SHALL INTEL, THE COPYRIGHT OWNER OR CONTRIBUTORS
+# BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+# CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+# ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+# POSSIBILITY OF SUCH DAMAGE.
+# 
+# EXPORT LAWS: THIS LICENSE ADDS NO RESTRICTIONS TO THE EXPORT LAWS OF YOUR
+# JURISDICTION. It is licensee's responsibility to comply with any export
+# regulations applicable in licensee's jurisdiction. Under CURRENT (May 2000)
+# U.S. export regulations this software is eligible for export from the U.S.
+# and can be downloaded by or otherwise exported or reexported worldwide EXCEPT
+# to U.S. embargoed destinations which include Cuba, Iraq, Libya, North Korea,
+# Iran, Syria, Sudan, Afghanistan and any other country to which the U.S. has
+# embargoed goods and services.
+
 %global appfolder opa-fmgui
 %global appjar opa-fmgui.jar
 
 Name:           opa-fmgui
 Version:        10.0.0.0.3
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Intel Omni-Path Architecture Fabric Manager Graphical User Interface
 Group:          Applications/System
 # For a breakdown of the licensing, see THIRD-PARTY-README
@@ -50,6 +84,31 @@ BuildRequires: mvn(com.mxgraph:jgraphx)
 BuildRequires: desktop-file-utils
 
 Requires: jre >= 1.7
+Requires: mvn(log4j:log4j)
+Requires: mvn(org.hibernate.common:hibernate-commons-annotations)
+Requires: mvn(org.hibernate:hibernate-core)
+Requires: mvn(org.hibernate:hibernate-entitymanager)
+Requires: mvn(org.hibernate.javax.persistence:hibernate-jpa-2.1-api)
+Requires: mvn(org.hsqldb:hsqldb)
+Requires: mvn(org.jboss:jandex)
+Requires: mvn(com.sun.mail:javax.mail)
+Requires: mvn(org.slf4j:log4j-over-slf4j)
+Requires: mvn(org.slf4j:slf4j-api)
+Requires: mvn(ch.qos.logback:logback-classic)
+Requires: mvn(ch.qos.logback:logback-core)
+Requires: mvn(org.jfree:jfreechart)
+Requires: mvn(org.jfree:jcommon)
+Requires: mvn(javax.help:javahelp)
+Requires: mvn(org.jboss.logging:jboss-logging)
+Requires: mvn(org.jboss.logging:jboss-logging-annotations)
+Requires: mvn(org.jboss.spec.javax.transaction:jboss-transaction-api_1.2_spec)
+Requires: mvn(org.javassist:javassist)
+Requires: mvn(dom4j:dom4j)
+Requires: mvn(antlr:antlr)
+Requires: mvn(com.jcraft:jsch)
+Requires: mvn(net.engio:mbassador)
+Requires: mvn(com.mxgraph:jgraphx)
+Requires: mvn(org.swinglabs.swingx:swingx-all)
 
 # Filter all jar files, except "gritty.jar".
 %global __provides_exclude_from ^%{_javadir}/%{appfolder}/lib/[^(gritty)].*.jar$
@@ -70,15 +129,18 @@ Interface. It can be run by invoking the Bourne shell script opa-fmgui.
 %endif
 
 %install
-%mvn_install
 
+%mvn_install
 install -m 755 -pDt %{buildroot}/%{_javadir}/%{appfolder} %{appjar}
 install -m 644 -pDt %{buildroot}/%{_javadir}/%{appfolder} README
 install -m 644 -pDt %{buildroot}/%{_javadir}/%{appfolder} THIRD-PARTY-README
 install -m 644 -pDt %{buildroot}/%{_javadir}/%{appfolder} Third_Party_Copyright_Notices_and_Licenses
 # All jar files provided by other RPMs had been prevented from scanning for deps.
 install -m 755 -pDt %{buildroot}/%{_javadir}/%{appfolder}/lib lib/*
-install -m 444 -pDt %{buildroot}/%{_javadir}/%{appfolder}/lib licenses/*
+install -m 755 -pDt %{buildroot}/%{_javadir}/%{appfolder}/gritty gritty/build/libs/gritty.jar
+install -m 755 -pDt %{buildroot}/%{_javadir}/%{appfolder}/gritty licenses/gritty_license.txt
+install -m 755 -pDt %{buildroot}/%{_javadir}/%{appfolder}/bin bin/buildlinks
+install -m 444 -pDt %{buildroot}/%{_javadir}/%{appfolder}/licenses  licenses/*
 install -m 755 -pDt %{buildroot}/%{_javadir}/%{appfolder}/help target/help/*
 install -m 644 -pDt %{buildroot}/%{_javadir}/%{appfolder}/help help/*.html 
 install -m 644 -pDt %{buildroot}/%{_javadir}/%{appfolder}/help help/LICENSE
@@ -96,6 +158,8 @@ desktop-file-install --dir=%{buildroot}/%{_datadir}/applications install/fmgui.d
 
 %post
 /bin/touch --no-create %{_datadir}/icons/hicolor &>/dev/null || :
+%{_javadir}/%{appfolder}/bin/buildlinks link
+
 
 %postun
 if [ $1 -eq 0 ] ; then
@@ -116,20 +180,24 @@ fi
 %config(noreplace) %{_sysconfdir}/xdg/menus/applications-merged/Fabric.menu
 %config(noreplace) %{_sysconfdir}/profile.d/fmguivars.sh
 %license LICENSE
-%license %{_javadir}/%{appfolder}/lib/gritty_license.txt
-%license %{_javadir}/%{appfolder}/lib/hibernate_license.txt
-%license %{_javadir}/%{appfolder}/lib/hsqldb_license.txt
-%license %{_javadir}/%{appfolder}/lib/javahelp_license.html
-%license %{_javadir}/%{appfolder}/lib/javamail_license.txt
-%license %{_javadir}/%{appfolder}/lib/jfreechart_license.txt
-%license %{_javadir}/%{appfolder}/lib/jgraphx_license.txt
-%license %{_javadir}/%{appfolder}/lib/jsch_license.txt
-%license %{_javadir}/%{appfolder}/lib/logback_license.txt
-%license %{_javadir}/%{appfolder}/lib/mbassador_license.txt
-%license %{_javadir}/%{appfolder}/lib/slf4j_license.txt
-%license %{_javadir}/%{appfolder}/lib/swingx_license.txt
+%license %{_javadir}/%{appfolder}/gritty/gritty_license.txt
+%license %{_javadir}/%{appfolder}/licenses/hibernate_license.txt
+%license %{_javadir}/%{appfolder}/licenses/hsqldb_license.txt
+%license %{_javadir}/%{appfolder}/licenses/javahelp_license.html
+%license %{_javadir}/%{appfolder}/licenses/javamail_license.txt
+%license %{_javadir}/%{appfolder}/licenses/jfreechart_license.txt
+%license %{_javadir}/%{appfolder}/licenses/jgraphx_license.txt
+%license %{_javadir}/%{appfolder}/licenses/jsch_license.txt
+%license %{_javadir}/%{appfolder}/licenses/logback_license.txt
+%license %{_javadir}/%{appfolder}/licenses/mbassador_license.txt
+%license %{_javadir}/%{appfolder}/licenses/slf4j_license.txt
+%license %{_javadir}/%{appfolder}/licenses/swingx_license.txt
 
 %changelog
+* Mon Jun 06 2016 Rick Tierney <rick.tierney@intel.com> 10.0.0.0.3-3
+- Removed 3rd party jar files, libraries are installed at runtime using Requires
+- Moved licenses from the lic folder to the license folder
+  
 * Thu Jun 02 2016 Rick Tierney <rick.tierney@intel.com> 10.0.0.0.3-2
 - Updated to fix license issues
 
