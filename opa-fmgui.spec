@@ -138,7 +138,7 @@ install -m 644 -pDt %{buildroot}/%{_javadir}/%{appfolder} Third_Party_Copyright_
 # All jar files provided by other RPMs had been prevented from scanning for deps.
 install -m 755 -pDt %{buildroot}/%{_javadir}/%{appfolder}/lib lib/*
 install -m 755 -pDt %{buildroot}/%{_javadir}/%{appfolder}/gritty gritty/build/libs/gritty.jar
-install -m 755 -pDt %{buildroot}/%{_javadir}/%{appfolder}/gritty licenses/gritty_license.txt
+install -m 644 -pDt %{buildroot}/%{_javadir}/%{appfolder}/gritty gritty/*.txt
 install -m 755 -pDt %{buildroot}/%{_javadir}/%{appfolder}/bin bin/buildlinks
 install -m 444 -pDt %{buildroot}/%{_javadir}/%{appfolder}/licenses  licenses/*
 install -m 755 -pDt %{buildroot}/%{_javadir}/%{appfolder}/help target/help/*
