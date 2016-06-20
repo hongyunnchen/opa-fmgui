@@ -136,14 +136,13 @@ install -m 644 -pDt %{buildroot}/%{_javadir}/%{appfolder} README
 install -m 644 -pDt %{buildroot}/%{_javadir}/%{appfolder} THIRD-PARTY-README
 install -m 644 -pDt %{buildroot}/%{_javadir}/%{appfolder} Third_Party_Copyright_Notices_and_Licenses
 # All jar files provided by other RPMs had been prevented from scanning for deps.
-install -m 755 -pDt %{buildroot}/%{_javadir}/%{appfolder}/lib lib/*
-install -m 755 -pDt %{buildroot}/%{_javadir}/%{appfolder}/gritty gritty/build/libs/gritty.jar
-install -m 644 -pDt %{buildroot}/%{_javadir}/%{appfolder}/gritty gritty/*.txt
+install -m 644 -pDt %{buildroot}/%{_javadir}/%{appfolder} LICENSE
+install -m 644 -pDt %{buildroot}/%{_javadir}/%{appfolder}/gritty gritty/build/libs/gritty.jar
+install -m 644 -pDt %{buildroot}/%{_javadir}/%{appfolder}/lib lib/*
+install -m 644 -pDt %{buildroot}/%{_javadir}/%{appfolder}/gritty gritty/gritty_license.txt
 install -m 755 -pDt %{buildroot}/%{_javadir}/%{appfolder}/bin bin/buildlinks
-install -m 444 -pDt %{buildroot}/%{_javadir}/%{appfolder}/licenses  licenses/*
 install -m 755 -pDt %{buildroot}/%{_javadir}/%{appfolder}/help target/help/*
 install -m 644 -pDt %{buildroot}/%{_javadir}/%{appfolder}/help help/*.html 
-install -m 644 -pDt %{buildroot}/%{_javadir}/%{appfolder}/help help/LICENSE
 install -m 755 -pDt %{buildroot}/%{_javadir}/%{appfolder}/util util/fmguiclear.sh
 install -m 755 -pDt %{buildroot}/%{_javadir}/%{appfolder}/util util/postsetup.sh
 install -m 644 -pDt %{buildroot}/%{_javadir}/%{appfolder}/util util/ClearFMGUICache.desktop
@@ -173,25 +172,15 @@ fi
 %files
 %{_javadir}/%{appfolder}
 %{_javadir}/%{appfolder}/THIRD-PARTY-README
+%{_javadir}/%{appfolder}/README
 %{_bindir}/opa-fmgui
 %{_datadir}/applications/fmgui.desktop
 %{_datadir}/desktop-directories/Fabric.directory
 %{_datadir}/icons/hicolor
 %config(noreplace) %{_sysconfdir}/xdg/menus/applications-merged/Fabric.menu
 %config(noreplace) %{_sysconfdir}/profile.d/fmguivars.sh
-%license LICENSE
+%license %{_javadir}/%{appfolder}/LICENSE
 %license %{_javadir}/%{appfolder}/gritty/gritty_license.txt
-%license %{_javadir}/%{appfolder}/licenses/hibernate_license.txt
-%license %{_javadir}/%{appfolder}/licenses/hsqldb_license.txt
-%license %{_javadir}/%{appfolder}/licenses/javahelp_license.html
-%license %{_javadir}/%{appfolder}/licenses/javamail_license.txt
-%license %{_javadir}/%{appfolder}/licenses/jfreechart_license.txt
-%license %{_javadir}/%{appfolder}/licenses/jgraphx_license.txt
-%license %{_javadir}/%{appfolder}/licenses/jsch_license.txt
-%license %{_javadir}/%{appfolder}/licenses/logback_license.txt
-%license %{_javadir}/%{appfolder}/licenses/mbassador_license.txt
-%license %{_javadir}/%{appfolder}/licenses/slf4j_license.txt
-%license %{_javadir}/%{appfolder}/licenses/swingx_license.txt
 
 %changelog
 * Mon Jun 06 2016 Rick Tierney <rick.tierney@intel.com> 10.0.0.0.3-3
