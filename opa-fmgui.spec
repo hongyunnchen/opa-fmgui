@@ -42,7 +42,7 @@
 
 Name:           opa-fmgui
 Version:        10.0.0.0.4
-Release:        4%{?dist}
+Release:        3%{?dist}
 Summary:        Intel Omni-Path Architecture Fabric Manager Graphical User Interface
 Group:          Applications/System
 # For a breakdown of the licensing, see THIRD-PARTY-README
