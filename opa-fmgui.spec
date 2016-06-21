@@ -41,14 +41,14 @@
 %global appjar opa-fmgui.jar
 
 Name:           opa-fmgui
-Version:        10.0.0.0.4
-Release:        3%{?dist}
+Version:        10.0.0.0.3
+Release:        4%{?dist}
 Summary:        Intel Omni-Path Architecture Fabric Manager Graphical User Interface
 Group:          Applications/System
 # For a breakdown of the licensing, see THIRD-PARTY-README
 License:        GPLv2 and LGPLv2+ and MIT and BSD 
 URL:            https://github.com/01org/opa-fmgui/wiki/
-Source0:        opa-fmgui-10.0.0.0.4.tar.gz
+Source0:        opa-fmgui-10.0.0.0.3.tar.gz
 BuildArch:      noarch
 
 BuildRequires: gradle-local
@@ -183,7 +183,7 @@ fi
 %license %{_javadir}/%{appfolder}/gritty/gritty_license.txt
 
 %changelog
-* Mon Jun 21 2016 Rick Tierney <rick.tierney@intel.com> 10.0.0.0.3-4
+* Tue Jun 21 2016 Rick Tierney <rick.tierney@intel.com> 10.0.0.0.3-4
 - Libraries are now installed at runtime using Requires
 - Removed 3rd party license files except for Gritty which is built
 - Updated spec file to implement 3rd party library changes
