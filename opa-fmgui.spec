@@ -184,10 +184,14 @@ fi
 
 %changelog
 * Mon Jun 21 2016 Rick Tierney <rick.tierney@intel.com> 10.0.0.0.3-3
-- Removed 3rd party jar files, libraries are installed at runtime using Requires
+- Libraries are now installed at runtime using Requires
 - Removed 3rd party license files except for Gritty which is built
 - Updated spec file to implement 3rd party library changes
 - Added script to create symbolic links to the installed 3rd party jar files
+
+* Mon Jun 06 2016 Rick Tierney <rick.tierney@intel.com> 10.0.0.0.3-3
+- Removed 3rd party jar files, libraries will be installed at runtime
+- Moved licenses from the lic folder to the license folder
   
 * Thu Jun 02 2016 Rick Tierney <rick.tierney@intel.com> 10.0.0.0.3-2
 - Updated to fix license issues
