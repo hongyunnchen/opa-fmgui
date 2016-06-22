@@ -42,13 +42,12 @@
 
 Name:           opa-fmgui
 Version:        10.0.0.0.3
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Intel Omni-Path Architecture Fabric Manager Graphical User Interface
 Group:          Applications/System
-# For a breakdown of the licensing, see THIRD-PARTY-README
-License:        GPLv2 and LGPLv2+ and MIT and BSD 
-URL:            https://github.com/01org/opa-fmgui/wiki/
-Source0:        opa-fmgui-10.0.0.0.3.tar.gz
+License:        BSD and LGPLv2+
+URL:            https://github.com/01org/opa-fmgui
+Source0:        https://github.com/01org/%{name}/archive/v1.5.tar.gz#/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 
 BuildRequires: gradle-local
@@ -132,14 +131,8 @@ Interface. It can be run by invoking the Bourne shell script opa-fmgui.
 
 %mvn_install
 install -m 755 -pDt %{buildroot}/%{_javadir}/%{appfolder} %{appjar}
-install -m 644 -pDt %{buildroot}/%{_javadir}/%{appfolder} README
-install -m 644 -pDt %{buildroot}/%{_javadir}/%{appfolder} THIRD-PARTY-README
-install -m 644 -pDt %{buildroot}/%{_javadir}/%{appfolder} Third_Party_Copyright_Notices_and_Licenses
-# All jar files provided by other RPMs had been prevented from scanning for deps.
-install -m 644 -pDt %{buildroot}/%{_javadir}/%{appfolder} LICENSE
 install -m 644 -pDt %{buildroot}/%{_javadir}/%{appfolder}/gritty gritty/build/libs/gritty.jar
 install -m 644 -pDt %{buildroot}/%{_javadir}/%{appfolder}/lib lib/*
-install -m 644 -pDt %{buildroot}/%{_javadir}/%{appfolder}/gritty gritty/gritty_license.txt
 install -m 755 -pDt %{buildroot}/%{_javadir}/%{appfolder}/bin bin/buildlinks
 install -m 755 -pDt %{buildroot}/%{_javadir}/%{appfolder}/help target/help/*
 install -m 644 -pDt %{buildroot}/%{_javadir}/%{appfolder}/help help/*.html 
@@ -162,6 +155,12 @@ desktop-file-install --dir=%{buildroot}/%{_datadir}/applications install/fmgui.d
 
 %postun
 if [ $1 -eq 0 ] ; then
+    echo
+    echo "****************************************************************************"
+    echo "NOTE: It is the user's responsibility to delete the opa-fmgui database      "
+    echo "See $HOME/.Intel/FabricManagerGUI/fmguiclear.sh                             "
+    echo "****************************************************************************"
+    echo
     /bin/touch --no-create %{_datadir}/icons/hicolor &>/dev/null
     /usr/bin/gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 fi
@@ -170,19 +169,26 @@ fi
 /usr/bin/gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 %files
-%{_javadir}/%{appfolder}
-%{_javadir}/%{appfolder}/THIRD-PARTY-README
-%{_javadir}/%{appfolder}/README
+# For a breakdown of the licensing, see /usr/share/doc/opa-fmgui/THIRD-PARTY-README
+%doc README THIRD-PARTY-README Third_Party_Copyright_Notices_and_Licenses
+%license LICENSE gritty/gritty_license.txt
+
 %{_bindir}/opa-fmgui
 %{_datadir}/applications/fmgui.desktop
 %{_datadir}/desktop-directories/Fabric.directory
 %{_datadir}/icons/hicolor
 %config(noreplace) %{_sysconfdir}/xdg/menus/applications-merged/Fabric.menu
 %config(noreplace) %{_sysconfdir}/profile.d/fmguivars.sh
-%license %{_javadir}/%{appfolder}/LICENSE
-%license %{_javadir}/%{appfolder}/gritty/gritty_license.txt
+%{_javadir}/%{appfolder}
 
 %changelog
+* Wed Jun 22 2016 Rick Tierney <rick.tierney@intel.com> 10.0.0.0.3-5
+- Fixed License tag to only reflect relevant licenses BSD and LGPL
+- Moved comment about 3rd party library license breakdown to the files section
+- Fixed the file duplication problem by not installing non-runtime files in the
+  application directory, and reorganized the files by tagging licenses and
+  documentation
+
 * Tue Jun 21 2016 Rick Tierney <rick.tierney@intel.com> 10.0.0.0.3-4
 - Libraries are now installed at runtime using Requires
 - Removed 3rd party license files except for Gritty which is built
