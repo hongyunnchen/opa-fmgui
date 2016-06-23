@@ -156,10 +156,10 @@ desktop-file-install --dir=%{buildroot}/%{_datadir}/applications install/fmgui.d
 %postun
 if [ $1 -eq 0 ] ; then
     echo
-    echo "****************************************************************************"
-    echo "NOTE: It is the user's responsibility to delete the opa-fmgui database      "
-    echo "See $HOME/.Intel/FabricManagerGUI/fmguiclear.sh                             "
-    echo "****************************************************************************"
+    echo "***********************************************************************"
+    echo "NOTE: It is the user's responsibility to delete the opa-fmgui database "
+    echo "See /<your-home-directory>/.Intel/FabricManagerGUI/fmguiclear.sh       "
+    echo "***********************************************************************"
     echo
     /bin/touch --no-create %{_datadir}/icons/hicolor &>/dev/null
     /usr/bin/gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
