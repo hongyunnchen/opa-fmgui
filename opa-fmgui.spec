@@ -42,12 +42,12 @@
 
 Name:           opa-fmgui
 Version:        10.0.0.0.3
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Intel Omni-Path Architecture Fabric Manager Graphical User Interface
 Group:          Applications/System
 License:        BSD and LGPLv2+
 URL:            https://github.com/01org/opa-fmgui
-Source0:        https://github.com/01org/%{name}/archive/v1.5.tar.gz#/%{name}-%{version}.tar.gz
+Source0:        %{name}-%{version}.tar.gz 
 BuildArch:      noarch
 
 BuildRequires: gradle-local
@@ -182,6 +182,15 @@ fi
 %{_javadir}/%{appfolder}
 
 %changelog
+* Thu Jun 23 2016 Rick Tierney <rick.tierney@intel.com> 10.0.0.0.3-6
+- Fixed Revision and Release tags in the spec file
+- Fixed the bogus date in the changelog
+- Removed non-runtime files from install
+- Removed individual listing of files under %files in spec
+- Added parent directory under %files in spec
+- Used the %doc and %license macros to copy non-runtime files to appropriate folders
+- Changed License tag to include only relevant licenses
+
 * Wed Jun 22 2016 Rick Tierney <rick.tierney@intel.com> 10.0.0.0.3-5
 - Fixed License tag to only reflect relevant licenses BSD and LGPL
 - Moved comment about 3rd party library license breakdown to the files section
