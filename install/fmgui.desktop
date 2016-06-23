@@ -3,6 +3,6 @@ Encoding=UTF-8
 GenericName=Fabric Manager GUI
 Name=Intel Omni-Path Architecture Fabric Manager Graphical User Interface
 Exec=/usr/bin/opa-fmgui
-Icon=opa-fmgui
+Icon=fmgui
 Terminal=false
 Type=Application

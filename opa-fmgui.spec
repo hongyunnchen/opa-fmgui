@@ -143,7 +143,9 @@ install -m 755 -pD  install/opa-fmgui.sh %{buildroot}/%{_bindir}/opa-fmgui
 install -m 644 -pDt %{buildroot}/%{_sysconfdir}/profile.d install/fmguivars.sh
 install -m 644 -pDt %{buildroot}/%{_sysconfdir}/xdg/menus/applications-merged install/Fabric.menu
 install -m 644 -pDt %{buildroot}%{_datadir}/desktop-directories install/Fabric.directory
-for file in $(find install/images -type f); do
+install -m 644 -pDt %{buildroot}/%{_datadir}/icons/hicolor/32x32/apps install/images/32x32/apps/fmgui.png
+install -m 644 -pDt %{buildroot}/%{_datadir}/icons/hicolor/48x48/apps install/images/48x48/apps/fmgui.png
+for file in $(find resources/image -type f); do
     install -m 644 -pDt %{buildroot}/%{_datadir}/icons/hicolor $file
 done
 desktop-file-install --dir=%{buildroot}/%{_datadir}/applications install/fmgui.desktop
@@ -151,7 +153,6 @@ desktop-file-install --dir=%{buildroot}/%{_datadir}/applications install/fmgui.d
 %post
 /bin/touch --no-create %{_datadir}/icons/hicolor &>/dev/null || :
 %{_javadir}/%{appfolder}/bin/buildlinks link
-
 
 %postun
 if [ $1 -eq 0 ] ; then
@@ -172,24 +173,26 @@ fi
 # For a breakdown of the licensing, see /usr/share/doc/opa-fmgui/THIRD-PARTY-README
 %doc README THIRD-PARTY-README Third_Party_Copyright_Notices_and_Licenses
 %license LICENSE gritty/gritty_license.txt
-
+%{_javadir}/%{appfolder}
 %{_bindir}/opa-fmgui
 %{_datadir}/applications/fmgui.desktop
 %{_datadir}/desktop-directories/Fabric.directory
 %{_datadir}/icons/hicolor
+%{_datadir}/icons/hicolor/32x32/apps/fmgui.png
+%{_datadir}/icons/hicolor/48x48/apps/fmgui.png
 %config(noreplace) %{_sysconfdir}/xdg/menus/applications-merged/Fabric.menu
 %config(noreplace) %{_sysconfdir}/profile.d/fmguivars.sh
-%{_javadir}/%{appfolder}
 
 %changelog
 * Thu Jun 23 2016 Rick Tierney <rick.tierney@intel.com> 10.0.0.0.3-6
 - Fixed Revision and Release tags in the spec file
 - Fixed the bogus date in the changelog
 - Removed non-runtime files from install
-- Removed individual listing of files under %files in spec
-- Added parent directory under %files in spec
-- Used the %doc and %license macros to copy non-runtime files to appropriate folders
+- Removed individual listing of files under files in spec
+- Added parent directory under files in spec
+- Used the doc and license macros to copy non-runtime files to appropriate folders
 - Changed License tag to include only relevant licenses
+- Add some desktop/icon image files
 
 * Wed Jun 22 2016 Rick Tierney <rick.tierney@intel.com> 10.0.0.0.3-5
 - Fixed License tag to only reflect relevant licenses BSD and LGPL
