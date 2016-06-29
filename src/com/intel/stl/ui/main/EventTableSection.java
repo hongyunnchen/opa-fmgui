@@ -1,9 +1,9 @@
 /**
  * Copyright (c) 2015, Intel Corporation
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  *     * Redistributions of source code must retain the above copyright notice,
  *       this list of conditions and the following disclaimer.
  *     * Redistributions in binary form must reproduce the above copyright
@@ -12,7 +12,7 @@
  *     * Neither the name of Intel Corporation nor the names of its contributors
  *       may be used to endorse or promote products derived from this software
  *       without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -25,33 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*******************************************************************************
- *                       I N T E L   C O R P O R A T I O N
- *  
- *  Functional Group: Fabric Viewer Application
- *
- *  File Name: EventTableSection.java
- *
- *  Archive Source: $Source$
- *
- *  Archive Log: $Log$
- *  Archive Log: Revision 1.10  2015/08/17 18:53:38  jijunwan
- *  Archive Log: PR 129983 - Need to change file header's copyright text to BSD license txt
- *  Archive Log: - changed frontend files' headers
- *  Archive Log:
- *  Archive Log: Revision 1.9  2015/06/10 21:07:17  jijunwan
- *  Archive Log: PR 129120 - Some old files have no proper file header. They cannot record change logs
- *  Archive Log: - manual correction on files that our tool cannot  identify
- *  Archive Log:
- *
- *  Overview: Table section of Rick's Test page
- *
- *  @author: jijunwan
- *
- ******************************************************************************/
 package com.intel.stl.ui.main;
-
-import net.engio.mbassy.bus.MBassador;
 
 import com.intel.stl.api.notice.EventDescription;
 import com.intel.stl.ui.common.BaseSectionController;
@@ -62,6 +36,8 @@ import com.intel.stl.ui.common.view.EventTableView;
 import com.intel.stl.ui.common.view.ISectionListener;
 import com.intel.stl.ui.common.view.JSectionView;
 import com.intel.stl.ui.framework.IAppEvent;
+
+import net.engio.mbassy.bus.MBassador;
 
 public class EventTableSection extends
         BaseSectionController<ISectionListener, JSectionView<ISectionListener>> {
@@ -76,7 +52,7 @@ public class EventTableSection extends
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.intel.hpc.stl.ui.ISection#getCards()
      */
     @Override
@@ -85,9 +61,9 @@ public class EventTableSection extends
     }
 
     /**
-     * 
+     *
      * Description: updates the table on the card
-     * 
+     *
      * @param event
      *            - event message
      */
@@ -97,7 +73,7 @@ public class EventTableSection extends
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.intel.stl.ui.common.ISection#clear()
      */
     @Override
@@ -107,7 +83,7 @@ public class EventTableSection extends
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.intel.stl.ui.common.BaseSectionController#getSectionListener()
      */
     @Override

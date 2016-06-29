@@ -1,9 +1,9 @@
 /**
  * Copyright (c) 2015, Intel Corporation
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  *     * Redistributions of source code must retain the above copyright notice,
  *       this list of conditions and the following disclaimer.
  *     * Redistributions in binary form must reproduce the above copyright
@@ -12,7 +12,7 @@
  *     * Neither the name of Intel Corporation nor the names of its contributors
  *       may be used to endorse or promote products derived from this software
  *       without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -24,38 +24,6 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-/*******************************************************************************
- *                       I N T E L   C O R P O R A T I O N
- * 
- *  Functional Group: Fabric Viewer Application
- * 
- *  File Name: SAHelper.java
- * 
- *  Archive Source: $Source$
- * 
- *  Archive Log: $Log$
- *  Archive Log: Revision 1.12  2015/09/26 06:17:57  jijunwan
- *  Archive Log: 130487 - FM GUI: Topology refresh required after enabling Fabric Simulator
- *  Archive Log: - added more log info
- *  Archive Log:
- *  Archive Log: Revision 1.11  2015/09/25 20:47:43  fernande
- *  Archive Log: PR129920 - revisit health score calculation. Changed formula to include several factors (or attributes) within the calculation as well as user-defined weights (for now are hard coded).
- *  Archive Log:
- *  Archive Log: Revision 1.10  2015/08/17 18:48:53  jijunwan
- *  Archive Log: PR 129983 - Need to change file header's copyright text to BSD license txt
- *  Archive Log: - change backend files' headers
- *  Archive Log:
- *  Archive Log: Revision 1.9  2015/06/10 19:36:39  jijunwan
- *  Archive Log: PR 129153 - Some old files have no proper file header. They cannot record change logs.
- *  Archive Log: - wrote a tool to check and insert file header
- *  Archive Log: - applied on backend files
- *  Archive Log:
- * 
- *  Overview:
- * 
- *  @author: jijunwan
- * 
- ******************************************************************************/
 package com.intel.stl.api.subnet.impl;
 
 import java.util.List;
@@ -106,8 +74,6 @@ import com.intel.stl.fecdriver.messages.command.sa.FVCmdGetTrace;
 import com.intel.stl.fecdriver.messages.command.sa.FVCmdGetVLArb;
 
 /**
- * @author jijunwan
- * 
  */
 public class SAHelper extends FEHelper {
     private final static Logger log = LoggerFactory.getLogger(SAHelper.class);
@@ -119,7 +85,7 @@ public class SAHelper extends FEHelper {
     public List<NodeRecordBean> getNodes() throws Exception {
         FVCmdGetNodes cmd = new FVCmdGetNodes();
         List<NodeRecordBean> res = statement.execute(cmd);
-        log.info("Get " + res.size() + " nodes from FE");
+        log.info("Get " + (res == null ? 0 : res.size()) + " nodes from FE");
         return res;
     }
 
@@ -136,7 +102,7 @@ public class SAHelper extends FEHelper {
     public List<LinkRecordBean> getLinks() throws Exception {
         FVCmdGetLink cmd = new FVCmdGetLink();
         List<LinkRecordBean> res = statement.execute(cmd);
-        log.info("Get " + res.size() + " links from FE");
+        log.info("Get " + (res == null ? 0 : res.size()) + " links from FE");
         return res;
     }
 
@@ -148,7 +114,7 @@ public class SAHelper extends FEHelper {
     public List<PortRecordBean> getPorts() throws Exception {
         FVCmdGetPortInfo cmd = new FVCmdGetPortInfo();
         List<PortRecordBean> res = statement.execute(cmd);
-        log.info("Get " + res.size() + " ports from FE");
+        log.info("Get " + (res == null ? 0 : res.size()) + " ports from FE");
         return res;
     }
 

@@ -1,9 +1,9 @@
 /**
  * Copyright (c) 2015, Intel Corporation
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  *     * Redistributions of source code must retain the above copyright notice,
  *       this list of conditions and the following disclaimer.
  *     * Redistributions in binary form must reproduce the above copyright
@@ -12,7 +12,7 @@
  *     * Neither the name of Intel Corporation nor the names of its contributors
  *       may be used to endorse or promote products derived from this software
  *       without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -24,37 +24,6 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-/*******************************************************************************
- *                       I N T E L   C O R P O R A T I O N
- * 
- *  Functional Group: Fabric Viewer Application
- * 
- *  File Name: GroupInfo.java
- * 
- *  Archive Source: $Source$
- * 
- *  Archive Log: $Log$
- *  Archive Log: Revision 1.11  2015/10/08 16:20:37  fernande
- *  Archive Log: PR130760 - Update FV GUI to reflect Changes to vol1g1 spec introduced in DN 0507. Changed commands to match FM spec
- *  Archive Log:
- *  Archive Log: Revision 1.10  2015/08/17 18:49:17  jijunwan
- *  Archive Log: PR 129983 - Need to change file header's copyright text to BSD license txt
- *  Archive Log: - change backend files' headers
- *  Archive Log:
- *  Archive Log: Revision 1.9  2015/07/02 20:27:49  fernande
- *  Archive Log: PR 129447 - Database size increases a lot over a short period of time. Moving Blobs to the database; arrays are now being saved to the database as collection tables.
- *  Archive Log:
- *  Archive Log: Revision 1.8  2015/06/10 19:36:29  jijunwan
- *  Archive Log: PR 129153 - Some old files have no proper file header. They cannot record change logs.
- *  Archive Log: - wrote a tool to check and insert file header
- *  Archive Log: - applied on backend files
- *  Archive Log:
- * 
- *  Overview:
- * 
- *  @author: jijunwan
- * 
- ******************************************************************************/
 package com.intel.stl.fecdriver.messages.adapter.pa;
 
 import java.util.ArrayList;
@@ -71,8 +40,8 @@ import com.intel.stl.common.StringUtils;
 import com.intel.stl.fecdriver.messages.adapter.SimpleDatagram;
 
 /**
- * ref: /ALL_EMB/IbAccess/Common/Inc/stl_pa.h v1.53<br>
- * 
+ * ref: /ALL_EMB/IbAccess/Common/Inc/stl_pa.h v1.55<br>
+ *
  * <pre>
  * typedef struct _STL_PA_Group_Info_Data {
  * [0]	char					groupName[STL_PM_GROUPNAMELEN];
@@ -91,17 +60,17 @@ import com.intel.stl.fecdriver.messages.adapter.SimpleDatagram;
  * [676]	uint32					maxInternalMBps;
  * [680]	uint32					maxExternalMBps;
  * } PACK_SUFFIX STL_PA_PM_GROUP_INFO_DATA;
- * 
+ *
  * typedef struct _STL_PA_Image_ID_Data {
  * 	uint64					imageNumber;
  * 	int32					imageOffset;
  * 	uint32					reserved;
  * } PACK_SUFFIX STL_PA_IMAGE_ID_DATA;
- * 
+ *
  * // Utilization statistical summary (88 bytes)
  * typedef struct _STL_PA_PM_Util_Stats {
- * [0]	uint64					totalMBps;	// MB per sec 
- * [8]	uint64					totalKPps;	// K pkts per sec 
+ * [0]	uint64					totalMBps;	// MB per sec
+ * [8]	uint64					totalKPps;	// K pkts per sec
  * [16]	uint32					avgMBps;
  * [20]	uint32					minMBps;
  * [24]	uint32					maxMBps;
@@ -110,15 +79,16 @@ import com.intel.stl.fecdriver.messages.adapter.SimpleDatagram;
  * [72]	uint32					avgKPps;
  * [76]	uint32					minKPps;
  * [80]	uint32					maxKPps;
- * [84]	uint32					reserved;
+ * [82]	uint16					pmaFailedPorts;
+ * [84] uint16                  topoFailedPorts;
  * } PACK_SUFFIX STL_PA_PM_UTIL_STATS;
- * 
+ *
  * // 40 + 24*5 = 160 bytes
  * typedef struct STL_PMERRSTATSTRUCT {
  * 	STL_PA_PM_ERROR_SUMMARY 	errorMaximums;
  * 	STL_PMERRBUCKET_T	ports[STL_PM_ERR_BUCKETS];
  * } PACK_SUFFIX STL_PMERRSTAT_T;
- * 
+ *
  * // 24 bytes
  * typedef struct STL_PMERRBUCKETSTRUCT {
  * [0]   uint32                  integrityErrors;
@@ -128,7 +98,7 @@ import com.intel.stl.fecdriver.messages.adapter.SimpleDatagram;
  * [16]   uint32                  securityErrors;
  * [20]   uint32                  routingErrors;
  * } PACK_SUFFIX STL_PMERRBUCKET_T;
- * 
+ *
  * // Error statistical summary (40 bytes)
  * typedef struct _STL_PA_PM_Error_Summary {
  * [0]    uint32                  integrityErrors;
@@ -137,24 +107,22 @@ import com.intel.stl.fecdriver.messages.adapter.SimpleDatagram;
  * [12]    uint32                  bubbleErrors;
  * [16]    uint32                  securityErrors;
  * [20]    uint32                  routingErrors;
- * 
- * [24]    uint16                  utilizationPct10;         // in units of 10% 
- * [26]    uint16                  discardsPct10;            // in units of 10% 
- * [28]    uint16                  reserved[6]; 
+ *
+ * [24]    uint16                  utilizationPct10;         // in units of 10%
+ * [26]    uint16                  discardsPct10;            // in units of 10%
+ * [28]    uint16                  reserved[6];
  * } PACK_SUFFIX STL_PA_PM_ERROR_SUMMARY;
- * 
+ *
  * #define STL_PM_GROUPNAMELEN		64
- * 
+ *
  * #define STL_PM_UTIL_GRAN_PERCENT 10 // granularity of utilization buckets
  * #define STL_PM_UTIL_BUCKETS (100 / STL_PM_UTIL_GRAN_PERCENT)
- * 
+ *
  * #define STL_PM_ERR_GRAN_PERCENT 25  // granularity of error buckets
  * #define STL_PM_ERR_BUCKETS ((100 / STL_PM_ERR_GRAN_PERCENT) + 1) // extra bucket is for those over threshold
- * 
+ *
  * </pre>
- * 
- * @author jijunwan
- * 
+ *
  */
 public class GroupInfo extends SimpleDatagram<GroupInfoBean> {
     public GroupInfo() {
@@ -191,6 +159,8 @@ public class GroupInfo extends SimpleDatagram<GroupInfoBean> {
         bean.setAvgKPps(buffer.getInt());
         bean.setMinKPps(buffer.getInt());
         bean.setMaxKPps(buffer.getInt());
+        bean.setPmaFailedPorts(buffer.getShort());
+        bean.setTopoFailedPorts(buffer.getShort());
         return bean;
     }
 
@@ -225,7 +195,7 @@ public class GroupInfo extends SimpleDatagram<GroupInfoBean> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.intel.hpc.stl.resourceadapter.data.SimpleDatagram#toObject()
      */
     @Override

@@ -1,9 +1,9 @@
 /**
  * Copyright (c) 2015, Intel Corporation
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  *     * Redistributions of source code must retain the above copyright notice,
  *       this list of conditions and the following disclaimer.
  *     * Redistributions in binary form must reproduce the above copyright
@@ -12,7 +12,7 @@
  *     * Neither the name of Intel Corporation nor the names of its contributors
  *       may be used to endorse or promote products derived from this software
  *       without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -25,45 +25,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*******************************************************************************
- *                       I N T E L   C O R P O R A T I O N
- *	
- *  Functional Group: FabricViewer
- *
- *  File Name: StatisticsController.java
- *
- *  Archive Source: $Source$
- * 
- *  Archive Log: $Log$
- *  Archive Log: Revision 1.23  2015/11/02 23:57:30  jijunwan
- *  Archive Log: Fixed -1 numSwitchLinks issue on b2b topology
- *  Archive Log:
- *  Archive Log: Revision 1.22  2015/08/17 18:53:38  jijunwan
- *  Archive Log: PR 129983 - Need to change file header's copyright text to BSD license txt
- *  Archive Log: - changed frontend files' headers
- *  Archive Log:
- *  Archive Log: Revision 1.21  2015/06/09 18:37:27  jijunwan
- *  Archive Log: PR 129069 - Incorrect Help action
- *  Archive Log: - moved help action from view to controller
- *  Archive Log: - only enable help button when we have HelpID
- *  Archive Log: - fixed incorrect HelpIDs
- *  Archive Log:
- * 
- *  Overview: 
- *
- *  @author: jijunwan
- *
- ******************************************************************************/
-
 package com.intel.stl.ui.main;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import javax.swing.Timer;
-
-import net.engio.mbassy.bus.MBassador;
 
 import com.intel.stl.api.StringUtils;
 import com.intel.stl.api.performance.SMInfoDataBean;
@@ -76,13 +45,14 @@ import com.intel.stl.ui.common.view.ICardListener;
 import com.intel.stl.ui.framework.IAppEvent;
 import com.intel.stl.ui.main.view.StatisticsView;
 import com.intel.stl.ui.model.GroupStatistics;
+import com.intel.stl.ui.model.NodeTypeViz;
+
+import net.engio.mbassy.bus.MBassador;
 
 /**
- * @author jijunwan
- * 
  */
-public class StatisticsCard extends
-        BaseCardController<ICardListener, StatisticsView> {
+public class StatisticsCard
+        extends BaseCardController<ICardListener, StatisticsView> {
     private final StaDetailsController nodesController;
 
     private final StaDetailsController portsController;
@@ -91,19 +61,44 @@ public class StatisticsCard extends
 
     public StatisticsCard(StatisticsView view, MBassador<IAppEvent> eventBus) {
         super(view, eventBus);
-        nodesController =
-                new StaDetailsController(
-                        STLConstants.K0014_ACTIVE_NODES.getValue(),
-                        view.getNodesPanel());
-        portsController =
-                new StaDetailsController(
-                        STLConstants.K0024_ACTIVE_PORTS.getValue(),
-                        view.getPortsPanel());
+        nodesController = new StaDetailsController(
+                STLConstants.K0014_ACTIVE_NODES.getValue(),
+                view.getNodesPanel());
+        portsController = new StaDetailsController(
+                STLConstants.K0024_ACTIVE_PORTS.getValue(),
+                view.getPortsPanel()) {
+
+            /*
+             * (non-Javadoc)
+             *
+             * @see
+             * com.intel.stl.ui.main.StaDetailsController#getTypeString(int,
+             * com.intel.stl.ui.model.NodeTypeViz)
+             */
+            @Override
+            protected String getTypeString(long count, NodeTypeViz nodeType) {
+                if (count == 1) {
+                    if (nodeType == NodeTypeViz.SWITCH) {
+                        return STLConstants.K0135_SW_PORT.getValue();
+                    } else if (nodeType == NodeTypeViz.HFI) {
+                        return STLConstants.K0137_HFI_PORT.getValue();
+                    }
+                } else {
+                    if (nodeType == NodeTypeViz.SWITCH) {
+                        return STLConstants.K0136_SW_PORTS.getValue();
+                    } else if (nodeType == NodeTypeViz.HFI) {
+                        return STLConstants.K0138_HFI_PORTS.getValue();
+                    }
+                }
+                return super.getTypeString(count, nodeType);
+            }
+
+        };
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.intel.stl.ui.common.ICardController#getHelpID()
      */
     @Override
@@ -157,23 +152,23 @@ public class StatisticsCard extends
                 if (switches != null && switches.intValue() > 0) {
                     numSwitchLinks = numLinks - numHostLinks;
                 }
-                view.setNumSwitchLinks(UIConstants.INTEGER
-                        .format(numSwitchLinks));
+                view.setNumSwitchLinks(
+                        UIConstants.INTEGER.format(numSwitchLinks));
                 view.setNumHostLinks(UIConstants.INTEGER.format(numHostLinks));
-                view.setOtherPorts(UIConstants.INTEGER.format(sta
-                        .getOtherPorts()));
-                SMInfoDataBean[] sms = sta.getSMInfo();
+                view.setOtherPorts(
+                        UIConstants.INTEGER.format(sta.getOtherPorts()));
+                List<SMInfoDataBean> sms = sta.getSMInfo();
                 if (sta.getNumSMs() > 0) {
-                    view.setMsmName(sms[0].getSmNodeDesc(),
-                            getSMDescription(sms[0]));
+                    view.setMsmName(sms.get(0).getSmNodeDesc(),
+                            getSMDescription(sms.get(0)));
                     String[] names = null;
                     String[] descriptions = null;
                     if (sta.getNumSMs() > 1) {
-                        names = new String[sms.length - 1];
-                        descriptions = new String[sms.length - 1];
-                        for (int i = 1; i < sms.length; i++) {
-                            names[i - 1] = sms[i].getSmNodeDesc();
-                            descriptions[i - 1] = getSMDescription(sms[i]);
+                        names = new String[sms.size() - 1];
+                        descriptions = new String[sms.size() - 1];
+                        for (int i = 1; i < sms.size(); i++) {
+                            names[i - 1] = sms.get(i).getSmNodeDesc();
+                            descriptions[i - 1] = getSMDescription(sms.get(i));
                         }
                     }
                     view.setStandbySMNames(names, descriptions);
@@ -199,7 +194,7 @@ public class StatisticsCard extends
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.intel.stl.ui.common.BaseCardController#getCardListener()
      */
     @Override
@@ -209,7 +204,7 @@ public class StatisticsCard extends
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.intel.stl.ui.common.BaseCardController#clear()
      */
     @Override

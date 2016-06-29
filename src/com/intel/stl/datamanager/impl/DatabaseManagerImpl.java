@@ -1,9 +1,9 @@
 /**
  * Copyright (c) 2015, Intel Corporation
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  *     * Redistributions of source code must retain the above copyright notice,
  *       this list of conditions and the following disclaimer.
  *     * Redistributions in binary form must reproduce the above copyright
@@ -12,7 +12,7 @@
  *     * Neither the name of Intel Corporation nor the names of its contributors
  *       may be used to endorse or promote products derived from this software
  *       without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -24,51 +24,6 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-/*******************************************************************************
- *                       I N T E L   C O R P O R A T I O N
- * 
- *  Functional Group: Fabric Viewer Application
- * 
- *  File Name: DatabaseManagerImpl.java
- * 
- *  Archive Source: $Source$
- * 
- *  Archive Log: $Log$
- *  Archive Log: Revision 1.50  2015/12/16 14:26:04  jijunwan
- *  Archive Log: PR 132071 - Error on initial CLI launch of FM GUI in RHEL 7.1
- *  Archive Log: - fixed Klocwork issue
- *  Archive Log:
- *  Archive Log: Revision 1.49  2015/09/02 15:56:22  fernande
- *  Archive Log: PR 130220 - FM GUI "about" window displays unmatched version and build #. Passing the OPA FM version thru the manifest.
- *  Archive Log:
- *  Archive Log: Revision 1.48  2015/08/19 19:27:16  fernande
- *  Archive Log: PR 128703 - Fail over doesn't work on A0 Fabric. Adding shutdown method to AppComponent interface for application shutdown.
- *  Archive Log:
- *  Archive Log: Revision 1.47  2015/08/18 21:04:27  fernande
- *  Archive Log: PR 128703 - Fail over doesn't work on A0 Fabric. Fixed schema update because FE list is not copied over to new database
- *  Archive Log:
- *  Archive Log: Revision 1.46  2015/08/17 18:49:00  jijunwan
- *  Archive Log: PR 129983 - Need to change file header's copyright text to BSD license txt
- *  Archive Log: - change backend files' headers
- *  Archive Log:
- *  Archive Log: Revision 1.45  2015/08/10 17:04:53  robertja
- *  Archive Log: PR128974 - Email notification functionality.
- *  Archive Log:
- *  Archive Log: Revision 1.44  2015/07/09 18:53:33  fernande
- *  Archive Log: PR 129447 - Database size increases a lot over a short period of time. Added purge function to delete GroupInfo records older than a specified timestamp
- *  Archive Log:
- *  Archive Log: Revision 1.43  2015/06/10 19:36:53  jijunwan
- *  Archive Log: PR 129153 - Some old files have no proper file header. They cannot record change logs.
- *  Archive Log: - wrote a tool to check and insert file header
- *  Archive Log: - applied on backend files
- *  Archive Log:
- * 
- *  Overview:
- * 
- *  @author: 
- * 
- ******************************************************************************/
-
 package com.intel.stl.datamanager.impl;
 
 import static com.intel.stl.api.subnet.NodeType.HFI;
@@ -76,6 +31,10 @@ import static com.intel.stl.api.subnet.NodeType.ROUTER;
 import static com.intel.stl.api.subnet.NodeType.SWITCH;
 import static com.intel.stl.api.subnet.NodeType.UNKNOWN;
 import static com.intel.stl.common.STLMessages.STL10006_ERROR_STARTING_DATABASE_ENGINE;
+import static com.intel.stl.common.STLMessages.STL10018_DATABASE_COMPONENT;
+import static com.intel.stl.common.STLMessages.STL10025_STARTING_COMPONENT;
+import static com.intel.stl.common.STLMessages.STL10026_STOPPING_COMPONENT;
+import static com.intel.stl.common.STLMessages.STL10028_COMPACTING_DATABASE;
 import static com.intel.stl.common.STLMessages.STL30001_STARTING_DATABASE_ENGINE;
 import static com.intel.stl.common.STLMessages.STL30010_STARTING_SCHEMA_UPDATE;
 import static com.intel.stl.common.STLMessages.STL30011_ERROR_UPDATING_SCHEMA;
@@ -93,6 +52,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.intel.stl.api.DatabaseException;
+import com.intel.stl.api.StartupProgressObserver;
 import com.intel.stl.api.StringUtils;
 import com.intel.stl.api.configuration.AppInfo;
 import com.intel.stl.api.configuration.EventRule;
@@ -111,7 +71,6 @@ import com.intel.stl.api.subnet.NodeRecordBean;
 import com.intel.stl.api.subnet.NodeType;
 import com.intel.stl.api.subnet.SubnetDataNotFoundException;
 import com.intel.stl.api.subnet.SubnetDescription;
-import com.intel.stl.common.STLMessages;
 import com.intel.stl.configuration.AppComponent;
 import com.intel.stl.configuration.AppConfigurationException;
 import com.intel.stl.configuration.AppSettings;
@@ -137,15 +96,25 @@ import com.intel.stl.dbengine.impl.DatabaseUtils;
 import com.intel.stl.dbengine.impl.SchedulerImpl;
 
 public class DatabaseManagerImpl implements DatabaseManager, AppComponent {
+    private static final String DATABASEMANAGER_COMPONENT =
+            STL10018_DATABASE_COMPONENT.getDescription();
+
+    private static final String PROGRESS_MESSAGE = STL10025_STARTING_COMPONENT
+            .getDescription(DATABASEMANAGER_COMPONENT);
+
+    private static final String SHUTDOWN_MESSAGE = STL10026_STOPPING_COMPONENT
+            .getDescription(DATABASEMANAGER_COMPONENT);
 
     protected static int THREAD_POOL_SIZE = 2;
 
-    private static Logger log = LoggerFactory
-            .getLogger(DatabaseManagerImpl.class);
+    private static Logger log =
+            LoggerFactory.getLogger(DatabaseManagerImpl.class);
 
     private final Scheduler scheduler;
 
     private final DatabaseEngine engine;
+
+    private boolean compactNeeded = false;
 
     public DatabaseManagerImpl(DatabaseEngine engine) {
         this.engine = engine;
@@ -154,21 +123,23 @@ public class DatabaseManagerImpl implements DatabaseManager, AppComponent {
     }
 
     @Override
-    public void initialize(AppSettings settings)
-            throws AppConfigurationException {
+    public void initialize(AppSettings settings,
+            StartupProgressObserver observer) throws AppConfigurationException {
+        if (observer != null) {
+            observer.setProgress(PROGRESS_MESSAGE);
+        }
         log.info(STL30001_STARTING_DATABASE_ENGINE.getDescription(
                 engine.getEngineName(), engine.getEngineVersion()));
         try {
             engine.start();
             AppInfo appInfo = engine.getAppInfo();
-            if (appInfo == null
-                    || appInfo.getAppSchemaLevel() < settings
-                            .getAppSchemaLevel()) {
+            if (appInfo == null || appInfo.getAppSchemaLevel() < settings
+                    .getAppSchemaLevel()) {
                 updateSchema(settings, appInfo);
             } else {
                 if (!appInfo.getAppBuildId().equals(settings.getAppBuildId())
-                        || !appInfo.getAppBuildDate().equals(
-                                settings.getAppBuildDate())) {
+                        || !appInfo.getAppBuildDate()
+                                .equals(settings.getAppBuildDate())) {
                     saveAppInfo(appInfo, settings);
                 }
             }
@@ -187,7 +158,7 @@ public class DatabaseManagerImpl implements DatabaseManager, AppComponent {
 
     @Override
     public String getComponentDescription() {
-        return STLMessages.STL10018_DATABASE_COMPONENT.getDescription();
+        return DATABASEMANAGER_COMPONENT;
     }
 
     @Override
@@ -196,20 +167,22 @@ public class DatabaseManagerImpl implements DatabaseManager, AppComponent {
     }
 
     @Override
-    public void shutdown() {
-        close();
-    }
-
-    @Override
-    public void close() {
+    public void shutdown(StartupProgressObserver observer) {
+        if (observer != null) {
+            observer.setProgress(SHUTDOWN_MESSAGE);
+        }
         try {
             if (scheduler != null) {
                 scheduler.shutdown();
             }
         } finally {
             if (engine != null) {
+                if (observer != null && compactNeeded) {
+                    observer.setProgress(
+                            STL10028_COMPACTING_DATABASE.getDescription());
+                }
                 try {
-                    engine.stop();
+                    engine.stop(compactNeeded);
                 } catch (DatabaseException e) {
                     log.error("Error during DatabaseEngine stop: ", e);
                 }
@@ -401,8 +374,8 @@ public class DatabaseManagerImpl implements DatabaseManager, AppComponent {
                     public NodeRecordBean execute(DatabaseContext ctx)
                             throws Exception {
                         SubnetDAO subnetDao = ctx.getSubnetDAO();
-                        return subnetDao
-                                .getNodeByPortGUID(subnetName, portGuid);
+                        return subnetDao.getNodeByPortGUID(subnetName,
+                                portGuid);
                     }
 
                 };
@@ -430,7 +403,7 @@ public class DatabaseManagerImpl implements DatabaseManager, AppComponent {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.intel.stl.datamanager.DatabaseManager#getLinks(java.lang.String,
      * int)
      */
@@ -455,7 +428,7 @@ public class DatabaseManagerImpl implements DatabaseManager, AppComponent {
     @Override
     public LinkRecordBean getLinkBySource(final String subnetName,
             final int lid, final short portNum)
-            throws SubnetDataNotFoundException {
+                    throws SubnetDataNotFoundException {
         DatabaseCall<LinkRecordBean> call =
                 new DatabaseCallImpl<LinkRecordBean>() {
 
@@ -475,7 +448,7 @@ public class DatabaseManagerImpl implements DatabaseManager, AppComponent {
     @Override
     public LinkRecordBean getLinkByDestination(final String subnetName,
             final int lid, final short portNum)
-            throws SubnetDataNotFoundException {
+                    throws SubnetDataNotFoundException {
         DatabaseCall<LinkRecordBean> call =
                 new DatabaseCallImpl<LinkRecordBean>() {
 
@@ -556,7 +529,7 @@ public class DatabaseManagerImpl implements DatabaseManager, AppComponent {
     @Override
     public void saveTopology(final String subnetName,
             final List<NodeRecordBean> nodes, final List<LinkRecordBean> links)
-            throws SubnetDataNotFoundException {
+                    throws SubnetDataNotFoundException {
         DatabaseCall<Void> call = new DatabaseCallImpl<Void>() {
 
             @Override
@@ -626,8 +599,8 @@ public class DatabaseManagerImpl implements DatabaseManager, AppComponent {
     }
 
     @Override
-    public void saveGroupConfig(final String subnetName,
-            final String groupName, final List<PortConfigBean> ports) {
+    public void saveGroupConfig(final String subnetName, final String groupName,
+            final List<PortConfigBean> ports) {
         DatabaseCall<Void> call = new DatabaseCallImpl<Void>() {
 
             @Override
@@ -663,7 +636,7 @@ public class DatabaseManagerImpl implements DatabaseManager, AppComponent {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.intel.stl.datamanager.DatabaseManager#getGroupConfig(com.intel.stl
      * .datamanager.GroupConfigId)
@@ -746,15 +719,17 @@ public class DatabaseManagerImpl implements DatabaseManager, AppComponent {
             @Override
             public Integer execute(DatabaseContext ctx) throws Exception {
                 GroupDAO groupDao = ctx.getGroupDAO();
-                int deleted =
-                        groupDao.purgeGroupInfos(ctx.getSubnet(subnetName), ago);
+                int deleted = groupDao
+                        .purgeGroupInfos(ctx.getSubnet(subnetName), ago);
 
                 return deleted;
             }
 
         };
         scheduler.enqueue(call);
-        return call.getResult();
+        int count = call.getResult();
+        this.compactNeeded = true;
+        return count;
     }
 
     @Override
@@ -778,7 +753,7 @@ public class DatabaseManagerImpl implements DatabaseManager, AppComponent {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.intel.stl.datamanager.DatabaseManager#getGroupInfo(com.intel.stl.
      * datamanager.GroupInfoId)
@@ -786,7 +761,7 @@ public class DatabaseManagerImpl implements DatabaseManager, AppComponent {
     @Override
     public List<GroupInfoBean> getGroupInfo(final String subnetName,
             final String groupName, final long startTime, final long stopTime)
-            throws PerformanceDataNotFoundException {
+                    throws PerformanceDataNotFoundException {
         DatabaseCall<List<GroupInfoBean>> call =
                 new DatabaseCallImpl<List<GroupInfoBean>>() {
 
@@ -795,8 +770,8 @@ public class DatabaseManagerImpl implements DatabaseManager, AppComponent {
                             throws Exception {
                         GroupDAO groupDao = ctx.getGroupDAO();
                         return groupDao.getGroupInfoList(
-                                ctx.getSubnet(subnetName), groupName,
-                                startTime, stopTime);
+                                ctx.getSubnet(subnetName), groupName, startTime,
+                                stopTime);
                     }
 
                 };
@@ -805,7 +780,8 @@ public class DatabaseManagerImpl implements DatabaseManager, AppComponent {
     }
 
     @Override
-    public void saveNotices(final String subnetName, final NoticeBean[] notices) {
+    public void saveNotices(final String subnetName,
+            final NoticeBean[] notices) {
         DatabaseCall<Void> call = new DatabaseCallImpl<Void>() {
 
             @Override
@@ -951,9 +927,8 @@ public class DatabaseManagerImpl implements DatabaseManager, AppComponent {
                     long id = subnet.getId();
                     subnet.setId(0L);
                     subnet.setTopology(null);
-                    SubnetRecord newRec =
-                            DatabaseMigrationHelper.insertSubnetRecord(em,
-                                    subnet);
+                    SubnetRecord newRec = DatabaseMigrationHelper
+                            .insertSubnetRecord(em, subnet);
                     if (users != null) {
                         for (UserRecord user : users) {
                             if (user.getId().getFabricId() == id) {

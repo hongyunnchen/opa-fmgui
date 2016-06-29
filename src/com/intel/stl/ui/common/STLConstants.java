@@ -1,9 +1,9 @@
 /**
  * Copyright (c) 2015, Intel Corporation
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  *     * Redistributions of source code must retain the above copyright notice,
  *       this list of conditions and the following disclaimer.
  *     * Redistributions in binary form must reproduce the above copyright
@@ -12,7 +12,7 @@
  *     * Neither the name of Intel Corporation nor the names of its contributors
  *       may be used to endorse or promote products derived from this software
  *       without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -24,139 +24,6 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-/*******************************************************************************
- *                       I N T E L   C O R P O R A T I O N
- * 
- *  Functional Group: Fabric Viewer Application
- * 
- *  File Name: STLConstants.java
- * 
- *  Archive Source: $Source$
- * 
- *  Archive Log: $Log$
- *  Archive Log: Revision 1.152  2015/12/03 20:12:46  jijunwan
- *  Archive Log: PR 130614 - Select All / Deselect All buttons
- *  Archive Log: - Added "select all" and "unselect all" buttons
- *  Archive Log:
- *  Archive Log: Revision 1.151  2015/12/03 14:56:28  jypak
- *  Archive Log: PR 131817 - FM GUI, the status Column to the right requires a header/title.
- *  Archive Log:
- *  Archive Log: Revision 1.150  2015/11/24 16:48:50  rjtierne
- *  Archive Log: PR 131720 - Code cleanup for PRQCode cleanup for PRQ
- *  Archive Log: - Created new constant K0808 describing the error when multiple selections are made within different device groups; i.e. port selection within both HFIs & Switches
- *  Archive Log:
- *  Archive Log: Revision 1.149  2015/11/18 23:55:53  rjtierne
- *  Archive Log: PR 130965 - ESM support on Log Viewer
- *  Archive Log: - Added constants K2163-K2170 for supporting ESM Log Viewer
- *  Archive Log:
- *  Archive Log: Revision 1.148  2015/11/02 20:26:14  jijunwan
- *  Archive Log: PR 131384 - Incorrect label name on port counter panel
- *  Archive Log: - renamed constant RX_CUMULATIVE_DATA to RX_CUMULATIVE_DATA_MB, and TX_CUMULATIVE_DATA to TX_CUMULATIVE_DATA_MB
- *  Archive Log: - introduced new constants for RvcData and XmitData and applied them on port counters panel
- *  Archive Log:
- *  Archive Log: Revision 1.147  2015/10/09 17:48:13  fernande
- *  Archive Log: PR130753 - XML parse errors when new VF is created from FM GUI. Added check during validation of opaconfig.xml to make sure the "All" application is not added if a PKey is especified.
- *  Archive Log:
- *  Archive Log: Revision 1.146  2015/09/25 13:57:31  rjtierne
- *  Archive Log: PR 130011 - Enhance SM Log Viewer to include Standard and Advanced requirements
- *  Archive Log: - Added constants K2145-K2147, and K2155-K2161 in support of log viewer enhancements
- *  Archive Log:
- *  Archive Log: Revision 1.145  2015/09/15 13:31:33  jypak
- *  Archive Log: PR 129397 - gaps in cableinfo output and handling.
- *  Archive Log: Incorporated the FM changes (PR 129390) as of 8/28/15. These changes are mainly from IbPrint/stl_sma.c revision 1.163.
- *  Archive Log:
- *  Archive Log: Revision 1.144  2015/09/01 19:04:05  fisherma
- *  Archive Log: PR 130111 - test button unavalable after entering SMTP information.  Added tooltips and help message to guide user in what is required to be entered in the text fields.
- *  Archive Log:
- *  Archive Log: Revision 1.143  2015/08/21 04:01:31  fisherma
- *  Archive Log: Added property to turn email notifications feature on/off.  Added strings to localization file.  Fixed dialog to be sized properly on different operating systems under various look and feel.
- *  Archive Log:
- *  Archive Log: Revision 1.142  2015/08/19 21:06:34  jijunwan
- *  Archive Log: PR 129397 - gaps in cableinfo output and handling.
- *  Archive Log: - adapt to latest FM code
- *  Archive Log:
- *  Archive Log: Revision 1.141  2015/08/17 18:54:12  jijunwan
- *  Archive Log: PR 129983 - Need to change file header's copyright text to BSD license txt
- *  Archive Log: - changed frontend files' headers
- *  Archive Log:
- *  Archive Log: Revision 1.140  2015/08/17 14:22:43  rjtierne
- *  Archive Log: PR 128979 - SM Log display
- *  Archive Log: This is the first version of the Log Viewer which displays select lines of text from the remote SM log file. Updates include searchable raw text from file, user-defined number of lines to display, refreshing end of file, and paging. This PR is now closed and further updates can be found by referencing PR 130011 - "Enhance SM Log Viewer to include Standard and Advanced requirements".
- *  Archive Log:
- *  Archive Log: Revision 1.139  2015/08/14 19:51:42  fisherma
- *  Archive Log: Ensure that email settings dialog always shows up on top of all the FV main windows.  Cleanup and improve validation code on the to/from and smtp server name fields.  Allow empty value for smpt server name field.  Fix re/parenting issue for the error dialog to show up on top of the smpt settings dialog.  Moved title string for the dialog to the resource file.
- *  Archive Log:
- *  Archive Log: Revision 1.138  2015/08/10 22:25:06  fisherma
- *  Archive Log: PR 128974 - Email notification functionality.  Updated layout in the preferences tab.  Added strings to localization file.
- *  Archive Log:
- *  Archive Log: Revision 1.137  2015/08/10 17:06:28  jypak
- *  Archive Log: PR 129919 - Change name from signal integrity to integrity.
- *  Archive Log: STLConstants and class names are changed.
- *  Archive Log:
- *  Archive Log: Revision 1.136  2015/08/10 13:49:01  robertja
- *  Archive Log: PR 129358 - PR 129556 - Refine congestion chart labeling.
- *  Archive Log:
- *  Archive Log: Revision 1.135  2015/08/07 14:57:56  jypak
- *  Archive Log: PR 129397 -gaps in cableinfo output and handling.
- *  Archive Log: Updates on the formats of the cableinfo output and also new enums were defined for different output values.
- *  Archive Log:
- *  Archive Log: Revision 1.134  2015/08/04 22:59:58  jijunwan
- *  Archive Log: PR 129821 - connectivity table has no Link Width Down Grade data
- *  Archive Log: - added related resource
- *  Archive Log:
- *  Archive Log: Revision 1.133  2015/07/28 18:29:10  fisherma
- *  Archive Log: PR 129219 - Admin page login dialog improvement
- *  Archive Log:
- *  Archive Log: Revision 1.132  2015/07/17 15:39:22  rjtierne
- *  Archive Log: PR 129547 - Need to add Node type and lid to the Connectivity
- *  Archive Log: Changed constant K0501 from LID to NODE_LID to serve as the title for a node lid
- *  Archive Log: on the connectivity table
- *  Archive Log:
- *  Archive Log: Revision 1.131  2015/07/16 16:33:37  jijunwan
- *  Archive Log: PR 129228 - remove PortLTPCRCMode of Al
- *  Archive Log: -  removed STL_PORT_LTP_CRC_MODE_ALL and STL_PORT_LINK_MODE_ALL_SUPPORTED
- *  Archive Log: - changed to use STLConstants for string print out
- *  Archive Log:
- *  Archive Log: Revision 1.130  2015/07/16 14:24:25  jijunwan
- *  Archive Log: PR 129387 - linkspeed and width show as Nop
- *  Archive Log: - change to show "None"
- *  Archive Log:
- *  Archive Log: Revision 1.129  2015/07/13 21:55:30  rjtierne
- *  Archive Log: PR 129355 - Ability to click on cables to get cable info
- *  Archive Log: Added constants K3049-K3050 for cable info and tool tip
- *  Archive Log:
- *  Archive Log: Revision 1.128  2015/06/30 22:28:02  jijunwan
- *  Archive Log: PR 129215 - Need short chart name to support pin capability
- *  Archive Log: - added new resources to support short name and full name
- *  Archive Log:
- *  Archive Log: Revision 1.127  2015/06/30 14:36:52  jypak
- *  Archive Log: PR 129284 - Incorrect QSFP field name.
- *  Archive Log: For date code, if invalid data, set the property field value as 'Invalid' and if both data code string and Date object are null, set the field value as 'N/A'.
- *  Archive Log:
- *  Archive Log: Revision 1.126  2015/06/29 15:05:43  jypak
- *  Archive Log: PR 129284 - Incorrect QSFP field name.
- *  Archive Log: Field name fix has been implemented. Also, introduced a conversion to Date object to add flexibility to display date code.
- *  Archive Log:
- *  Archive Log: Revision 1.125  2015/06/25 19:08:56  jijunwan
- *  Archive Log: Bug 126755 - Pin Board functionality is not working in FV
- *  Archive Log: - new resources to support pin capability
- *  Archive Log:
- *  Archive Log: Revision 1.124  2015/06/22 13:11:56  jypak
- *  Archive Log: PR 128980 - Be able to search devices by name or lid.
- *  Archive Log: New feature added to enable search devices by name, lid or node guid. The search results are displayed as a tree and when a result node from the tree is selected, original tree is expanded and the corresponding node is highlighted.
- *  Archive Log:
- *  Archive Log: Revision 1.123  2015/06/10 19:58:58  jijunwan
- *  Archive Log: PR 129120 - Some old files have no proper file header. They cannot record change logs.
- *  Archive Log: - wrote a tool to check and insert file header
- *  Archive Log: - applied on backend files
- *  Archive Log:
- * 
- *  Overview:
- * 
- *  @author: Fernando Fernandez
- * 
- ******************************************************************************/
-
 package com.intel.stl.ui.common;
 
 import java.text.MessageFormat;
@@ -168,8 +35,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /***
- * @author Fernando Fernandez
- * 
  */
 public enum STLConstants {
 
@@ -307,6 +172,16 @@ public enum STLConstants {
     K0127_PERCENT_OF_THRESHOLD(127),
 
     K0128_NODES_DISTR_SEVERITY(128),
+    K0129_MILLISECOND(129),
+    K0130_MS(130),
+    K0131_US(131),
+    K0132_S(132),
+    K0133_INFINITE(133),
+    K0134_HOQLIFE(134),
+    K0135_SW_PORT(135),
+    K0136_SW_PORTS(136),
+    K0137_HFI_PORT(137),
+    K0138_HFI_PORTS(138),
 
     K0200_PERFORMANCE(200),
     K0201_PERFORMANCE_DESCRIPTION(201),
@@ -321,7 +196,12 @@ public enum STLConstants {
     K0210_SHOW_OPTIONS(210),
     K0211_APPLY_OPTIONS(211),
 
-    // K0212-K0299 is available
+    K0212_PMA_IGNORE(212),
+    K0213_PMA_FAILURE(213),
+    K0214_TOPO_FAILURE(214),
+    K0215_NUM_FAILED_PORTS(215),
+
+    // K0216-K0299 is available
 
     // Property text
     K0300_PROPERTIES(300),
@@ -953,7 +833,7 @@ public enum STLConstants {
     K1066_MTU_SERIES(1066),
     K1067_NUM_VL(1067),
     K1068_MTU(1068),
-    K1069_HOQLIFE(1069),
+    K1069_HOQLIFE_BY_VL(1069),
     K1070_VLSTALL_SERIES(1070),
     K1071_QSFP_CABLE_INFO(1071),
     K1072_CABLE_ID(1072),
@@ -1103,6 +983,8 @@ public enum STLConstants {
     K1636_SEL_BUBBLE_ERRORS_HIGH(1636),
     K1637_SEL_SECURITY_ERRORS_HIGH(1637),
     K1638_SEL_ROUTING_ERRORS_HIGH(1638),
+
+    K1655_NUM_LANES_DOWN(1655),
 
     K1750_NO_SPECIFIED_REASON(1750),
     K1751_OFFDIS_DISCONNECTED(1751),
@@ -1308,6 +1190,8 @@ public enum STLConstants {
     K3231_MARK_FECN_DESCRIPTION(3231),
     K3232_UNCORR_ERR_DESCRIPTION(3232),
 
+    K3234_NUM_LANES_DOWN_DESCRIPTION(3234),
+
     K3300_BPS_DESCRIPTION(3300),
     K3301_KBPS_DESCRIPTION(3301),
     K3302_MBPS_DESCRIPTION(3302),
@@ -1339,6 +1223,8 @@ public enum STLConstants {
     K5014_EMAIL_HINT_TEXT(5014),
     K5015_EMAIL_TOOLTIP_HINT_TEXT(5015),
     K5016_EMAIL_TEST_BTN_TOOLTIP_TEXT(5015),
+    K5017_SENDING_EMAIL(5017),
+    K5018_EMAIL_SENT_OUT(5018),
 
     K99999_END_OF_CONSTANTS(99999);
 
@@ -1347,11 +1233,11 @@ public enum STLConstants {
 
     private static final String STL_CONSTANTS_ENCODING = "UTF-8";
 
-    private static final Control STL_CONTROL = new UTFControl(
-            STL_CONSTANTS_ENCODING);
+    private static final Control STL_CONTROL =
+            new UTFControl(STL_CONSTANTS_ENCODING);
 
-    private static final ResourceBundle STL_CONSTANTS = ResourceBundle
-            .getBundle(STL_CONSTANTS_BUNDLE, STL_CONTROL);
+    private static final ResourceBundle STL_CONSTANTS =
+            ResourceBundle.getBundle(STL_CONSTANTS_BUNDLE, STL_CONTROL);
 
     private static Logger log = LoggerFactory.getLogger(STLConstants.class);
 
@@ -1384,8 +1270,8 @@ public enum STLConstants {
 
     public String getValue(Object... arguments) {
         try {
-            return MessageFormat
-                    .format(STL_CONSTANTS.getString(key), arguments);
+            return MessageFormat.format(STL_CONSTANTS.getString(key),
+                    arguments);
         } catch (MissingResourceException mre) {
             String message = "Constant '" + key + "' not found!";
             log.error(message);

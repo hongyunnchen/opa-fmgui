@@ -1,9 +1,9 @@
 /**
  * Copyright (c) 2015, Intel Corporation
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  *     * Redistributions of source code must retain the above copyright notice,
  *       this list of conditions and the following disclaimer.
  *     * Redistributions in binary form must reproduce the above copyright
@@ -12,7 +12,7 @@
  *     * Neither the name of Intel Corporation nor the names of its contributors
  *       may be used to endorse or promote products derived from this software
  *       without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -24,117 +24,6 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-/*******************************************************************************
- *                       I N T E L   C O R P O R A T I O N
- *	
- *  Functional Group: Fabric Viewer Application
- *
- *  File Name: NoticeCalculator.java
- *
- *  Archive Source: $Source$
- *
- *  Archive Log:    $Log$
- *  Archive Log:    Revision 1.27  2015/09/29 13:29:14  fernande
- *  Archive Log:    PR129920 - revisit health score calculation. Fixed divide by zero in B2B configuration; the score will be zero if nothing is found in the fabric.
- *  Archive Log:
- *  Archive Log:    Revision 1.26  2015/09/25 20:54:02  fernande
- *  Archive Log:    PR129920 - revisit health score calculation. Changed formula to include several factors (or attributes) within the calculation as well as user-defined weights (for now are hard coded).
- *  Archive Log:
- *  Archive Log:    Revision 1.25  2015/08/31 22:33:41  jijunwan
- *  Archive Log:    PR 130197 - Calculated fabric health above 100% when entire fabric is rebooted
- *  Archive Log:    - handle null pointer
- *  Archive Log:
- *  Archive Log:    Revision 1.24  2015/08/31 22:01:44  jijunwan
- *  Archive Log:    PR 130197 - Calculated fabric health above 100% when entire fabric is rebooted
- *  Archive Log:    - changed to only use information from ImageInfo for calculation
- *  Archive Log:
- *  Archive Log:    Revision 1.23  2015/08/18 14:28:37  jijunwan
- *  Archive Log:    PR 130033 - Fix critical issues found by Klocwork or FindBugs
- *  Archive Log:    - DateFormat is not thread safe. Changed to create new DateFormat to avoid sharing it among different threads
- *  Archive Log:
- *  Archive Log:    Revision 1.22  2015/08/17 18:54:08  jijunwan
- *  Archive Log:    PR 129983 - Need to change file header's copyright text to BSD license txt
- *  Archive Log:    - changed frontend files' headers
- *  Archive Log:
- *  Archive Log:    Revision 1.21  2015/08/17 17:47:52  jijunwan
- *  Archive Log:    added null check
- *  Archive Log:
- *  Archive Log:    Revision 1.20  2015/08/11 14:10:35  jijunwan
- *  Archive Log:    PR 129917 - No update on event statistics
- *  Archive Log:    - Added a new subscriber to allow periodically getting state summary
- *  Archive Log:
- *  Archive Log:    Revision 1.19  2015/08/07 19:11:41  jijunwan
- *  Archive Log:    PR 129775 - disable node not available on Worst Node Card
- *  Archive Log:    - improved to display event type
- *  Archive Log:    - improved to disable jumping buttons when event type is PORT_INACTIVE
- *  Archive Log:
- *  Archive Log:    Revision 1.18  2015/06/29 15:05:48  jypak
- *  Archive Log:    PR 129284 - Incorrect QSFP field name.
- *  Archive Log:    Field name fix has been implemented. Also, introduced a conversion to Date object to add flexibility to display date code.
- *  Archive Log:
- *  Archive Log:    Revision 1.17  2015/05/12 17:43:28  rjtierne
- *  Archive Log:    PR 128624 - Klocwork and FindBugs fixes for UI
- *  Archive Log:    In method clear(), reorganized code to check events for null before trying synchronize on it.
- *  Archive Log:
- *  Archive Log:    Revision 1.16  2015/03/30 18:34:41  jypak
- *  Archive Log:    Introduce a UserSettingsProcessor to handle different use cases for user settings via Setup Wizard.
- *  Archive Log:
- *  Archive Log:    Revision 1.15  2015/03/26 11:10:04  jypak
- *  Archive Log:    PR 126613 Event (State) Severity based on user configuration via setup wizard.
- *  Archive Log:    -The Notice Api retrieves the latest user configuration for the severity through the UserSettings and set the severity when the EventDescription is generated.
- *  Archive Log:    -The Event Calculator clear out event description contents before posting new ones based on new notices with the severities configured by user.
- *  Archive Log:
- *  Archive Log:    Revision 1.14  2015/03/25 11:27:01  jypak
- *  Archive Log:    Event (State) Severity based on user configuration via setup wizard.
- *  Archive Log:    The Notice Api retrieves the latest user configuration for the severity through the UserSettings and set the severity when the EventDescription is generated.
- *  Archive Log:    The Event Calculator and the Event Summary Table clear out event description contents before posting new ones based on new notices with the severities configured by user.
- *  Archive Log:
- *  Archive Log:    Revision 1.13  2015/02/10 23:29:59  jijunwan
- *  Archive Log:    removed unused sweepRate
- *  Archive Log:
- *  Archive Log:    Revision 1.12  2015/02/06 15:56:39  robertja
- *  Archive Log:    PR 126597 Initialize status summary panels in the absence of event-driven updates.
- *  Archive Log:
- *  Archive Log:    Revision 1.11  2014/12/11 18:49:26  fernande
- *  Archive Log:    Switch from log4j to slf4j+logback
- *  Archive Log:
- *  Archive Log:    Revision 1.10  2014/12/08 16:01:53  robertja
- *  Archive Log:    Sweep old events before notifying listeners of new events.
- *  Archive Log:
- *  Archive Log:    Revision 1.9  2014/10/28 15:10:22  robertja
- *  Archive Log:    Change Home page and Performance page status panel updates from poll-driven to event-driven.
- *  Archive Log:
- *  Archive Log:    Revision 1.8  2014/08/19 18:13:44  jijunwan
- *  Archive Log:    changed IEventListener to handler an event array rather than a list of events
- *  Archive Log:
- *  Archive Log:    Revision 1.7  2014/08/05 18:39:07  jijunwan
- *  Archive Log:    renamed FI to HFI
- *  Archive Log:
- *  Archive Log:    Revision 1.6  2014/06/05 18:32:53  jijunwan
- *  Archive Log:    changed Channel Adapter to Fabric Interface
- *  Archive Log:
- *  Archive Log:    Revision 1.5  2014/05/19 22:08:53  jijunwan
- *  Archive Log:    moved filter from EventCalculator to StateSummary, so we can have better consistent result
- *  Archive Log:
- *  Archive Log:    Revision 1.4  2014/05/16 15:17:14  jijunwan
- *  Archive Log:    Added filter capability to EventCalculator
- *  Archive Log:
- *  Archive Log:    Revision 1.3  2014/05/08 19:03:24  jijunwan
- *  Archive Log:    backend support for states based on notices
- *  Archive Log:
- *  Archive Log:    Revision 1.2  2014/05/06 20:24:35  jijunwan
- *  Archive Log:    fixed typo
- *  Archive Log:
- *  Archive Log:    Revision 1.1  2014/05/06 15:20:24  jijunwan
- *  Archive Log:    added state and heal score calculation
- *  Archive Log:
- *
- *  Overview: 
- *
- *  @author: jijunwan
- *
- ******************************************************************************/
 
 package com.intel.stl.ui.publisher;
 
@@ -177,8 +66,8 @@ import com.intel.stl.ui.model.TimedScore;
 import com.intel.stl.ui.model.UserPreference;
 import com.intel.stl.ui.publisher.NodeEvents.EventItem;
 
-public class EventCalculator implements IEventListener<EventDescription>,
-        IStateMonitor {
+public class EventCalculator
+        implements IEventListener<EventDescription>, IStateMonitor {
     private static Logger log = LoggerFactory.getLogger(EventCalculator.class);
 
     private static final boolean DEBUG = false;
@@ -187,6 +76,7 @@ public class EventCalculator implements IEventListener<EventDescription>,
             new EnumMap<NoticeSeverity, Double>(NoticeSeverity.class) {
                 private static final long serialVersionUID =
                         2065678798638714805L;
+
                 {
                     put(NoticeSeverity.INFO, 1.0);
                     put(NoticeSeverity.WARNING, 0.8);
@@ -244,7 +134,7 @@ public class EventCalculator implements IEventListener<EventDescription>,
 
     private final EnumMap<HealthScoreAttribute, Integer> weights;
 
-    private long[] baseline = new long[] { 0, 0, 0, 0, 0, 0 };
+    private final long[] baseline = new long[] { 0, 0, 0, 0, 0, 0 };
 
     private int totalWeight;
 
@@ -253,7 +143,7 @@ public class EventCalculator implements IEventListener<EventDescription>,
 
     /**
      * Description:
-     * 
+     *
      * @param timeWindowInSeconds
      */
     public EventCalculator(EnumMap<NodeType, Integer> nodes,
@@ -276,18 +166,14 @@ public class EventCalculator implements IEventListener<EventDescription>,
         switchStates = new int[NoticeSeverity.values().length];
         hfiStates = new int[NoticeSeverity.values().length];
         events = new LinkedList<NodeEvents>();
-        weightSettings =
-                new EnumMap<HealthScoreAttribute, Integer>(
-                        HealthScoreAttribute.class);
-        values =
-                new EnumMap<HealthScoreAttribute, Long>(
-                        HealthScoreAttribute.class);
-        totals =
-                new EnumMap<HealthScoreAttribute, Long>(
-                        HealthScoreAttribute.class);
-        weights =
-                new EnumMap<HealthScoreAttribute, Integer>(
-                        HealthScoreAttribute.class);
+        weightSettings = new EnumMap<HealthScoreAttribute, Integer>(
+                HealthScoreAttribute.class);
+        values = new EnumMap<HealthScoreAttribute, Long>(
+                HealthScoreAttribute.class);
+        totals = new EnumMap<HealthScoreAttribute, Long>(
+                HealthScoreAttribute.class);
+        weights = new EnumMap<HealthScoreAttribute, Integer>(
+                HealthScoreAttribute.class);
         setHealthScoreWeights(userPreference);
         // Initialize switch and HFI states.
         sweep();
@@ -337,7 +223,7 @@ public class EventCalculator implements IEventListener<EventDescription>,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.intel.stl.api.notice.IEventListener#onNewEvent()
      */
     @Override
@@ -378,7 +264,8 @@ public class EventCalculator implements IEventListener<EventDescription>,
                 events.add(ne);
             }
             NoticeSeverity newSeverity = ne.addEvent(time, type, severity);
-            // System.out.println("AddEvent "+oldSeverity+" "+newSeverity+" "+ne);
+            // System.out.println("AddEvent "+oldSeverity+" "+newSeverity+"
+            // "+ne);
             updateStates(nodeSource.getNodeType(), oldSeverity, newSeverity);
         }
     }
@@ -391,10 +278,10 @@ public class EventCalculator implements IEventListener<EventDescription>,
     }
 
     /**
-     * 
+     *
      * <i>Description:</i>If a user change severity level in setup wizard, clear
      * all events before we apply the new severity levels.
-     * 
+     *
      * @param userSettings
      */
     public void clear() {
@@ -423,7 +310,8 @@ public class EventCalculator implements IEventListener<EventDescription>,
 
     protected void updateStates(NodeType type, NoticeSeverity oldSeverity,
             NoticeSeverity newSeverity) {
-        // System.out.println("updateStates "+type+" "+oldSeverity+" "+newSeverity);
+        // System.out.println("updateStates "+type+" "+oldSeverity+"
+        // "+newSeverity);
         if (type == NodeType.SWITCH) {
             if (oldSeverity != null) {
                 switchStates[oldSeverity.ordinal()] -= 1;
@@ -480,7 +368,7 @@ public class EventCalculator implements IEventListener<EventDescription>,
 
     /**
      * Description:
-     * 
+     *
      */
     protected void sweep() {
         sweep(System.currentTimeMillis());
@@ -515,7 +403,7 @@ public class EventCalculator implements IEventListener<EventDescription>,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.intel.stl.ui.publisher.IStateMonitor#getHealthScore()
      */
     @Override
@@ -555,7 +443,7 @@ public class EventCalculator implements IEventListener<EventDescription>,
         if (totalNodes <= 0 || !hasSweep) {
             return null;
         }
-
+    
         double penaltySum = 0;
         synchronized (critical) {
             for (int i = 0; i < switchStatesImage.length; i++) {
@@ -577,7 +465,7 @@ public class EventCalculator implements IEventListener<EventDescription>,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.intel.stl.ui.publisher.IStateMonitor#getSwitchStates()
      */
     @Override
@@ -598,7 +486,7 @@ public class EventCalculator implements IEventListener<EventDescription>,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.intel.stl.ui.publisher.IStateMonitor#getHFIStates()
      */
     @Override
@@ -632,10 +520,9 @@ public class EventCalculator implements IEventListener<EventDescription>,
             NodeEvents ne = nodes.get(i);
             EventItem item = ne.getLatestEvent();
             if (item != null) {
-                res[i] =
-                        new NodeScore(ne.getName(), ne.getNodeType(),
-                                ne.getLid(), item.getType(), sweepTime,
-                                item.getHealthScore());
+                res[i] = new NodeScore(ne.getName(), ne.getNodeType(),
+                        ne.getLid(), item.getType(), sweepTime,
+                        item.getHealthScore());
             }
         }
         Arrays.sort(res);
@@ -646,7 +533,8 @@ public class EventCalculator implements IEventListener<EventDescription>,
     public StateSummary getSummary() {
         // System.out.println("EventCalculaor.getSummary");
         if (!hasSweep) {
-            // System.out.println("EventCalculaor.getSummary - hasSweep = null");
+            // System.out.println("EventCalculaor.getSummary - hasSweep =
+            // null");
             return null;
         }
 
@@ -711,21 +599,22 @@ public class EventCalculator implements IEventListener<EventDescription>,
 
     public void processHealthScoreStats(FabricInfoBean fabricInfo,
             ImageInfoBean imageInfo) {
+        if (fabricInfo == null || imageInfo == null) {
+            return;
+        }
+
         long numSwitches = fabricInfo.getNumSwitches();
         long numHFIs = fabricInfo.getNumHFIs();
         long numSwitchPorts = imageInfo.getNumSwitchPorts();
         long numHFIPorts = imageInfo.getNumHFIPorts();
-        long numISLs =
-                fabricInfo.getNumInternalISLs()
-                        + fabricInfo.getNumExternalISLs()
-                        + fabricInfo.getNumDegradedISLs();
-        long numHFILinks =
-                fabricInfo.getNumInternalHFILinks()
-                        + fabricInfo.getNumExternalHFILinks()
-                        + fabricInfo.getNumDegradedHFILinks();
-        long[] newTotal =
-                new long[] { numSwitches, numHFIs, numSwitchPorts, numHFIPorts,
-                        numISLs, numHFILinks };
+        long numISLs = fabricInfo.getNumInternalISLs()
+                + fabricInfo.getNumExternalISLs()
+                + fabricInfo.getNumDegradedISLs();
+        long numHFILinks = fabricInfo.getNumInternalHFILinks()
+                + fabricInfo.getNumExternalHFILinks()
+                + fabricInfo.getNumDegradedHFILinks();
+        long[] newTotal = new long[] { numSwitches, numHFIs, numSwitchPorts,
+                numHFIPorts, numISLs, numHFILinks };
         boolean baselineChanged = false;
         for (int i = 0; i < baseline.length; i++) {
             if (newTotal[i] > baseline[i]) {
@@ -756,9 +645,11 @@ public class EventCalculator implements IEventListener<EventDescription>,
         if (baseline[0] == 0) {
             newWeight = 0;
         } else {
-            newWeight =
-                    (int) ((setting == -1) ? ((baseline[2] / baseline[0]) + 1)
-                            : setting); // numSwitchPorts / numSwitches + 1
+            newWeight = (int) ((setting == -1)
+                    ? ((baseline[2] / baseline[0]) + 1) : setting); // numSwitchPorts
+                                                                    // /
+                                                                    // numSwitches
+                                                                    // + 1
         }
         weights.put(NUM_SWITCHES, newWeight);
         totals.put(NUM_SWITCHES, baseline[0]);
@@ -769,9 +660,10 @@ public class EventCalculator implements IEventListener<EventDescription>,
         if (baseline[1] == 0) {
             newWeight = 0;
         } else {
-            newWeight =
-                    (int) ((setting == -1) ? ((baseline[3] / baseline[1]) + 1)
-                            : setting); // numHFIPorts / numHFIs + 1
+            newWeight = (int) ((setting == -1)
+                    ? ((baseline[3] / baseline[1]) + 1) : setting); // numHFIPorts
+                                                                    // / numHFIs
+                                                                    // + 1
         }
         weights.put(NUM_HFIS, newWeight);
         totals.put(NUM_HFIS, baseline[1]);

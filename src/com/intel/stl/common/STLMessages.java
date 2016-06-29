@@ -1,9 +1,9 @@
 /**
  * Copyright (c) 2015, Intel Corporation
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  *     * Redistributions of source code must retain the above copyright notice,
  *       this list of conditions and the following disclaimer.
  *     * Redistributions in binary form must reproduce the above copyright
@@ -12,7 +12,7 @@
  *     * Neither the name of Intel Corporation nor the names of its contributors
  *       may be used to endorse or promote products derived from this software
  *       without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -24,62 +24,6 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-/*******************************************************************************
- *                       I N T E L   C O R P O R A T I O N
- * 
- *  Functional Group: Fabric Viewer Application
- * 
- *  File Name: STLMessages.java
- * 
- *  Archive Source: $Source$
- * 
- *  Archive Log: $Log$
- *  Archive Log: Revision 1.51  2015/11/18 23:51:33  rjtierne
- *  Archive Log: PR 130965 - ESM support on Log Viewer
- *  Archive Log: - Added STL50014_ESM_COMMAND_NOT_FOUND and STL50015_SESSION_CONNECTION_FAILURE
- *  Archive Log:
- *  Archive Log: Revision 1.50  2015/09/21 20:46:56  jijunwan
- *  Archive Log: PR 130542 - Confusion error message on fetching conf file
- *  Archive Log: - improved SftpException to include file path information
- *  Archive Log:
- *  Archive Log: Revision 1.49  2015/08/17 18:49:06  jijunwan
- *  Archive Log: PR 129983 - Need to change file header's copyright text to BSD license txt
- *  Archive Log: - change backend files' headers
- *  Archive Log:
- *  Archive Log: Revision 1.48  2015/08/17 14:22:53  rjtierne
- *  Archive Log: PR 128979 - SM Log display
- *  Archive Log: This is the first version of the Log Viewer which displays select lines of text from the remote SM log file. Updates include searchable raw text from file, user-defined number of lines to display, refreshing end of file, and paging. This PR is now closed and further updates can be found by referencing PR 130011 - "Enhance SM Log Viewer to include Standard and Advanced requirements".
- *  Archive Log:
- *  Archive Log: Revision 1.47  2015/08/10 17:04:42  robertja
- *  Archive Log: PR128974 - Email notification functionality.
- *  Archive Log:
- *  Archive Log: Revision 1.46  2015/07/31 21:04:51  fernande
- *  Archive Log: PR 129631 - Ports table sometimes not getting performance related data. Translating a RequestCancelledException into a special PerformanceRequestCancelledException for UI consumption.
- *  Archive Log:
- *  Archive Log: Revision 1.45  2015/07/02 14:43:00  robertja
- *  Archive Log: PR 128703 - Messages for new failover states.
- *  Archive Log:
- *  Archive Log: Revision 1.44  2015/07/01 18:19:52  robertja
- *  Archive Log: PR128703 - Add messages for new failover states.
- *  Archive Log:
- *  Archive Log: Revision 1.43  2015/06/18 20:55:51  fernande
- *  Archive Log: PR 129034 Support secure FE. Improvements to framework in SMFailoverManager
- *  Archive Log:
- *  Archive Log: Revision 1.42  2015/06/11 17:47:11  fernande
- *  Archive Log: PR 129034 Support secure FE. Added message for SMRecordBean record not found condition.
- *  Archive Log:
- *  Archive Log: Revision 1.41  2015/06/10 19:36:45  jijunwan
- *  Archive Log: PR 129153 - Some old files have no proper file header. They cannot record change logs.
- *  Archive Log: - wrote a tool to check and insert file header
- *  Archive Log: - applied on backend files
- *  Archive Log:
- * 
- *  Overview:
- * 
- *  @author: Fernando Fernandez
- * 
- ******************************************************************************/
-
 package com.intel.stl.common;
 
 import java.text.MessageFormat;
@@ -99,9 +43,7 @@ import com.intel.stl.api.IMessage;
  * component STL30001-STL30999: Messages related to the Database Manager
  * component Add ranges as more components are added. Don't forget to add the
  * actual message in the messages.properties file.
- * 
- * @author Fernando Fernandez
- * 
+ *
  */
 public enum STLMessages implements IMessage {
 
@@ -130,7 +72,9 @@ public enum STLMessages implements IMessage {
     STL10023_ERROR_READING_RESOURCE(10023),
     STL10024_NO_COMPONENT_FOUND(10024),
     STL10025_STARTING_COMPONENT(10025),
-    STL10026_FE_ADAPTER(10026),
+    STL10026_STOPPING_COMPONENT(10026),
+    STL10027_FE_ADAPTER(10027),
+    STL10028_COMPACTING_DATABASE(10028),
 
     STL10100_ERRORS_INIT_APP(10100),
     STL10101_ONE_ERROR_INIT_APP(10101),
@@ -331,11 +275,11 @@ public enum STLMessages implements IMessage {
 
     private static final String STL_MESSAGES_ENCODING = "UTF-8";
 
-    private static final Control STL_CONTROL = new UTFControl(
-            STL_MESSAGES_ENCODING);
+    private static final Control STL_CONTROL =
+            new UTFControl(STL_MESSAGES_ENCODING);
 
-    private static final ResourceBundle STL_MESSAGES = ResourceBundle
-            .getBundle(STL_MESSAGES_BUNDLE, STL_CONTROL);
+    private static final ResourceBundle STL_MESSAGES =
+            ResourceBundle.getBundle(STL_MESSAGES_BUNDLE, STL_CONTROL);
 
     private static Logger log = LoggerFactory.getLogger(STLMessages.class);
 

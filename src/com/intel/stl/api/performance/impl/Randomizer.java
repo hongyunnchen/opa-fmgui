@@ -1,9 +1,9 @@
 /**
  * Copyright (c) 2015, Intel Corporation
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  *     * Redistributions of source code must retain the above copyright notice,
  *       this list of conditions and the following disclaimer.
  *     * Redistributions in binary form must reproduce the above copyright
@@ -12,7 +12,7 @@
  *     * Neither the name of Intel Corporation nor the names of its contributors
  *       may be used to endorse or promote products derived from this software
  *       without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -24,55 +24,6 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-/*******************************************************************************
- *                       I N T E L   C O R P O R A T I O N
- *	
- *  Functional Group: Fabric Viewer Application
- *
- *  File Name: Randomizer.java
- *
- *  Archive Source: $Source$
- *
- *  Archive Log:    $Log$
- *  Archive Log:    Revision 1.9  2015/08/17 18:49:03  jijunwan
- *  Archive Log:    PR 129983 - Need to change file header's copyright text to BSD license txt
- *  Archive Log:    - change backend files' headers
- *  Archive Log:
- *  Archive Log:    Revision 1.8  2015/07/02 20:23:21  fernande
- *  Archive Log:    PR 129447 - Database size increases a lot over a short period of time. Moving Blobs to the database; arrays are now being saved to the database as collection tables.
- *  Archive Log:
- *  Archive Log:    Revision 1.7  2015/06/25 21:04:03  jijunwan
- *  Archive Log:    Bug 126755 - Pin Board functionality is not working in FV
- *  Archive Log:    - improvement on data randomization that ensure an attribute at the same time point get the same data where
- *  Archive Log:
- *  Archive Log:    Revision 1.6  2015/04/09 03:29:24  jijunwan
- *  Archive Log:    updated to match FM 390
- *  Archive Log:
- *  Archive Log:    Revision 1.5  2015/02/04 21:38:00  jijunwan
- *  Archive Log:    impoved to handle unsigned values
- *  Archive Log:     - we promote to a "bigger" data type
- *  Archive Log:     - port numbers are now short
- *  Archive Log:
- *  Archive Log:    Revision 1.4  2015/01/11 21:02:42  jijunwan
- *  Archive Log:    minor change - reduced randomization range on image info
- *  Archive Log:
- *  Archive Log:    Revision 1.3  2014/08/15 21:38:07  jijunwan
- *  Archive Log:    1) implemented the new GroupConfig and FocusPorts queries that use separated req and rsp data structure
- *  Archive Log:    2) adapter our drive and db code to the new data structure
- *  Archive Log:
- *  Archive Log:    Revision 1.2  2014/07/17 18:54:23  jijunwan
- *  Archive Log:    minor improvement on random performance generation
- *  Archive Log:
- *  Archive Log:    Revision 1.1  2014/07/16 21:36:56  jijunwan
- *  Archive Log:    added randomizer to fully support all error counters
- *  Archive Log:
- *
- *  Overview: 
- *
- *  @author: jijunwan
- *
- ******************************************************************************/
 
 package com.intel.stl.api.performance.impl;
 
@@ -104,6 +55,10 @@ public class Randomizer implements IRandomable {
 
     private long allPacketRate;
 
+    private int allPmaFailedPorts;
+
+    private int allTopoFailedPorts;
+
     private long allCongestion;
 
     private long allSignalIntegrity;
@@ -117,6 +72,10 @@ public class Randomizer implements IRandomable {
     private long bandwidth;
 
     private long packetRate;
+
+    private int pmaFailedPorts;
+
+    private int topoFailedPorts;
 
     private long congestion;
 
@@ -135,7 +94,7 @@ public class Randomizer implements IRandomable {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.intel.stl.api.IRandomable#setSeed(long)
      */
     @Override
@@ -145,7 +104,7 @@ public class Randomizer implements IRandomable {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.intel.stl.api.IRandomable#setRandom(boolean)
      */
     @Override
@@ -212,48 +171,59 @@ public class Randomizer implements IRandomable {
 
         UtilStatsBean internalUtil = info.getInternalUtilStats();
         if (isAll) {
-            bandwidth =
-                    Math.max(bandwidth,
-                            internalUtil.getTotalMBps() + random.nextInt(1000));
+            bandwidth = Math.max(bandwidth,
+                    internalUtil.getTotalMBps() + random.nextInt(1000));
             allBandwidth = bandwidth;
-            packetRate =
-                    Math.max(packetRate,
-                            internalUtil.getTotalKPps() + random.nextInt(1000));
+            packetRate = Math.max(packetRate,
+                    internalUtil.getTotalKPps() + random.nextInt(1000));
             allPacketRate = packetRate;
+            if (Math.random() > 0.8) {
+                allPmaFailedPorts = pmaFailedPorts = Math.max(pmaFailedPorts,
+                        internalUtil.getPmaFailedPorts() + random.nextInt(10));
+                allTopoFailedPorts = topoFailedPorts = Math.max(topoFailedPorts,
+                        internalUtil.getTopoFailedPorts() + random.nextInt(10));
+            } else {
+                allPmaFailedPorts = pmaFailedPorts = 0;
+                allTopoFailedPorts = topoFailedPorts = 0;
+            }
         } else {
             bandwidth = (long) (allBandwidth * random.nextDouble());
             packetRate = (long) (allPacketRate * random.nextDouble());
+            pmaFailedPorts = (int) (allPmaFailedPorts * random.nextDouble());
+            topoFailedPorts = (int) (allTopoFailedPorts * random.nextDouble());
         }
         internalUtil.setTotalMBps(bandwidth);
         internalUtil.setTotalKPps(packetRate);
+        internalUtil.setPmaFailedPorts(pmaFailedPorts);
+        internalUtil.setTopoFailedPorts(topoFailedPorts);
 
         randomHistogram(internalUtil.getBwBucketsAsArray());
 
         ErrStatBean errStat = info.getInternalErrors();
         if (isAll) {
-            congestion =
-                    Math.max(congestion, errStat.getErrorMaximums()
-                            .getCongestionErrors() + random.nextInt(99));
+            congestion = Math.max(congestion,
+                    errStat.getErrorMaximums().getCongestionErrors()
+                            + random.nextInt(99));
             allCongestion = congestion;
 
-            signalIntegrity =
-                    Math.max(signalIntegrity, errStat.getErrorMaximums()
-                            .getIntegrityErrors() + random.nextInt(99));
+            signalIntegrity = Math.max(signalIntegrity,
+                    errStat.getErrorMaximums().getIntegrityErrors()
+                            + random.nextInt(99));
             allSignalIntegrity = signalIntegrity;
 
-            smaCongestion =
-                    Math.max(smaCongestion, errStat.getErrorMaximums()
-                            .getSmaCongestionErrors() + random.nextInt(99));
+            smaCongestion = Math.max(smaCongestion,
+                    errStat.getErrorMaximums().getSmaCongestionErrors()
+                            + random.nextInt(99));
             allSmaCongestion = smaCongestion;
 
-            security =
-                    Math.max(security, errStat.getErrorMaximums()
-                            .getSecurityErrors() + random.nextInt(99));
+            security = Math.max(security,
+                    errStat.getErrorMaximums().getSecurityErrors()
+                            + random.nextInt(99));
             allSecurity = security;
 
-            routing =
-                    Math.max(routing, errStat.getErrorMaximums()
-                            .getRoutingErrors() + random.nextInt(99));
+            routing = Math.max(routing,
+                    errStat.getErrorMaximums().getRoutingErrors()
+                            + random.nextInt(99));
             allRouting = routing;
         } else {
             congestion = (int) (allCongestion * random.nextDouble());
@@ -320,33 +290,34 @@ public class Randomizer implements IRandomable {
         long packetRate = internalUtil.getTotalKPps() + random.nextInt(1000);
         internalUtil.setTotalMBps(bandwidth);
         internalUtil.setTotalKPps(packetRate);
+        if (Math.random() > 0.8) {
+            internalUtil.setPmaFailedPorts(
+                    internalUtil.getPmaFailedPorts() + random.nextInt(10));
+            internalUtil.setTopoFailedPorts(
+                    internalUtil.getTopoFailedPorts() + random.nextInt(10));
+        }
 
         randomHistogram(internalUtil.getBwBucketsAsArray());
 
         ErrStatBean errStat = info.getInternalErrors();
-        long value =
-                errStat.getErrorMaximums().getCongestionErrors()
-                        + random.nextInt(99);
+        long value = errStat.getErrorMaximums().getCongestionErrors()
+                + random.nextInt(99);
         errStat.getErrorMaximums().setCongestionErrors(value);
 
-        value =
-                errStat.getErrorMaximums().getIntegrityErrors()
-                        + random.nextInt(99);
+        value = errStat.getErrorMaximums().getIntegrityErrors()
+                + random.nextInt(99);
         errStat.getErrorMaximums().setIntegrityErrors(value);
 
-        value =
-                errStat.getErrorMaximums().getSmaCongestionErrors()
-                        + random.nextInt(99);
+        value = errStat.getErrorMaximums().getSmaCongestionErrors()
+                + random.nextInt(99);
         errStat.getErrorMaximums().setSmaCongestionErrors(value);
 
-        value =
-                errStat.getErrorMaximums().getSecurityErrors()
-                        + random.nextInt(99);
+        value = errStat.getErrorMaximums().getSecurityErrors()
+                + random.nextInt(99);
         errStat.getErrorMaximums().setSecurityErrors(value);
 
-        value =
-                errStat.getErrorMaximums().getRoutingErrors()
-                        + random.nextInt(99);
+        value = errStat.getErrorMaximums().getRoutingErrors()
+                + random.nextInt(99);
         errStat.getErrorMaximums().setRoutingErrors(value);
 
         ErrBucketBean[] ports = errStat.getPorts();
@@ -379,9 +350,8 @@ public class Randomizer implements IRandomable {
     protected void randomHistogram(int[] counts) {
         int delta = 0;
         for (int i = 0; i < counts.length - 1; i++) {
-            double tmp =
-                    (int) (counts[i] * random.nextDouble() - delta
-                            * random.nextDouble());
+            double tmp = (int) (counts[i] * random.nextDouble()
+                    - delta * random.nextDouble());
             counts[i] -= (int) tmp;
             delta += (int) tmp;
         }
@@ -391,9 +361,8 @@ public class Randomizer implements IRandomable {
     protected void randomHistogram(Integer[] counts) {
         int delta = 0;
         for (int i = 0; i < counts.length - 1; i++) {
-            double tmp =
-                    (int) (counts[i] * random.nextDouble() - delta
-                            * random.nextDouble());
+            double tmp = (int) (counts[i] * random.nextDouble()
+                    - delta * random.nextDouble());
             counts[i] -= (int) tmp;
             delta += (int) tmp;
         }
@@ -412,6 +381,11 @@ public class Randomizer implements IRandomable {
         Arrays.sort(values);
         for (int i = 0; i < values.length; i++) {
             focusPorts.get(i).setValue(values[values.length - 1 - i]);
+            int flag = random.nextInt(10);
+            if (flag > 3) {
+                flag = 0;
+            }
+            focusPorts.get(i).setLocalFlags((byte) flag);
         }
     }
 
@@ -427,6 +401,11 @@ public class Randomizer implements IRandomable {
         Arrays.sort(values);
         for (int i = 0; i < values.length; i++) {
             focusPort.get(i).setValue(values[values.length - 1 - i]);
+            int flag = random.nextInt(10);
+            if (flag > 3) {
+                flag = 0;
+            }
+            focusPort.get(i).setLocalFlags((byte) flag);
         }
     }
 
@@ -436,10 +415,8 @@ public class Randomizer implements IRandomable {
         Point id = new Point(counter.getNodeLid(), counter.getPortNumber());
         Long[] last = counters.get(id);
         if (last == null) {
-            counters.put(
-                    id,
-                    new Long[] { counter.getPortRcvData(),
-                            counter.getPortXmitData() });
+            counters.put(id, new Long[] { counter.getPortRcvData(),
+                    counter.getPortXmitData() });
             return;
         }
         last[0] = getRandomTraffic(last[0]);

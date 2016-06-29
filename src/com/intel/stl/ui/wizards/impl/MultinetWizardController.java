@@ -1,9 +1,9 @@
 /**
  * Copyright (c) 2015, Intel Corporation
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  *     * Redistributions of source code must retain the above copyright notice,
  *       this list of conditions and the following disclaimer.
  *     * Redistributions in binary form must reproduce the above copyright
@@ -12,7 +12,7 @@
  *     * Neither the name of Intel Corporation nor the names of its contributors
  *       may be used to endorse or promote products derived from this software
  *       without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -25,157 +25,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*******************************************************************************
- *                       I N T E L   C O R P O R A T I O N
- *	
- *  Functional Group: Fabric Viewer Application
- *
- *  File Name: MultinetWizardController.java
- *
- *  Archive Source: $Source$
- *
- *  Archive Log:    $Log$
- *  Archive Log:    Revision 1.32  2015/12/09 16:12:36  jijunwan
- *  Archive Log:    PR 131944 - If "# Worst Nodes" is <10 or >100, there is a Entry Validation warning for the Refresh Rate
- *  Archive Log:
- *  Archive Log:    - improved ConfigTaskStatus to hold errors
- *  Archive Log:    - changed  ConfigureSubnetTask to fill in errors into ConfigTaskStatus
- *  Archive Log:
- *  Archive Log:    Revision 1.31  2015/11/09 20:42:17  fernande
- *  Archive Log:    PR130231 - Cannot delete subnet from Wizard if subnet name is "Unknown Subnet". Some refactoring to decouple tasks from main wizard controller
- *  Archive Log:
- *  Archive Log:    Revision 1.30  2015/10/29 13:52:43  robertja
- *  Archive Log:    PR 131014 Clean up debug.
- *  Archive Log:
- *  Archive Log:    Revision 1.29  2015/10/29 12:11:42  robertja
- *  Archive Log:    PR 131014 MailNotifier is now updated if user changes events or recipients in wizard after start-up.
- *  Archive Log:
- *  Archive Log:    Revision 1.28  2015/08/17 18:54:10  jijunwan
- *  Archive Log:    PR 129983 - Need to change file header's copyright text to BSD license txt
- *  Archive Log:    - changed frontend files' headers
- *  Archive Log:
- *  Archive Log:    Revision 1.27  2015/08/10 17:55:46  robertja
- *  Archive Log:    PR 128974 - Email notification functionality.
- *  Archive Log:
- *  Archive Log:    Revision 1.26  2015/07/17 20:50:32  jijunwan
- *  Archive Log:    PR 129594 - Apply new input verification on setup wizard
- *  Archive Log:    - forbid switching tabs or apply other actions when there is invalid edit
- *  Archive Log:
- *  Archive Log:    Revision 1.25  2015/06/10 19:25:58  rjtierne
- *  Archive Log:    PR 128975 - Can not setup application log
- *  Archive Log:    Removed references to the logger
- *  Archive Log:
- *  Archive Log:    Revision 1.24  2015/05/22 16:21:21  jypak
- *  Archive Log:    PR 128869 - Add online help on setup wizard.
- *  Archive Log:    Added help button to MultinetWizardView. The contents will be update when it's available.
- *  Archive Log:
- *  Archive Log:    Revision 1.23  2015/05/11 12:35:46  rjtierne
- *  Archive Log:    PR 128585 - Fix errors found by Klocwork and FindBugs
- *  Archive Log:    In onTab(), added null pointer protection to task, and display error if it's null
- *  Archive Log:
- *  Archive Log:    Revision 1.22  2015/05/05 21:49:42  rjtierne
- *  Archive Log:    Changed onTab() to accept the tab name which is used to select the
- *  Archive Log:    corresponding task
- *  Archive Log:
- *  Archive Log:    Revision 1.21  2015/05/05 20:01:15  jijunwan
- *  Archive Log:    fixed typo
- *  Archive Log:
- *  Archive Log:    Revision 1.20  2015/05/01 22:31:52  jijunwan
- *  Archive Log:    changed back to use getMessage for our own exceptions
- *  Archive Log:
- *  Archive Log:    Revision 1.19  2015/05/01 21:29:16  jijunwan
- *  Archive Log:    changed to directly show exception(s)
- *  Archive Log:
- *  Archive Log:    Revision 1.18  2015/04/28 22:09:03  jijunwan
- *  Archive Log:    removed title argument from #showErrorMessage
- *  Archive Log:
- *  Archive Log:    Revision 1.17  2015/04/27 21:47:39  rjtierne
- *  Archive Log:    - PR 128358 - Fabric Viewer not Working:
- *  Archive Log:    In method onRun() catch IllegalArgumentException when calling getCurrentFE() and display error
- *  Archive Log:
- *  Archive Log:    Revision 1.16  2015/04/21 21:17:26  rjtierne
- *  Archive Log:    Added setDirty() to enable/disable Apply and Reset button depending on whether any
- *  Archive Log:    of the wizard views have changed
- *  Archive Log:
- *  Archive Log:    Revision 1.15  2015/04/02 13:33:04  jypak
- *  Archive Log:    Klockwork: Front End Critical Without Unit Test. 47 open issues fixed. All of them are for null checks.
- *  Archive Log:
- *  Archive Log:    Revision 1.14  2015/04/01 17:04:17  rjtierne
- *  Archive Log:    Enable/disable welcome Ok button on view before and after the
- *  Archive Log:    configuration thread is executed.  Also updated models at the start
- *  Archive Log:    of configuration thread to fix connection bug
- *  Archive Log:
- *  Archive Log:    Revision 1.13  2015/03/31 17:49:10  rjtierne
- *  Archive Log:    - Added cancelConfiguration() to cancel configuration thread from view
- *  Archive Log:    - Added some new exception handling
- *  Archive Log:    - Implemented getHostIp() and isHostConnectable()
- *  Archive Log:    - Background thread now calling isHostConnectable() instead of isHostReachable()
- *  Archive Log:
- *  Archive Log:    Revision 1.12  2015/03/30 15:11:14  rjtierne
- *  Archive Log:    - Added method showStep() to show a task without initializing it
- *  Archive Log:    - Corrected EventWizard table update; now calling showStep() instead of selectStep() in onTab()
- *  Archive Log:    - Added new tryToConnect() to take a subnet so individual backup hosts can be tested
- *  Archive Log:
- *  Archive Log:    Revision 1.11  2015/03/25 17:56:17  rjtierne
- *  Archive Log:    Added maps to keep track of secure certificate files for each subnet
- *  Archive Log:    and clear key factories at appropriate times
- *  Archive Log:
- *  Archive Log:    Revision 1.10  2015/03/20 21:05:59  rjtierne
- *  Archive Log:    - Implemented onTab() to update the model and select the current task to fix problem
- *  Archive Log:    with tab selection during subnet creation
- *  Archive Log:    - Only enable the "Run" button when the subnet is fully configured
- *  Archive Log:
- *  Archive Log:    Revision 1.9  2015/03/16 17:46:00  fernande
- *  Archive Log:    STLConnection lifecycle support. STLConnections can now be reused and temporary connections are not cached and their socket is closed after they are logically closed. Changed SubnetDescription in support of failover to have a list of HostInfo objects instead of just info for one host.
- *  Archive Log:
- *  Archive Log:    Revision 1.8  2015/03/11 15:24:27  rjtierne
- *  Archive Log:    Multinet Wizard: Added new logic to save the subnet and update the
- *  Archive Log:    database on a background task with updates to the Welcome panel. Add new inner class
- *  Archive Log:    ConfigureSubnetTask to perform final host reachability, entry validation, and database
- *  Archive Log:    update tasks and update the welcome window.
- *  Archive Log:    updateDatabase() now throws exception so the welcome window is updated with failed status
- *  Archive Log:
- *  Archive Log:    Revision 1.7  2015/02/27 15:34:32  rjtierne
- *  Archive Log:    Fixed preferences model/view sync issue when creating new subnet
- *  Archive Log:
- *  Archive Log:    Revision 1.6  2015/02/26 22:51:13  rjtierne
- *  Archive Log:    - Added method isHostReachable() to test for the existence of a host
- *  Archive Log:    - Added new functionality to setMultinetTasks() so the first tab (Subnet)
- *  Archive Log:    will always appear when the wizard is first opened
- *  Archive Log:    - Simplified method updateDatabase()
- *  Archive Log:    - Removed outdated feature to display error when switching between
- *  Archive Log:    sub-wizards without saving
- *  Archive Log:    - Added change listener to tabbed pane to update the Next button label
- *  Archive Log:    depending on which tab is selected
- *  Archive Log:    - When a subnet button is clicked, update the subnet in the controller
- *  Archive Log:    to correct model synchronization issues
- *  Archive Log:    - Handle subnet name changes in onNext()
- *  Archive Log:    - Save changes if Run is selected before Apply
- *  Archive Log:
- *  Archive Log:    Revision 1.5  2015/02/26 16:20:44  fernande
- *  Archive Log:    Changed showSetupWizard so that the wizard can show its view centered on the calling frame.
- *  Archive Log:
- *  Archive Log:    Revision 1.4  2015/02/25 17:59:09  rjtierne
- *  Archive Log:    - Using new WizardType enumeration to specify model to update to improve efficiency
- *  Archive Log:    - Passing subnet to the wizard view so the current subnet is highlighted
- *  Archive Log:    - Implemented subnet deletion
- *  Archive Log:
- *  Archive Log:    Revision 1.3  2015/02/23 15:06:00  rjtierne
- *  Archive Log:    Added new method getNewWizardStatus() so sub-wizards can tell
- *  Archive Log:    if a new wizard configuration is in progress
- *  Archive Log:
- *  Archive Log:    Revision 1.2  2015/02/20 21:13:23  rjtierne
- *  Archive Log:    Multinet Wizard: New instalment of the multinet wizard targeting synchronization of all sub-wizard data with selected subnet
- *  Archive Log:
- *  Archive Log:    Revision 1.1  2015/02/13 21:30:27  rjtierne
- *  Archive Log:    Multinet Wizard: Initial Version
- *  Archive Log:
- *
- *  Overview: Top level Multinet Setup Wizard
- *
- *  @author: rjtierne
- *
- ******************************************************************************/
 package com.intel.stl.ui.wizards.impl;
 
 import static com.intel.stl.ui.wizards.view.WizardViewType.WELCOME;
@@ -227,8 +76,11 @@ import com.intel.stl.ui.wizards.view.event.EventWizardView;
 import com.intel.stl.ui.wizards.view.preferences.PreferencesWizardView;
 import com.intel.stl.ui.wizards.view.subnet.SubnetWizardView;
 
-public class MultinetWizardController implements IMultinetWizardListener,
-        IModelChangeListener<IWizardModel> {
+/**
+ * Top level Multinet Setup Wizard
+ */
+public class MultinetWizardController
+        implements IMultinetWizardListener, IModelChangeListener<IWizardModel> {
 
     private final MultinetWizardView view;
 
@@ -268,10 +120,10 @@ public class MultinetWizardController implements IMultinetWizardListener,
     private ConfigureSubnetTask configTask;
 
     /**
-     * 
+     *
      * Description: Private constructor for the singleton
      * MultinetWizardController
-     * 
+     *
      * @param view
      *            view for the setup wizard
      */
@@ -301,18 +153,17 @@ public class MultinetWizardController implements IMultinetWizardListener,
         if (instance == null) {
             MultinetWizardView wizardView = new MultinetWizardView(owner);
             MultinetWizardModel wizardModel = new MultinetWizardModel();
-            instance =
-                    new MultinetWizardController(wizardView, wizardModel,
-                            subnetMgr);
+            instance = new MultinetWizardController(wizardView, wizardModel,
+                    subnetMgr);
         }
 
         return instance;
     }
 
     /**
-     * 
+     *
      * <i>Description: Builds a list of IConfigTask controllers</i>
-     * 
+     *
      * @return tasks - list of IConfigTask
      */
     protected List<IMultinetWizardTask> getTasks(ISubnetManager subnetMgr) {
@@ -400,7 +251,7 @@ public class MultinetWizardController implements IMultinetWizardListener,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.intel.stl.ui.wizards.impl.IWizardListener#onPrevious()
      */
     @Override
@@ -427,7 +278,7 @@ public class MultinetWizardController implements IMultinetWizardListener,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.intel.stl.ui.wizards.impl.IWizardListener#onNext()
      */
     @Override
@@ -462,7 +313,7 @@ public class MultinetWizardController implements IMultinetWizardListener,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.intel.stl.ui.wizards.impl.IMultinetWizardListener#onTab()
      */
     @Override
@@ -481,7 +332,7 @@ public class MultinetWizardController implements IMultinetWizardListener,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.intel.stl.ui.wizards.impl.IMultinetWizardListener#onFinish()
      */
     @Override
@@ -494,7 +345,7 @@ public class MultinetWizardController implements IMultinetWizardListener,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.intel.stl.ui.wizards.impl.IMultinetWizardListener#cancelConfiguration
      * ()
@@ -508,7 +359,7 @@ public class MultinetWizardController implements IMultinetWizardListener,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.intel.stl.ui.wizards.impl.IMultinetWizardListener#validateEntry()
      */
@@ -548,7 +399,7 @@ public class MultinetWizardController implements IMultinetWizardListener,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.intel.stl.ui.wizards.impl.IMultinetWizardListener#isValidEntry()
      */
     @Override
@@ -559,7 +410,7 @@ public class MultinetWizardController implements IMultinetWizardListener,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.intel.stl.ui.wizards.impl.IMultinetWizardListener#setWorkerStatus()
      */
@@ -571,7 +422,7 @@ public class MultinetWizardController implements IMultinetWizardListener,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.intel.stl.ui.wizards.impl.IMultinetWizardListener#checkHost()
      */
     @Override
@@ -582,7 +433,7 @@ public class MultinetWizardController implements IMultinetWizardListener,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.intel.stl.ui.wizards.impl.IMultinetWizardListener#saveConfiguration()
      */
@@ -594,7 +445,7 @@ public class MultinetWizardController implements IMultinetWizardListener,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.intel.stl.ui.wizards.impl.IWizardListener#onApply()
      */
     @Override
@@ -629,11 +480,6 @@ public class MultinetWizardController implements IMultinetWizardListener,
                     wizardModel.getPreferencesModel();
             userSettings.setPreferences(preferencesModel.getPreferencesMap());
 
-            // /////////////////////////DEBUG//////////////////////////
-            // List<String> recipients = new ArrayList<String>();
-            // recipients.add("robert.amato@intel.com");
-            // userSettings.setMailRecipients(recipients);
-            // // ////////////////////////////////////////////////////////
             // Save the user settings to the database
             subnetMgr.saveUserSettings(currentSubnetName, userSettings);
 
@@ -653,7 +499,7 @@ public class MultinetWizardController implements IMultinetWizardListener,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.intel.stl.ui.wizards.impl.IWizardListener#onClose()
      */
     @Override
@@ -665,7 +511,7 @@ public class MultinetWizardController implements IMultinetWizardListener,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.intel.stl.ui.wizards.impl.IWizardListener#selectStep(java.lang.String
      * )
@@ -693,7 +539,7 @@ public class MultinetWizardController implements IMultinetWizardListener,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.intel.stl.ui.wizards.impl.IWizardListener#showStep(java.lang.String)
      */
@@ -717,7 +563,7 @@ public class MultinetWizardController implements IMultinetWizardListener,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.intel.stl.ui.wizards.impl.IWizardListener#showView(boolean)
      */
     @Override
@@ -766,7 +612,7 @@ public class MultinetWizardController implements IMultinetWizardListener,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.intel.stl.ui.wizards.impl.IMultinetWizardListener#getView()
      */
     @Override
@@ -777,7 +623,7 @@ public class MultinetWizardController implements IMultinetWizardListener,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.intel.stl.ui.wizards.impl.IWizardListener#closeStatusPanels()
      */
     @Override
@@ -796,7 +642,7 @@ public class MultinetWizardController implements IMultinetWizardListener,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.intel.stl.ui.wizards.impl.IWizardListener#isFirstRun()
      */
     @Override
@@ -809,7 +655,7 @@ public class MultinetWizardController implements IMultinetWizardListener,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.intel.stl.ui.wizards.impl.IMultinetWizardListener#onRun()
      */
     @Override
@@ -820,9 +666,8 @@ public class MultinetWizardController implements IMultinetWizardListener,
         String subnetName = wizardModel.getSubnetModel().getSubnet().getName();
 
         try {
-            hostName =
-                    wizardModel.getSubnetModel().getSubnet().getCurrentFE()
-                            .getHost();
+            hostName = wizardModel.getSubnetModel().getSubnet().getCurrentFE()
+                    .getHost();
         } catch (IllegalArgumentException e) {
             Util.showError(view, e);
         }
@@ -838,8 +683,8 @@ public class MultinetWizardController implements IMultinetWizardListener,
             }
         } else {
             view.showErrorMessage(STLConstants.K0030_ERROR.getValue(),
-                    UILabels.STL50050_CONNECTION_FAIL.getDescription(
-                            subnetName, hostName));
+                    UILabels.STL50050_CONNECTION_FAIL.getDescription(subnetName,
+                            hostName));
         }
 
         return result;
@@ -847,7 +692,7 @@ public class MultinetWizardController implements IMultinetWizardListener,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.intel.stl.ui.wizards.impl.IWizardListener#onReset()
      */
     @Override
@@ -860,7 +705,7 @@ public class MultinetWizardController implements IMultinetWizardListener,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.intel.stl.ui.wizards.impl.IWizardListener#onNewSubnet()
      */
     @Override
@@ -868,11 +713,10 @@ public class MultinetWizardController implements IMultinetWizardListener,
         // Add a new subnet, display new empty tabs and subnet button
         // This subnet will be updated when the subnet controller updates
         // the model with a subnet from the subnetMgr
-        this.subnet =
-                new SubnetDescription(
-                        STLConstants.K3018_UNKNOWN_SUBNET.getValue(),
-                        STLConstants.K3018_UNKNOWN_SUBNET.getValue(),
-                        SubnetModel.DEFAULT_PORT_NUM);
+        this.subnet = new SubnetDescription(
+                STLConstants.K3018_UNKNOWN_SUBNET.getValue(),
+                STLConstants.K3018_UNKNOWN_SUBNET.getValue(),
+                SubnetModel.DEFAULT_PORT_NUM);
         view.addSubnet(subnet);
         wizardModel.getSubnetModel().setSubnet(subnet);
         wizardModel.notifyModelChange(WizardType.SUBNET);
@@ -914,7 +758,7 @@ public class MultinetWizardController implements IMultinetWizardListener,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.intel.stl.ui.wizards.impl.IWizardListener#onDelete()
      */
     @Override
@@ -925,7 +769,7 @@ public class MultinetWizardController implements IMultinetWizardListener,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.intel.stl.ui.wizards.impl.IMultinetWizardListener#deleteSubnet(com
      * .intel.stl.api.subnet.SubnetDescription)
@@ -949,7 +793,7 @@ public class MultinetWizardController implements IMultinetWizardListener,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.intel.stl.ui.wizards.impl.IWizardListener#getSubnets()
      */
     @Override
@@ -960,7 +804,7 @@ public class MultinetWizardController implements IMultinetWizardListener,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.intel.stl.ui.wizards.model.IModelChangeListener#onModelChange(com
      * .intel.stl.ui.wizards.model.IWizardModel)
@@ -977,7 +821,7 @@ public class MultinetWizardController implements IMultinetWizardListener,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.intel.stl.ui.wizards.impl.IMultinetWizardListener#getHostIp(java.
      * lang.String)
@@ -999,7 +843,7 @@ public class MultinetWizardController implements IMultinetWizardListener,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.intel.stl.ui.wizards.impl.IMultinetWizardListener#isReachable()
      */
     @Override
@@ -1011,7 +855,7 @@ public class MultinetWizardController implements IMultinetWizardListener,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.intel.stl.ui.wizards.impl.IMultinetWizardListener#isHostConnectable()
      */
@@ -1021,12 +865,13 @@ public class MultinetWizardController implements IMultinetWizardListener,
         boolean result = false;
 
         try {
-            result =
-                    subnetMgr.isHostConnectable(wizardModel.getSubnetModel()
-                            .getSubnet());
+            result = subnetMgr.isHostConnectable(
+                    wizardModel.getSubnetModel().getSubnet());
         } catch (ConfigurationException e) {
-            view.showErrorMessage(STLConstants.K2004_CONNECTION.getValue()
-                    + " " + STLConstants.K0030_ERROR.getValue(), e.getMessage());
+            view.showErrorMessage(
+                    STLConstants.K2004_CONNECTION.getValue() + " "
+                            + STLConstants.K0030_ERROR.getValue(),
+                    e.getMessage());
         }
 
         return result;
@@ -1035,7 +880,7 @@ public class MultinetWizardController implements IMultinetWizardListener,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.intel.stl.ui.wizards.impl.IWizardListener#tryToConnect()
      */
     @Override
@@ -1044,19 +889,20 @@ public class MultinetWizardController implements IMultinetWizardListener,
         boolean result = false;
 
         try {
-            result =
-                    subnetMgr.tryToConnect(wizardModel.getSubnetModel()
-                            .getSubnet());
+            result = subnetMgr
+                    .tryToConnect(wizardModel.getSubnetModel().getSubnet());
         } catch (SubnetConnectionException e) {
-            view.showErrorMessage(STLConstants.K2004_CONNECTION.getValue()
-                    + " " + STLConstants.K0030_ERROR.getValue(), e.getMessage());
+            view.showErrorMessage(
+                    STLConstants.K2004_CONNECTION.getValue() + " "
+                            + STLConstants.K0030_ERROR.getValue(),
+                    e.getMessage());
         }
         return result;
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.intel.stl.ui.wizards.impl.IWizardListener#tryToConnect(com.intel.
      * stl.api.subnet.SubnetDescription)
@@ -1070,15 +916,17 @@ public class MultinetWizardController implements IMultinetWizardListener,
         try {
             result = subnetMgr.tryToConnect(subnet);
         } catch (SubnetConnectionException e) {
-            view.showErrorMessage(STLConstants.K2004_CONNECTION.getValue()
-                    + " " + STLConstants.K0030_ERROR.getValue(), e.getMessage());
+            view.showErrorMessage(
+                    STLConstants.K2004_CONNECTION.getValue() + " "
+                            + STLConstants.K0030_ERROR.getValue(),
+                    e.getMessage());
         }
         return result;
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.intel.stl.ui.wizards.impl.IWizardListener#getPMConfig()
      */
     @Override
@@ -1093,31 +941,32 @@ public class MultinetWizardController implements IMultinetWizardListener,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.intel.stl.ui.wizards.impl.IWizardListener#getTaskScheduler()
      */
     @Override
     public TaskScheduler getTaskScheduler() {
 
-        return subnetMgr.getTaskScheduler(wizardModel.getSubnetModel()
-                .getSubnet());
+        return subnetMgr
+                .getTaskScheduler(wizardModel.getSubnetModel().getSubnet());
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.intel.stl.ui.wizards.impl.IWizardListener#saveUserSettings()
      */
     @Override
     public void saveUserSettings() {
 
-        subnetMgr.saveUserSettings(wizardModel.getSubnetModel().getSubnet()
-                .getName(), userSettings);
+        subnetMgr.saveUserSettings(
+                wizardModel.getSubnetModel().getSubnet().getName(),
+                userSettings);
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.intel.stl.ui.wizards.impl.IWizardListener#getSubnet()
      */
     @Override
@@ -1131,9 +980,8 @@ public class MultinetWizardController implements IMultinetWizardListener,
         boolean result = false;
 
         try {
-            SubnetDescription savedSubnet =
-                    subnetMgr.saveSubnet(wizardModel.getSubnetModel()
-                            .getSubnet());
+            SubnetDescription savedSubnet = subnetMgr
+                    .saveSubnet(wizardModel.getSubnetModel().getSubnet());
 
             // Update the Subnet Model with the saved subnet (containing the
             // ID)
@@ -1142,8 +990,10 @@ public class MultinetWizardController implements IMultinetWizardListener,
             view.resetSubnet(savedSubnet);
             result = true;
         } catch (SubnetDataNotFoundException e) {
-            view.showErrorMessage(STLConstants.K2004_CONNECTION.getValue()
-                    + " " + STLConstants.K0030_ERROR.getValue(), e.getMessage());
+            view.showErrorMessage(
+                    STLConstants.K2004_CONNECTION.getValue() + " "
+                            + STLConstants.K0030_ERROR.getValue(),
+                    e.getMessage());
         }
 
         return result;
@@ -1151,10 +1001,9 @@ public class MultinetWizardController implements IMultinetWizardListener,
 
     /*
      * (non-Javadoc)
-     * 
-     * @see
-     * com.intel.stl.ui.wizards.impl.IMultinetWizardListener#retrieveUserSettings
-     * ()
+     *
+     * @see com.intel.stl.ui.wizards.impl.IMultinetWizardListener#
+     * retrieveUserSettings ()
      */
     @Override
     public UserSettings retrieveUserSettings() {
@@ -1164,9 +1013,9 @@ public class MultinetWizardController implements IMultinetWizardListener,
 
     /*
      * (non-Javadoc)
-     * 
-     * @see
-     * com.intel.stl.ui.wizards.impl.IMultinetWizardListener#retrieveUserSettings
+     *
+     * @see com.intel.stl.ui.wizards.impl.IMultinetWizardListener#
+     * retrieveUserSettings
      */
     @Override
     public UserSettings retrieveUserSettings(SubnetDescription subnet) {
@@ -1186,7 +1035,7 @@ public class MultinetWizardController implements IMultinetWizardListener,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.intel.stl.ui.wizards.impl.IMultinetWizardListener#getCurrentSubnet()
      */
@@ -1197,7 +1046,7 @@ public class MultinetWizardController implements IMultinetWizardListener,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.intel.stl.ui.wizards.impl.IMultinetWizardListener#getCurrentTask()
      */
@@ -1208,7 +1057,7 @@ public class MultinetWizardController implements IMultinetWizardListener,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.intel.stl.ui.wizards.impl.IMultinetWizardListener#setCurrentTask(
      * com.intel.stl.ui.wizards.impl.IWizardTask)
@@ -1245,7 +1094,7 @@ public class MultinetWizardController implements IMultinetWizardListener,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.intel.stl.ui.wizards.impl.IMultinetWizardListener#clearTasks()
      */
     @Override
@@ -1257,7 +1106,7 @@ public class MultinetWizardController implements IMultinetWizardListener,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.intel.stl.ui.wizards.impl.IMultinetWizardListener#getNewWizardStatus
      * ()
@@ -1270,7 +1119,7 @@ public class MultinetWizardController implements IMultinetWizardListener,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.intel.stl.ui.wizards.impl.IMultinetWizardListener#getSubnetView()
      */
@@ -1282,7 +1131,7 @@ public class MultinetWizardController implements IMultinetWizardListener,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.intel.stl.ui.wizards.impl.IMultinetWizardListener#setDirty(boolean)
      */
@@ -1292,12 +1141,12 @@ public class MultinetWizardController implements IMultinetWizardListener,
         view.enableReset(dirty);
     }
 
-    private class ConfigureSubnetTask extends
-            SwingWorker<Void, ConfigTaskStatus> {
+    private class ConfigureSubnetTask
+            extends SwingWorker<Void, ConfigTaskStatus> {
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see javax.swing.SwingWorker#doInBackground()
          */
         @Override
@@ -1315,9 +1164,8 @@ public class MultinetWizardController implements IMultinetWizardListener,
             // Check if the host is reachable and publish the result
             view.setProgress(ConfigTaskType.CHECK_HOST);
             boolean isConnectable = isHostConnectable();
-            ConfigTaskStatus connectable =
-                    new ConfigTaskStatus(ConfigTaskType.CHECK_HOST,
-                            isConnectable, null);
+            ConfigTaskStatus connectable = new ConfigTaskStatus(
+                    ConfigTaskType.CHECK_HOST, isConnectable, null);
             publish(connectable);
 
             // If host is reachable validate and publish
@@ -1342,17 +1190,15 @@ public class MultinetWizardController implements IMultinetWizardListener,
             status = (numPass == tasks.size()) ? true : false;
 
             currentTask.promoteModel(wizardModel);
-            ConfigTaskStatus valid =
-                    new ConfigTaskStatus(ConfigTaskType.VALIDATE_ENTRY, status,
-                            errors);
+            ConfigTaskStatus valid = new ConfigTaskStatus(
+                    ConfigTaskType.VALIDATE_ENTRY, status, errors);
             publish(valid);
 
             try {
                 // Update the database and publish the result
                 view.setProgress(ConfigTaskType.UPDATE_DATABASE);
-                ConfigTaskStatus updated =
-                        new ConfigTaskStatus(ConfigTaskType.UPDATE_DATABASE,
-                                updateDatabase(), null);
+                ConfigTaskStatus updated = new ConfigTaskStatus(
+                        ConfigTaskType.UPDATE_DATABASE, updateDatabase(), null);
                 publish(updated);
             } catch (Exception e) {
                 publish(new ConfigTaskStatus(ConfigTaskType.UPDATE_DATABASE,
@@ -1400,9 +1246,8 @@ public class MultinetWizardController implements IMultinetWizardListener,
 
                 String recipients =
                         wizardModel.getPreferencesModel().getMailRecipients();
-                List<String> recipientsList =
-                        Utils.concatenatedStringToList(recipients,
-                                UIConstants.MAIL_LIST_DELIMITER);
+                List<String> recipientsList = Utils.concatenatedStringToList(
+                        recipients, UIConstants.MAIL_LIST_DELIMITER);
                 mailNotifier.setRecipients(recipientsList);
             }
 
@@ -1420,7 +1265,7 @@ public class MultinetWizardController implements IMultinetWizardListener,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.intel.stl.ui.wizards.impl.IMultinetWizardListener#onEmailTest(java
      * .lang.String)

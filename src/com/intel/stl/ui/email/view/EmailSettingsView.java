@@ -1,9 +1,9 @@
 /**
  * Copyright (c) 2015, Intel Corporation
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  *     * Redistributions of source code must retain the above copyright notice,
  *       this list of conditions and the following disclaimer.
  *     * Redistributions in binary form must reproduce the above copyright
@@ -12,7 +12,7 @@
  *     * Neither the name of Intel Corporation nor the names of its contributors
  *       may be used to endorse or promote products derived from this software
  *       without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -24,39 +24,6 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-/*******************************************************************************
- *                       I N T E L   C O R P O R A T I O N
- *	
- *  Functional Group: Fabric Viewer Application
- *
- *  File Name: EmailSetupDialog.java
- *
- *  Archive Source: $Source$
- *
- *  Archive Log:    $Log$
- *  Archive Log:    Revision 1.5  2015/09/01 19:04:06  fisherma
- *  Archive Log:    PR 130111 - test button unavalable after entering SMTP information.  Added tooltips and help message to guide user in what is required to be entered in the text fields.
- *  Archive Log:
- *  Archive Log:    Revision 1.4  2015/08/21 04:01:32  fisherma
- *  Archive Log:    Added property to turn email notifications feature on/off.  Added strings to localization file.  Fixed dialog to be sized properly on different operating systems under various look and feel.
- *  Archive Log:
- *  Archive Log:    Revision 1.3  2015/08/17 18:54:58  jijunwan
- *  Archive Log:    PR 129983 - Need to change file header's copyright text to BSD license txt
- *  Archive Log:    - changed frontend files' headers
- *  Archive Log:
- *  Archive Log:    Revision 1.2  2015/08/14 19:51:43  fisherma
- *  Archive Log:    Ensure that email settings dialog always shows up on top of all the FV main windows.  Cleanup and improve validation code on the to/from and smtp server name fields.  Allow empty value for smpt server name field.  Fix re/parenting issue for the error dialog to show up on top of the smpt settings dialog.  Moved title string for the dialog to the resource file.
- *  Archive Log:
- *  Archive Log:    Revision 1.1  2015/08/10 17:55:50  robertja
- *  Archive Log:    PR 128974 - Email notification functionality.
- *  Archive Log:
- *
- *  Overview: 
- *
- *  @author: fisherma
- *
- ******************************************************************************/
 
 package com.intel.stl.ui.email.view;
 
@@ -74,6 +41,8 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -114,17 +83,19 @@ public class EmailSettingsView extends JDialog implements DocumentListener {
 
     private JButton testBtn;
 
-    private final JTextField serverNameTxtField = ComponentFactory
-            .createTextField(null, true, 100, this);
+    private JTextArea messageArea;
 
-    private final JTextField serverPortTxtField = ComponentFactory
-            .createTextField("0123456789", false, 5, this);
+    private final JTextField serverNameTxtField =
+            ComponentFactory.createTextField(null, true, 100, this);
 
-    private final JTextField fromAddrTxtField = ComponentFactory
-            .createTextField(null, true, 100, this);
+    private final JTextField serverPortTxtField =
+            ComponentFactory.createTextField("0123456789", false, 5, this);
 
-    private final JTextField testAddressTxtField = ComponentFactory
-            .createTextField(null, true, 100, this);
+    private final JTextField fromAddrTxtField =
+            ComponentFactory.createTextField(null, true, 100, this);
+
+    private final JTextField testAddressTxtField =
+            ComponentFactory.createTextField(null, true, 100, this);
 
     private IEmailController listener;
 
@@ -132,14 +103,15 @@ public class EmailSettingsView extends JDialog implements DocumentListener {
 
     private JCheckBox enableEmailFeature;
 
-    private String helpTextStr = STLConstants.K5014_EMAIL_HINT_TEXT.getValue();
+    private final String helpTextStr =
+            STLConstants.K5014_EMAIL_HINT_TEXT.getValue();
 
-    private String helpTooltipStr = STLConstants.K5015_EMAIL_TOOLTIP_HINT_TEXT
-            .getValue();
+    private final String helpTooltipStr =
+            STLConstants.K5015_EMAIL_TOOLTIP_HINT_TEXT.getValue();
 
-    private Color disabledTextColor = UIConstants.INTEL_GRAY;
+    private final Color disabledTextColor = UIConstants.INTEL_GRAY;
 
-    private Color enabledTextColor = java.awt.Color.black;
+    private final Color enabledTextColor = java.awt.Color.black;
 
     public EmailSettingsView(IFabricView owner) {
         // Construct application modal dialog - should block all the windows
@@ -157,8 +129,8 @@ public class EmailSettingsView extends JDialog implements DocumentListener {
         pack();
 
         // Update preferred size - making the dialog wider for nicer look
-        setPreferredSize(new Dimension(500, (int) this.getPreferredSize()
-                .getHeight()));
+        setPreferredSize(
+                new Dimension(500, (int) this.getPreferredSize().getHeight()));
 
         // The second pack is to re-package the dialog after we updated
         // its preferred size above.
@@ -168,7 +140,7 @@ public class EmailSettingsView extends JDialog implements DocumentListener {
 
     /**
      * <i>Description:</i> Create and layout components
-     * 
+     *
      */
     private void initComponents() {
         addSettingsPanel();
@@ -185,7 +157,7 @@ public class EmailSettingsView extends JDialog implements DocumentListener {
         gc.fill = GridBagConstraints.HORIZONTAL;
 
         enableEmailFeature = ComponentFactory.getIntelCheckBox(
-                        STLConstants.K5012_EMAIL_ENABLE_OPTION_TXT.getValue());
+                STLConstants.K5012_EMAIL_ENABLE_OPTION_TXT.getValue());
         enableEmailFeature.setFont(UIConstants.H5_FONT.deriveFont(Font.BOLD));
         enableEmailFeature.setForeground(UIConstants.INTEL_DARK_GRAY);
         enableEmailFeature.addItemListener(new ItemListener() {
@@ -195,8 +167,9 @@ public class EmailSettingsView extends JDialog implements DocumentListener {
 
                 // Set all the components on the page enabled if checkbox is
                 // selected and disabled if checkbox is unchecked(deselected)
-                setComponentsEnabled(e.getStateChange() == ItemEvent.SELECTED ? true
-                        : false);
+                setComponentsEnabled(e.getStateChange() == ItemEvent.SELECTED
+                        ? true : false);
+                updateMessageArea();
             }
         });
         gc.gridwidth = GridBagConstraints.REMAINDER;
@@ -205,10 +178,8 @@ public class EmailSettingsView extends JDialog implements DocumentListener {
         gc.gridy++;
         gc.weightx = 0.1;
         gc.gridwidth = 1;
-        JLabel smtpNameLbl =
-                ComponentFactory.getH5Label(
-                        STLConstants.K5002_SMTP_HOST.getValue() + " :",
-                        Font.BOLD);
+        JLabel smtpNameLbl = ComponentFactory.getH5Label(
+                STLConstants.K5002_SMTP_HOST.getValue() + " :", Font.BOLD);
         smtpNameLbl.setHorizontalAlignment(SwingConstants.RIGHT);
         settingsPanel.add(smtpNameLbl, gc);
 
@@ -222,10 +193,8 @@ public class EmailSettingsView extends JDialog implements DocumentListener {
         gc.gridx = 0;
         gc.weightx = 0.1;
         gc.gridwidth = 1;
-        JLabel smtpPortLbl =
-                ComponentFactory.getH5Label(
-                        STLConstants.K0404_PORT_NUMBER.getValue() + " :",
-                        Font.BOLD);
+        JLabel smtpPortLbl = ComponentFactory.getH5Label(
+                STLConstants.K0404_PORT_NUMBER.getValue() + " :", Font.BOLD);
         smtpPortLbl.setHorizontalAlignment(SwingConstants.RIGHT);
         settingsPanel.add(smtpPortLbl, gc);
 
@@ -239,10 +208,8 @@ public class EmailSettingsView extends JDialog implements DocumentListener {
         gc.gridx = 0;
         gc.weightx = 0.1;
         gc.gridwidth = 1;
-        JLabel senderLbl =
-                ComponentFactory
-                        .getH5Label(STLConstants.K5003_FROM_LBL.getValue()
-                                + ":", Font.BOLD);
+        JLabel senderLbl = ComponentFactory.getH5Label(
+                STLConstants.K5003_FROM_LBL.getValue() + ":", Font.BOLD);
         senderLbl.setHorizontalAlignment(SwingConstants.RIGHT);
         settingsPanel.add(senderLbl, gc);
 
@@ -280,8 +247,10 @@ public class EmailSettingsView extends JDialog implements DocumentListener {
         JPanel testPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         testPanel.setBackground(UIConstants.INTEL_WHITE);
-        testPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
-                .createLineBorder(UIConstants.INTEL_BORDER_GRAY, 2),
+        testPanel
+                .setBorder(BorderFactory.createCompoundBorder(
+                        BorderFactory.createLineBorder(
+                                UIConstants.INTEL_BORDER_GRAY, 2),
                 BorderFactory.createEmptyBorder(10, 10, 10, 10)));
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -289,7 +258,7 @@ public class EmailSettingsView extends JDialog implements DocumentListener {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.weightx = 1;
         gbc.gridwidth = GridBagConstraints.REMAINDER;
-        JTextArea messageArea = new JTextArea();
+        messageArea = new JTextArea();
         messageArea.setText(STLConstants.K5011_EMAIL_TEST_HELP_MSG.getValue());
         messageArea.setWrapStyleWord(true);
         messageArea.setLineWrap(true);
@@ -297,6 +266,7 @@ public class EmailSettingsView extends JDialog implements DocumentListener {
         messageArea.setFocusable(false);
         messageArea.setFont(UIConstants.H5_FONT.deriveFont(Font.BOLD));
         messageArea.setForeground(UIConstants.INTEL_DARK_GRAY);
+        Util.makeUndoable(messageArea);
         testPanel.add(messageArea, gbc);
 
         gbc.gridy = 1;
@@ -308,19 +278,27 @@ public class EmailSettingsView extends JDialog implements DocumentListener {
         gbc.gridx = 3;
         gbc.weightx = 0.1;
         gbc.gridwidth = 1;
-        testBtn =
-                ComponentFactory
-                        .getIntelActionButton(STLConstants.K5009_WIZARD_EMAIL_TEST_LABEL_TEXT
-                                .getValue());
+        testBtn = ComponentFactory.getIntelActionButton(
+                STLConstants.K5009_WIZARD_EMAIL_TEST_LABEL_TEXT.getValue());
         testBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 testBtnAction();
             }
         });
+        // the document listen makes testBtn lose focus even when we click on
+        // it. Turns out we have to click twice to fire the test action. The
+        // following code gives this button focus when we mouse over it, so it
+        // will behavior as desired
+        testBtn.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                testBtn.requestFocusInWindow();
+            }
+        });
         testBtn.setEnabled(false);
-        testBtn.setToolTipText(STLConstants.K5016_EMAIL_TEST_BTN_TOOLTIP_TEXT
-                .getValue());
+        testBtn.setToolTipText(
+                STLConstants.K5016_EMAIL_TEST_BTN_TOOLTIP_TEXT.getValue());
         testPanel.add(testBtn, gbc);
 
         gc.gridy++;
@@ -339,9 +317,8 @@ public class EmailSettingsView extends JDialog implements DocumentListener {
         buttonsPanel.setBackground(UIConstants.INTEL_WHITE);
         buttonsPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 20, 10));
 
-        okBtn =
-                ComponentFactory.getIntelActionButton(STLConstants.K0645_OK
-                        .getValue());
+        okBtn = ComponentFactory
+                .getIntelActionButton(STLConstants.K0645_OK.getValue());
         okBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -352,9 +329,8 @@ public class EmailSettingsView extends JDialog implements DocumentListener {
         okBtn.setEnabled(false);
 
         // In the beginning set Cancel button to be default
-        cancelBtn =
-                ComponentFactory.getIntelActionButton(STLConstants.K0621_CANCEL
-                        .getValue());
+        cancelBtn = ComponentFactory
+                .getIntelActionButton(STLConstants.K0621_CANCEL.getValue());
         getRootPane().setDefaultButton(cancelBtn);
         cancelBtn.addActionListener(new ActionListener() {
             @Override
@@ -397,6 +373,7 @@ public class EmailSettingsView extends JDialog implements DocumentListener {
 
     // Cancel button discards changes and hides the dialog
     private void cancelBtnAction() {
+        updateMessageArea();
         // Hide the dialog
         setVisible(false);
     }
@@ -428,6 +405,7 @@ public class EmailSettingsView extends JDialog implements DocumentListener {
 
         // Giving everything a fresh start
         dirty = false;
+        updateMessageArea();
     }
 
     private void testBtnAction() {
@@ -440,7 +418,7 @@ public class EmailSettingsView extends JDialog implements DocumentListener {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.swing.event.DocumentListener#insertUpdate(javax.swing.event.
      * DocumentEvent)
      */
@@ -451,7 +429,7 @@ public class EmailSettingsView extends JDialog implements DocumentListener {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.swing.event.DocumentListener#removeUpdate(javax.swing.event.
      * DocumentEvent)
      */
@@ -462,7 +440,7 @@ public class EmailSettingsView extends JDialog implements DocumentListener {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.swing.event.DocumentListener#changedUpdate(javax.swing.event.
      * DocumentEvent)
      */
@@ -476,10 +454,20 @@ public class EmailSettingsView extends JDialog implements DocumentListener {
 
         // boolean canTest = false;
         if (isVisible()) {
+            updateMessageArea();
             testBtn.setEnabled(isReadyToTest());
+
             dirty = true;
 
             makeOkBtnDefault();
+        }
+    }
+
+    private void updateMessageArea() {
+        if (messageArea.getText() != STLConstants.K5011_EMAIL_TEST_HELP_MSG
+                .getValue()) {
+            messageArea
+                    .setText(STLConstants.K5011_EMAIL_TEST_HELP_MSG.getValue());
         }
     }
 
@@ -552,7 +540,7 @@ public class EmailSettingsView extends JDialog implements DocumentListener {
 
     /**
      * <i>Description:</i>
-     * 
+     *
      * @param owner
      */
     public void setOwner(FVMainFrame owner) {
@@ -560,12 +548,12 @@ public class EmailSettingsView extends JDialog implements DocumentListener {
     }
 
     /**
-     * 
+     *
      * <i>Description:</i> Logic to detect if all the needed settings for email
      * notification test have been provided by the user in the email settings
      * dialog. Required fields are: smtp server name, From: (email formatted
      * string), To: email recipient address (email formatted string)
-     * 
+     *
      * @return true if all the required settings have been provided by the user.
      *         false otherwise.
      */
@@ -609,4 +597,13 @@ public class EmailSettingsView extends JDialog implements DocumentListener {
 
     }
 
+    public void showTesting(boolean isTesting) {
+        if (isTesting) {
+            messageArea.setText(STLConstants.K5017_SENDING_EMAIL.getValue());
+            testBtn.setEnabled(false);
+        } else {
+            messageArea.setText(STLConstants.K5018_EMAIL_SENT_OUT.getValue());
+            testBtn.setEnabled(true);
+        }
+    }
 }

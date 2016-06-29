@@ -1,9 +1,9 @@
 /**
  * Copyright (c) 2015, Intel Corporation
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  *     * Redistributions of source code must retain the above copyright notice,
  *       this list of conditions and the following disclaimer.
  *     * Redistributions in binary form must reproduce the above copyright
@@ -12,7 +12,7 @@
  *     * Neither the name of Intel Corporation nor the names of its contributors
  *       may be used to endorse or promote products derived from this software
  *       without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -25,38 +25,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*******************************************************************************
- *                       I N T E L   C O R P O R A T I O N
- *  
- *  Functional Group: Fabric Viewer Application
- *
- *  File Name: UtilStatsBean.java
- *
- *  Archive Source: $Source$
- *
- *  Archive Log:    $Log$
- *  Archive Log:    Revision 1.7  2015/08/17 18:48:41  jijunwan
- *  Archive Log:    PR 129983 - Need to change file header's copyright text to BSD license txt
- *  Archive Log:    - change backend files' headers
- *  Archive Log:
- *  Archive Log:    Revision 1.6  2015/07/14 18:56:03  fernande
- *  Archive Log:    PR 129447 - Database size increases a lot over a short period of time. Fixes for Klocwork issues
- *  Archive Log:
- *  Archive Log:    Revision 1.5  2015/07/02 20:22:59  fernande
- *  Archive Log:    PR 129447 - Database size increases a lot over a short period of time. Moving Blobs to the database; arrays are now being saved to the database as collection tables.
- *  Archive Log:
- *  Archive Log:    Revision 1.4  2015/02/04 21:37:53  jijunwan
- *  Archive Log:    impoved to handle unsigned values
- *  Archive Log:     - we promote to a "bigger" data type
- *  Archive Log:     - port numbers are now short
- *  Archive Log:
- *
- *  Overview: 
- *
- *  @author: jijunwan
- *
- ******************************************************************************/
-
 package com.intel.stl.api.performance;
 
 import java.io.Serializable;
@@ -67,8 +35,6 @@ import java.util.List;
 import com.intel.stl.api.Utils;
 
 /**
- * @author jijunwan
- * 
  */
 public class UtilStatsBean implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -93,6 +59,10 @@ public class UtilStatsBean implements Serializable {
     private long minKPps; // unsigned int
 
     private long maxKPps; // unsigned int
+
+    private int pmaFailedPorts; // unsigned short
+
+    private int topoFailedPorts; // unsigned short
 
     /**
      * @return the totalMBps
@@ -306,9 +276,47 @@ public class UtilStatsBean implements Serializable {
         this.maxKPps = Utils.unsignedInt(maxKPps);
     }
 
+    /**
+     * @return the pmaFailedPorts
+     */
+    public int getPmaFailedPorts() {
+        return pmaFailedPorts;
+    }
+
+    /**
+     * @param pmaFailedPorts
+     *            the pmaFailedPorts to set
+     */
+    public void setPmaFailedPorts(short pmaFailedPorts) {
+        this.pmaFailedPorts = Utils.unsignedShort(pmaFailedPorts);
+    }
+
+    public void setPmaFailedPorts(int pmaFailedPorts) {
+        this.pmaFailedPorts = pmaFailedPorts;
+    }
+
+    /**
+     * @return the topoFailedPorts
+     */
+    public int getTopoFailedPorts() {
+        return topoFailedPorts;
+    }
+
+    /**
+     * @param topoFailedPorts
+     *            the topoFailedPorts to set
+     */
+    public void setTopoFailedPorts(short topoFailedPorts) {
+        this.topoFailedPorts = Utils.unsignedShort(topoFailedPorts);
+    }
+
+    public void setTopoFailedPorts(int topoFailedPorts) {
+        this.topoFailedPorts = topoFailedPorts;
+    }
+
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#toString()
      */
     @Override
@@ -317,8 +325,9 @@ public class UtilStatsBean implements Serializable {
                 + totalKPps + ", avgMBps=" + avgMBps + ", minMBps=" + minMBps
                 + ", maxMBps=" + maxMBps + ", numBWBuckets=" + numBWBuckets
                 + ", bwBuckets=" + Arrays.toString(bwBuckets.toArray())
-                + ", avgKPps=" + avgKPps + ", minKPps=" + minKPps
-                + ", maxKPps=" + maxKPps + "]";
+                + ", avgKPps=" + avgKPps + ", minKPps=" + minKPps + ", maxKPps="
+                + maxKPps + ", pmaFailedPorts=" + pmaFailedPorts
+                + ", topoFailedPorts=" + topoFailedPorts + "]";
     }
 
 }

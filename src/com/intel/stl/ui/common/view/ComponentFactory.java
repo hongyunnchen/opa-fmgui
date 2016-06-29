@@ -1,9 +1,9 @@
 /**
  * Copyright (c) 2015, Intel Corporation
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  *     * Redistributions of source code must retain the above copyright notice,
  *       this list of conditions and the following disclaimer.
  *     * Redistributions in binary form must reproduce the above copyright
@@ -12,7 +12,7 @@
  *     * Neither the name of Intel Corporation nor the names of its contributors
  *       may be used to endorse or promote products derived from this software
  *       without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -24,92 +24,6 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-/*******************************************************************************
- *                       I N T E L   C O R P O R A T I O N
- * 
- *  Functional Group: Fabric Viewer Application
- * 
- *  File Name: ComponentFactory.java
- * 
- *  Archive Source: $Source$
- * 
- *  Archive Log: $Log$
- *  Archive Log: Revision 1.51  2015/09/14 16:06:59  jijunwan
- *  Archive Log: PR 130229 - The text component of all editable combo boxes should provide validation of the input
- *  Archive Log: - apply FormattedComboBoxEditor on ComponentFactory and PreferenceWizard
- *  Archive Log:
- *  Archive Log: Revision 1.50  2015/08/18 14:28:33  jijunwan
- *  Archive Log: PR 130033 - Fix critical issues found by Klocwork or FindBugs
- *  Archive Log: - DateFormat is not thread safe. Changed to create new DateFormat to avoid sharing it among different threads
- *  Archive Log:
- *  Archive Log: Revision 1.49  2015/08/17 18:53:36  jijunwan
- *  Archive Log: PR 129983 - Need to change file header's copyright text to BSD license txt
- *  Archive Log: - changed frontend files' headers
- *  Archive Log:
- *  Archive Log: Revision 1.48  2015/08/17 14:22:37  rjtierne
- *  Archive Log: PR 128979 - SM Log display
- *  Archive Log: This is the first version of the Log Viewer which displays select lines of text from the remote SM log file. Updates include searchable raw text from file, user-defined number of lines to display, refreshing end of file, and paging. This PR is now closed and further updates can be found by referencing PR 130011 - "Enhance SM Log Viewer to include Standard and Advanced requirements".
- *  Archive Log:
- *  Archive Log: Revision 1.47  2015/08/11 14:36:50  jijunwan
- *  Archive Log: PR 129917 - No update on event statistics
- *  Archive Log: - Apply event subscriber on HealthHistoryCard. It will update either by event or period updating.
- *  Archive Log: - Improved Health Trend chart to draw current data shape
- *  Archive Log: - Improved Health Trend view to show current value immediately
- *  Archive Log:
- *  Archive Log: Revision 1.46  2015/07/28 18:29:12  fisherma
- *  Archive Log: PR 129219 - Admin page login dialog improvement
- *  Archive Log:
- *  Archive Log: Revision 1.45  2015/07/17 21:20:57  jijunwan
- *  Archive Log: PR 129528 - input validation improvement
- *  Archive Log: - improved CompomentFactory to create text field based on argument allowEmpty
- *  Archive Log: - apply it on Log preference and subnet name on Setup Wizard to forbid empty string
- *  Archive Log: - apply it on key file location on Setup Wizard to allow empty string
- *  Archive Log:
- *  Archive Log: Revision 1.44  2015/07/17 20:32:15  jijunwan
- *  Archive Log: PR 129528 - input validation improvement
- *  Archive Log: - change default number format to "###", so we need to support character ','
- *  Archive Log:
- *  Archive Log: Revision 1.43  2015/07/16 21:22:53  jijunwan
- *  Archive Log: PR 129528 - input validation improvement
- *  Archive Log: - extended SafeTextField to apply rules in name check
- *  Archive Log: - moved valid chars to UIConstants
- *  Archive Log: - made FieldPair more generic and flexible
- *  Archive Log:
- *  Archive Log: Revision 1.42  2015/07/13 19:30:57  jijunwan
- *  Archive Log: PR 129528 - input validation improvement
- *  Archive Log: - In interactive console, the port number must be in range (0, 65535) and the password cannot be empty.
- *  Archive Log:
- *  Archive Log: Revision 1.41  2015/07/13 18:37:24  jijunwan
- *  Archive Log: PR 129528 - input validation improvement
- *  Archive Log: - updated generic classes to use the new text field
- *  Archive Log:
- *  Archive Log: Revision 1.40  2015/06/29 15:05:45  jypak
- *  Archive Log: PR 129284 - Incorrect QSFP field name.
- *  Archive Log: Field name fix has been implemented. Also, introduced a conversion to Date object to add flexibility to display date code.
- *  Archive Log:
- *  Archive Log: Revision 1.39  2015/06/25 22:23:54  jijunwan
- *  Archive Log: PR 129216 - The labels on a TopN chart may occupy too much space
- *  Archive Log: -  change parameter to set the maximum label width to be half of the chart
- *  Archive Log:
- *  Archive Log: Revision 1.38  2015/06/25 20:51:59  jijunwan
- *  Archive Log: Bug 126755 - Pin Board functionality is not working in FV
- *  Archive Log: - improved to display title annotation properly the chart is very narrow
- *  Archive Log:
- *  Archive Log: Revision 1.37  2015/06/22 13:11:51  jypak
- *  Archive Log: PR 128980 - Be able to search devices by name or lid.
- *  Archive Log: New feature added to enable search devices by name, lid or node guid. The search results are displayed as a tree and when a result node from the tree is selected, original tree is expanded and the corresponding node is highlighted.
- *  Archive Log:
- *  Archive Log: Revision 1.36  2015/06/10 19:58:51  jijunwan
- *  Archive Log: PR 129120 - Some old files have no proper file header. They cannot record change logs.
- *  Archive Log: - wrote a tool to check and insert file header
- *  Archive Log: - applied on backend files
- *  Archive Log:
- * 
- *  Overview:
- * 
- *  @author: jijunwan
- * 
- ******************************************************************************/
 package com.intel.stl.ui.common.view;
 
 import java.awt.BasicStroke;
@@ -152,6 +66,9 @@ import org.jdesktop.swingx.JXLabel;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.LegendItem;
+import org.jfree.chart.LegendItemCollection;
+import org.jfree.chart.LegendItemSource;
 import org.jfree.chart.annotations.CategoryTextAnnotation;
 import org.jfree.chart.annotations.XYTitleAnnotation;
 import org.jfree.chart.axis.AxisLocation;
@@ -164,10 +81,14 @@ import org.jfree.chart.axis.TickUnitSource;
 import org.jfree.chart.axis.TickUnits;
 import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.block.BlockBorder;
+import org.jfree.chart.event.ChartChangeEventType;
+import org.jfree.chart.event.PlotChangeEvent;
+import org.jfree.chart.event.PlotChangeListener;
 import org.jfree.chart.labels.StandardXYToolTipGenerator;
 import org.jfree.chart.labels.XYItemLabelGenerator;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.CrosshairState;
+import org.jfree.chart.plot.DatasetRenderingOrder;
 import org.jfree.chart.plot.IntervalMarker;
 import org.jfree.chart.plot.PiePlot;
 import org.jfree.chart.plot.PlotOrientation;
@@ -180,6 +101,7 @@ import org.jfree.chart.renderer.xy.StandardXYBarPainter;
 import org.jfree.chart.renderer.xy.XYBarRenderer;
 import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.chart.renderer.xy.XYItemRendererState;
+import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.chart.renderer.xy.XYStepAreaRenderer;
 import org.jfree.chart.title.LegendTitle;
 import org.jfree.data.Range;
@@ -193,9 +115,11 @@ import org.jfree.ui.RectangleAnchor;
 import org.jfree.ui.RectangleEdge;
 import org.jfree.ui.RectangleInsets;
 import org.jfree.ui.TextAnchor;
+import org.jfree.util.ShapeUtilities;
 
 import com.intel.stl.api.StringUtils;
 import com.intel.stl.api.Utils;
+import com.intel.stl.ui.common.STLConstants;
 import com.intel.stl.ui.common.UIConstants;
 import com.intel.stl.ui.common.UIImages;
 import com.intel.stl.ui.common.UILabels;
@@ -204,16 +128,14 @@ import com.intel.stl.ui.common.view.SafeTextField.SafeStringFormatter;
 import com.intel.stl.ui.model.NodeTypeViz;
 
 /**
- * @author jijunwan
- * 
  */
 public class ComponentFactory {
     /**
-     * 
+     *
      * <i>Description:</i> simple method that creates single/multi line label
      * with specified label width based on a source label. For more advanced
      * label attributes, it's the developer's responsibility to set them back.
-     * 
+     *
      * @param source
      * @param wrap
      * @param maxWidth
@@ -221,57 +143,54 @@ public class ComponentFactory {
      */
     public static JLabel deriveLabel(JLabel source, final boolean wrap,
             final int maxWidth) {
-        JXLabel label =
-                new JXLabel(source.getText(), source.getIcon(),
-                        source.getHorizontalAlignment()) {
-                    private static final long serialVersionUID =
-                            -4816144910055350011L;
+        JXLabel label = new JXLabel(source.getText(), source.getIcon(),
+                source.getHorizontalAlignment()) {
+            private static final long serialVersionUID = -4816144910055350011L;
 
-                    private Font cachedFont;
+            private Font cachedFont;
 
-                    private String chahedRawText, chahedText;
+            private String chahedRawText, chahedText;
 
-                    /*
-                     * (non-Javadoc)
-                     * 
-                     * @see javax.swing.JLabel#getText()
-                     */
-                    @Override
-                    public String getText() {
-                        String text = super.getText();
-                        if (wrap || maxWidth <= 0 || text == null
-                                || text.isEmpty()) {
-                            return text;
-                        }
+            /*
+             * (non-Javadoc)
+             *
+             * @see javax.swing.JLabel#getText()
+             */
+            @Override
+            public String getText() {
+                String text = super.getText();
+                if (wrap || maxWidth <= 0 || text == null || text.isEmpty()) {
+                    return text;
+                }
 
-                        if (getFont().equals(cachedFont)
-                                && text.equals(chahedRawText)) {
-                            return chahedText;
-                        }
+                if (getFont().equals(cachedFont)
+                        && text.equals(chahedRawText)) {
+                    return chahedText;
+                }
 
-                        chahedRawText = text;
-                        cachedFont = getFont();
-                        FontMetrics fm = getFontMetrics(cachedFont);
-                        char[] chars = text.toCharArray();
-                        int width = fm.charsWidth(chars, 0, chars.length);
-                        if (width < maxWidth) {
-                            chahedText = text;
-                        } else {
-                            width += fm.charWidth('.') * 3;
-                            int pos = chars.length - 1;
-                            for (; pos >= 0 && width > maxWidth; pos--) {
-                                width -= fm.charWidth(chars[pos]);
-                            }
-                            chahedText = new String(chars, 0, pos) + "...";
-                            if (getToolTipText() == null) {
-                                setToolTipText(text);
-                            }
-                        }
-
-                        return chahedText;
+                chahedRawText = text;
+                cachedFont = getFont();
+                FontMetrics fm = getFontMetrics(cachedFont);
+                char[] chars = text.toCharArray();
+                int width = fm.charsWidth(chars, 0, chars.length);
+                if (width < maxWidth) {
+                    chahedText = text;
+                } else {
+                    width += fm.charWidth('.') * 3;
+                    int pos = chars.length - 1;
+                    for (; pos >= 0 && width > maxWidth; pos--) {
+                        width -= fm.charWidth(chars[pos]);
                     }
+                    chahedText = new String(chars, 0, pos) + "...";
+                    if (getToolTipText() == null) {
+                        setToolTipText(text);
+                    }
+                }
 
-                };
+                return chahedText;
+            }
+
+        };
         if (wrap) {
             label.setLineWrap(true);
         }
@@ -544,17 +463,16 @@ public class ComponentFactory {
     }
 
     public static JCheckBoxMenuItem getIntelCheckBoxMenuItem(String text) {
-        final JCheckBoxMenuItem box =
-                new JCheckBoxMenuItem(text,
-                        UIImages.EMPTY_BOX_ICON.getImageIcon());
+        final JCheckBoxMenuItem box = new JCheckBoxMenuItem(text,
+                UIImages.EMPTY_BOX_ICON.getImageIcon());
         // should do it through L&F, but couldn't find the way to do it
         // so we are using action listener to dynamically change icon
         box.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                box.setIcon(box.isSelected() ? UIImages.CHECK_BOX_ICON
-                        .getImageIcon() : UIImages.EMPTY_BOX_ICON
-                        .getImageIcon());
+                box.setIcon(box.isSelected()
+                        ? UIImages.CHECK_BOX_ICON.getImageIcon()
+                        : UIImages.EMPTY_BOX_ICON.getImageIcon());
             }
         });
         return box;
@@ -567,9 +485,8 @@ public class ComponentFactory {
 
     public static SafeNumberField<Integer> createNumericTextField(Integer max,
             DocumentListener... docListeners) {
-        final SafeNumberField<Integer> field =
-                new SafeNumberField<Integer>(new DecimalFormat("###"), 0,
-                        false, max, false);
+        final SafeNumberField<Integer> field = new SafeNumberField<Integer>(
+                new DecimalFormat("###"), 0, false, max, false);
         // only positive integer
         field.setValidChars(UIConstants.DIGITS);
         if (docListeners != null) {
@@ -607,8 +524,8 @@ public class ComponentFactory {
                 JTextField field = (JTextField) input;
                 String txt = field.getText();
                 if (txt.isEmpty()) {
-                    field.setToolTipText(UILabels.STL50084_CANT_BE_BLANK
-                            .getDescription());
+                    field.setToolTipText(
+                            UILabels.STL50084_CANT_BE_BLANK.getDescription());
                     input.setBackground(UIConstants.INTEL_LIGHT_RED);
                     return false;
                 }
@@ -617,8 +534,8 @@ public class ComponentFactory {
                     input.setBackground(UIConstants.INTEL_WHITE);
                     return true;
                 } catch (Exception e) {
-                    field.setToolTipText(UILabels.STL50085_MUST_BE_NUMERIC
-                            .getDescription());
+                    field.setToolTipText(
+                            UILabels.STL50085_MUST_BE_NUMERIC.getDescription());
                     input.setBackground(UIConstants.INTEL_LIGHT_RED);
                 }
                 return false;
@@ -628,9 +545,9 @@ public class ComponentFactory {
     }
 
     /**
-     * 
+     *
      * <i>Description:</i>
-     * 
+     *
      * @param validChars
      *            the string lists valid characters, such as
      *            "0123456789abcedfABCDEF"
@@ -686,9 +603,9 @@ public class ComponentFactory {
                             input.setBorder(BorderFactory.createLineBorder(
                                     UIConstants.INTEL_RED, 2));
                             // show tooltip immediately
-                            ToolTipManager.sharedInstance().mouseMoved(
-                                    new MouseEvent(field, 0, 0, 0, 0, 0, 0,
-                                            false));
+                            ToolTipManager.sharedInstance()
+                                    .mouseMoved(new MouseEvent(field, 0, 0, 0,
+                                            0, 0, 0, false));
                         }
                     });
                     return false;
@@ -782,8 +699,8 @@ public class ComponentFactory {
         table.setBackground(UIConstants.INTEL_WHITE);
         table.getTableHeader().setBackground(UIConstants.INTEL_BORDER_GRAY);
         table.getTableHeader().setForeground(UIConstants.INTEL_DARK_GRAY);
-        table.getTableHeader().setFont(
-                UIConstants.H5_FONT.deriveFont(Font.BOLD));
+        table.getTableHeader()
+                .setFont(UIConstants.H5_FONT.deriveFont(Font.BOLD));
         return table;
     }
 
@@ -793,8 +710,8 @@ public class ComponentFactory {
         table.setBackground(UIConstants.INTEL_WHITE);
         table.getTableHeader().setBackground(UIConstants.INTEL_BORDER_GRAY);
         table.getTableHeader().setForeground(UIConstants.INTEL_DARK_GRAY);
-        table.getTableHeader().setFont(
-                UIConstants.H5_FONT.deriveFont(Font.BOLD));
+        table.getTableHeader()
+                .setFont(UIConstants.H5_FONT.deriveFont(Font.BOLD));
         return table;
     }
 
@@ -807,7 +724,7 @@ public class ComponentFactory {
 
     /**
      * Create a simple pie chart without title, legend, label etc.
-     * 
+     *
      * @param dataset
      *            the dataset to be renderer
      * @param colors
@@ -837,8 +754,8 @@ public class ComponentFactory {
         pieplot.setBackgroundPaint(null);
         pieplot.setOutlineStroke(null);
         pieplot.setLabelGenerator(null);
-        pieplot.setNoDataMessage(UILabels.STL40001_ERROR_No_DATA
-                .getDescription());
+        pieplot.setNoDataMessage(
+                UILabels.STL40001_ERROR_No_DATA.getDescription());
         pieplot.setCircular(true);
         pieplot.setInteriorGap(0.000001);
         return jfreechart;
@@ -850,9 +767,8 @@ public class ComponentFactory {
             throw new IllegalArgumentException("No dataset.");
         }
 
-        JFreeChart jfreechart =
-                ChartFactory.createXYBarChart(null, null, true, null, dataset,
-                        PlotOrientation.VERTICAL, false, true, false);
+        JFreeChart jfreechart = ChartFactory.createXYBarChart(null, null, true,
+                null, dataset, PlotOrientation.VERTICAL, false, true, false);
         XYPlot xyplot = (XYPlot) jfreechart.getPlot();
         xyplot.setBackgroundPaint(null);
         xyplot.setOutlinePaint(null);
@@ -880,9 +796,8 @@ public class ComponentFactory {
             throw new IllegalArgumentException("No dataset.");
         }
 
-        JFreeChart jfreechart =
-                ChartFactory.createXYLineChart(null, null, null, dataset,
-                        PlotOrientation.VERTICAL, false, true, false);
+        JFreeChart jfreechart = ChartFactory.createXYLineChart(null, null, null,
+                dataset, PlotOrientation.VERTICAL, false, true, false);
         XYPlot xyplot = (XYPlot) jfreechart.getPlot();
         xyplot.setBackgroundPaint(UIConstants.INTEL_BACKGROUND_GRAY);
         // xyplot.setOutlinePaint(null);
@@ -896,7 +811,8 @@ public class ComponentFactory {
                             ValueAxis domainAxis, ValueAxis rangeAxis,
                             XYDataset dataset, int series, int item,
                             CrosshairState crosshairState, int pass) {
-                        setShapesVisible(item == dataset.getItemCount(series) - 1);
+                        setShapesVisible(
+                                item == dataset.getItemCount(series) - 1);
                         super.drawItem(g2, state, dataArea, info, plot,
                                 domainAxis, rangeAxis, dataset, series, item,
                                 crosshairState, pass);
@@ -934,10 +850,9 @@ public class ComponentFactory {
             throw new IllegalArgumentException("No dataset.");
         }
 
-        JFreeChart jfreechart =
-                ChartFactory.createXYBarChart(null, xAxisLabel, false,
-                        yAxisLabel, dataset, PlotOrientation.VERTICAL, false,
-                        true, false);
+        JFreeChart jfreechart = ChartFactory.createXYBarChart(null, xAxisLabel,
+                false, yAxisLabel, dataset, PlotOrientation.VERTICAL, false,
+                true, false);
         XYPlot xyplot = (XYPlot) jfreechart.getPlot();
         xyplot.setBackgroundPaint(null);
         xyplot.setOutlinePaint(null);
@@ -1010,8 +925,8 @@ public class ComponentFactory {
         yAxis.setLabelFont(UIConstants.H5_FONT);
         yAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
         xyplot.getDomainAxis().setLabelFont(UIConstants.H5_FONT);
-        xyplot.getRangeAxis().setStandardTickUnits(
-                NumberAxis.createIntegerTickUnits());
+        xyplot.getRangeAxis()
+                .setStandardTickUnits(NumberAxis.createIntegerTickUnits());
         XYBarRenderer renderer = (XYBarRenderer) xyplot.getRenderer();
         renderer.setShadowVisible(false);
         renderer.setBaseItemLabelsVisible(true);
@@ -1047,10 +962,9 @@ public class ComponentFactory {
             legendtitle.setBackgroundPaint(UIConstants.INTEL_WHITE);
             legendtitle.setFrame(new BlockBorder(UIConstants.INTEL_BLUE));
             legendtitle.setPosition(RectangleEdge.BOTTOM);
-            XYTitleAnnotation xytitleannotation =
-                    new XYTitleAnnotation(0.97999999999999998D,
-                            0.99999999999999998D, legendtitle,
-                            RectangleAnchor.TOP_RIGHT);
+            XYTitleAnnotation xytitleannotation = new XYTitleAnnotation(
+                    0.97999999999999998D, 0.99999999999999998D, legendtitle,
+                    RectangleAnchor.TOP_RIGHT);
             // xytitleannotation.setMaxWidth(0.47999999999999998D);
             xyplot.addAnnotation(xytitleannotation);
         }
@@ -1059,15 +973,14 @@ public class ComponentFactory {
         xyitemrenderer.setSeriesPaint(1, UIConstants.INTEL_DARK_GRAY);
         xyitemrenderer.setSeriesPaint(0, NodeTypeViz.SWITCH.getColor());
         xyitemrenderer.setBaseToolTipGenerator(new StandardXYToolTipGenerator(
-                "<html><b>{0}</b><br> Time: {1}<br> Data: {2}</html>", Util
-                        .getHHMMSS(), new DecimalFormat("#,##0.00")));
+                "<html><b>{0}</b><br> Time: {1}<br> Data: {2}</html>",
+                Util.getHHMMSS(), new DecimalFormat("#,##0.00")));
         return jfreechart;
     }
 
     public static JFreeChart createXYAreaSparkline(XYDataset dataset) {
-        JFreeChart jfreechart =
-                ChartFactory.createXYAreaChart(null, null, null, dataset,
-                        PlotOrientation.VERTICAL, false, false, false);
+        JFreeChart jfreechart = ChartFactory.createXYAreaChart(null, null, null,
+                dataset, PlotOrientation.VERTICAL, false, false, false);
         XYPlot xyplot = (XYPlot) jfreechart.getPlot();
         xyplot.setDomainPannable(true);
         xyplot.setBackgroundPaint(null);
@@ -1098,6 +1011,172 @@ public class ComponentFactory {
         XYItemRenderer xyitemrenderer = xyplot.getRenderer();
         xyitemrenderer.setSeriesPaint(1, UIConstants.INTEL_DARK_GRAY);
         xyitemrenderer.setSeriesPaint(0, NodeTypeViz.SWITCH.getColor());
+        return jfreechart;
+    }
+
+    public static JFreeChart createUtilXYAreaChart(String xAxisLabel,
+            String yAxisLabel, final XYDataset utilDataset,
+            XYDataset pmaDataset, XYDataset topoDataset,
+            boolean includeLegend) {
+        JFreeChart jfreechart = ChartFactory.createXYAreaChart(null, xAxisLabel,
+                yAxisLabel, utilDataset, PlotOrientation.VERTICAL, false, true,
+                false);
+        XYPlot xyplot = (XYPlot) jfreechart.getPlot();
+        xyplot.setDomainPannable(true);
+        xyplot.setBackgroundPaint(null);
+        xyplot.setOutlinePaint(null);
+        xyplot.setForegroundAlpha(0.8F);
+        xyplot.setRangeGridlinePaint(UIConstants.INTEL_DARK_GRAY);
+        DateAxis dateaxis = new DateAxis(xAxisLabel);
+        dateaxis.setLowerMargin(0.0D);
+        dateaxis.setUpperMargin(0.0D);
+        xyplot.setDomainAxis(dateaxis);
+        NumberAxis rangeAxis = (NumberAxis) xyplot.getRangeAxis();
+        rangeAxis.setRangeType(RangeType.POSITIVE);
+        rangeAxis.setLabelFont(UIConstants.H5_FONT);
+        rangeAxis.setLabelInsets(new RectangleInsets(0, 0, 0, 0));
+
+        final XYItemRenderer xyitemrenderer = xyplot.getRenderer(0);
+        xyitemrenderer.setSeriesPaint(1, UIConstants.INTEL_DARK_GRAY);
+        xyitemrenderer.setSeriesPaint(0, NodeTypeViz.SWITCH.getColor());
+        xyitemrenderer.setBaseToolTipGenerator(new StandardXYToolTipGenerator(
+                "<html><b>{0}</b><br> Time: {1}<br> Data: {2}</html>",
+                Util.getHHMMSS(), new DecimalFormat("#,##0.00")));
+
+        if (includeLegend) {
+            LegendTitle legendtitle = new LegendTitle(new LegendItemSource() {
+                @Override
+                public LegendItemCollection getLegendItems() {
+                    LegendItemCollection res = new LegendItemCollection();
+                    int seriesCount = utilDataset.getSeriesCount();
+                    for (int i = 0; i < seriesCount; i++) {
+                        LegendItem item = xyitemrenderer.getLegendItem(0, i);
+                        if (item != null) {
+                            res.add(item);
+                        }
+                    }
+                    return res;
+                }
+            });
+            legendtitle.setItemFont(UIConstants.H5_FONT);
+            legendtitle.setBackgroundPaint(UIConstants.INTEL_WHITE);
+            legendtitle.setFrame(new BlockBorder(UIConstants.INTEL_BLUE));
+            legendtitle.setPosition(RectangleEdge.BOTTOM);
+            XYTitleAnnotation xytitleannotation = new XYTitleAnnotation(
+                    0.97999999999999998D, 0.99999999999999998D, legendtitle,
+                    RectangleAnchor.TOP_RIGHT);
+            // xytitleannotation.setMaxWidth(0.47999999999999998D);
+            xyplot.addAnnotation(xytitleannotation);
+        }
+
+        NumberAxis numberaxis =
+                new NumberAxis(STLConstants.K0215_NUM_FAILED_PORTS.getValue());
+        numberaxis.setVisible(true);
+        numberaxis.setAxisLinePaint(UIConstants.INTEL_DARK_RED);
+        numberaxis.setTickLabelPaint(UIConstants.INTEL_DARK_RED);
+        numberaxis.setLabelPaint(UIConstants.INTEL_DARK_RED);
+        numberaxis.setLabelFont(UIConstants.H5_FONT);
+        numberaxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
+        numberaxis.setAutoRange(true);
+        numberaxis.setAutoRangeIncludesZero(true);
+
+        xyplot.setRangeAxis(1, numberaxis);
+        xyplot.setRangeAxisLocation(1, AxisLocation.BOTTOM_OR_RIGHT);
+        xyplot.setDataset(1, pmaDataset);
+        xyplot.mapDatasetToRangeAxis(1, 1);
+        XYLineAndShapeRenderer renderer =
+                new XYLineAndShapeRenderer(false, true);
+        renderer.setSeriesShape(1, ShapeUtilities.createDiamond(4F));
+        renderer.setSeriesShape(0, ShapeUtilities.createDiamond(4F));
+        renderer.setSeriesPaint(1, UIConstants.INTEL_DARK_ORANGE);
+        renderer.setSeriesPaint(0, UIConstants.INTEL_ORANGE);
+        renderer.setBaseToolTipGenerator(new StandardXYToolTipGenerator(
+                "<html><b>{0}</b><br> Time: {1}<br> "
+                        + STLConstants.K0215_NUM_FAILED_PORTS.getValue()
+                        + ": {2}</html>",
+                Util.getHHMMSS(), UIConstants.INTEGER));
+        xyplot.setRenderer(1, renderer);
+
+        xyplot.setDataset(2, topoDataset);
+        xyplot.mapDatasetToRangeAxis(2, 1);
+        renderer = new XYLineAndShapeRenderer(false, true);
+        renderer.setSeriesShape(1, ShapeUtilities.createDiamond(4F));
+        renderer.setSeriesShape(0, ShapeUtilities.createDiamond(4F));
+        renderer.setSeriesPaint(1, UIConstants.INTEL_DARK_RED);
+        renderer.setSeriesPaint(0, UIConstants.INTEL_RED);
+        renderer.setBaseToolTipGenerator(new StandardXYToolTipGenerator(
+                "<html><b>{0}</b><br> " + STLConstants.K0035_TIME.getValue()
+                        + ": {1}<br> "
+                        + STLConstants.K0215_NUM_FAILED_PORTS.getValue()
+                        + ": {2}</html>",
+                Util.getHHMMSS(), UIConstants.INTEGER));
+        xyplot.setRenderer(2, renderer);
+
+        xyplot.setDatasetRenderingOrder(DatasetRenderingOrder.FORWARD);
+        return jfreechart;
+    }
+
+    public static JFreeChart createUtilXYAreaSparkline(XYDataset utilDatasets,
+            XYDataset pmaDataset, XYDataset topoDataset) {
+        JFreeChart jfreechart = ChartFactory.createXYAreaChart(null, null, null,
+                utilDatasets, PlotOrientation.VERTICAL, false, false, false);
+        XYPlot xyplot = (XYPlot) jfreechart.getPlot();
+        xyplot.setDomainPannable(true);
+        xyplot.setBackgroundPaint(null);
+        xyplot.setOutlinePaint(null);
+        xyplot.setForegroundAlpha(0.8F);
+        xyplot.setDomainGridlinesVisible(false);
+        xyplot.setDomainCrosshairVisible(false);
+        xyplot.setRangeGridlinesVisible(false);
+        xyplot.setRangeCrosshairVisible(false);
+
+        DateAxis dateaxis = new DateAxis("");
+        dateaxis.setTickLabelsVisible(false);
+        dateaxis.setTickMarksVisible(false);
+        dateaxis.setAxisLineVisible(false);
+        dateaxis.setNegativeArrowVisible(false);
+        dateaxis.setPositiveArrowVisible(false);
+        dateaxis.setVisible(false);
+        xyplot.setDomainAxis(dateaxis);
+
+        ValueAxis rangeAxis = xyplot.getRangeAxis();
+        rangeAxis.setTickLabelsVisible(false);
+        rangeAxis.setTickMarksVisible(false);
+        rangeAxis.setAxisLineVisible(false);
+        rangeAxis.setNegativeArrowVisible(false);
+        rangeAxis.setPositiveArrowVisible(false);
+        rangeAxis.setVisible(false);
+
+        XYItemRenderer xyitemrenderer = xyplot.getRenderer();
+        xyitemrenderer.setSeriesPaint(1, UIConstants.INTEL_DARK_GRAY);
+        xyitemrenderer.setSeriesPaint(0, NodeTypeViz.SWITCH.getColor());
+
+        NumberAxis numberaxis = new NumberAxis("Failure Axis");
+        numberaxis.setVisible(false);
+        numberaxis.setAutoRange(true);
+        numberaxis.setAutoRangeIncludesZero(true);
+        xyplot.setRangeAxis(1, numberaxis);
+        xyplot.setRangeAxisLocation(1, AxisLocation.BOTTOM_OR_RIGHT);
+
+        xyplot.setDataset(1, pmaDataset);
+        xyplot.mapDatasetToRangeAxis(1, 1);
+        XYLineAndShapeRenderer renderer =
+                new XYLineAndShapeRenderer(false, true);
+        renderer.setSeriesShape(1, ShapeUtilities.createDiamond(4F));
+        renderer.setSeriesShape(0, ShapeUtilities.createDiamond(4F));
+        renderer.setSeriesPaint(1, UIConstants.INTEL_DARK_ORANGE);
+        renderer.setSeriesPaint(0, UIConstants.INTEL_ORANGE);
+        xyplot.setRenderer(1, renderer);
+
+        xyplot.setDataset(2, topoDataset);
+        xyplot.mapDatasetToRangeAxis(2, 1);
+        renderer = new XYLineAndShapeRenderer(false, true);
+        renderer.setSeriesShape(1, ShapeUtilities.createDiamond(4F));
+        renderer.setSeriesShape(0, ShapeUtilities.createDiamond(4F));
+        renderer.setSeriesPaint(1, UIConstants.INTEL_DARK_RED);
+        renderer.setSeriesPaint(0, UIConstants.INTEL_RED);
+        xyplot.setRenderer(2, renderer);
+
         return jfreechart;
     }
 
@@ -1145,17 +1224,26 @@ public class ComponentFactory {
     }
 
     public static JFreeChart createTopNBarChart(String yAxisLabel,
-            CategoryDataset dataset) {
+            final CategoryDataset dataset) {
         JFreeChart jfreechart =
                 ChartFactory.createBarChart(null, null, yAxisLabel, dataset,
                         PlotOrientation.HORIZONTAL, true, true, false);
-        CategoryPlot categoryplot = jfreechart.getCategoryPlot();
+        final CategoryPlot categoryplot = jfreechart.getCategoryPlot();
         categoryplot.setBackgroundPaint(null);
         categoryplot.setOutlinePaint(null);
         categoryplot.setRangeAxisLocation(AxisLocation.BOTTOM_OR_LEFT);
         categoryplot.setRangePannable(true);
         categoryplot.setRangeGridlinesVisible(true);
         categoryplot.setRangeGridlinePaint(UIConstants.INTEL_DARK_GRAY);
+        categoryplot.addChangeListener(new PlotChangeListener() {
+            @Override
+            public void plotChanged(PlotChangeEvent event) {
+                if (event.getType() == ChartChangeEventType.NEW_DATASET || event
+                        .getType() == ChartChangeEventType.DATASET_UPDATED) {
+                    categoryplot.getDomainAxis().configure();
+                }
+            }
+        });
 
         BarRenderer barrenderer = (BarRenderer) categoryplot.getRenderer();
         barrenderer.setBarPainter(new StandardBarPainter());
@@ -1164,11 +1252,13 @@ public class ComponentFactory {
         barrenderer.setSeriesPaint(0, UIConstants.INTEL_BLUE);
         barrenderer.setSeriesPaint(1, UIConstants.INTEL_LIGHT_BLUE);
 
-        CategoryAxis categoryaxis = categoryplot.getDomainAxis();
+        CategoryAxis categoryaxis = new PortEntryAxis();
         categoryaxis.setCategoryMargin(0.15D);
         categoryaxis.setUpperMargin(0.02D);
         categoryaxis.setLowerMargin(0.02D);
         categoryaxis.setMaximumCategoryLabelWidthRatio(0.5F);
+        categoryaxis.setTickLabelFont(UIConstants.H5_FONT);
+        categoryplot.setDomainAxis(categoryaxis);
 
         NumberAxis numberaxis = (NumberAxis) categoryplot.getRangeAxis();
         numberaxis.setRangeType(RangeType.POSITIVE);
@@ -1181,7 +1271,8 @@ public class ComponentFactory {
 
         LegendTitle legend = jfreechart.getLegend();
         legend.setFrame(BlockBorder.NONE);
-        legend.setItemFont(barrenderer.getBaseItemLabelFont().deriveFont(10.0f));
+        legend.setItemFont(
+                barrenderer.getBaseItemLabelFont().deriveFont(10.0f));
 
         return jfreechart;
     }
@@ -1194,9 +1285,8 @@ public class ComponentFactory {
                             + " colors=" + colors.length);
         }
 
-        JFreeChart jfreechart =
-                ChartFactory.createBarChart(null, null, null, dataset,
-                        PlotOrientation.HORIZONTAL, false, true, false);
+        JFreeChart jfreechart = ChartFactory.createBarChart(null, null, null,
+                dataset, PlotOrientation.HORIZONTAL, false, true, false);
         CategoryPlot categoryplot = jfreechart.getCategoryPlot();
         categoryplot.setBackgroundPaint(null);
         categoryplot.setOutlinePaint(null);

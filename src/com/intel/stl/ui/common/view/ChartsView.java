@@ -1,9 +1,9 @@
 /**
  * Copyright (c) 2015, Intel Corporation
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  *     * Redistributions of source code must retain the above copyright notice,
  *       this list of conditions and the following disclaimer.
  *     * Redistributions in binary form must reproduce the above copyright
@@ -12,7 +12,7 @@
  *     * Neither the name of Intel Corporation nor the names of its contributors
  *       may be used to endorse or promote products derived from this software
  *       without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -24,104 +24,6 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-/*******************************************************************************
- *                       I N T E L   C O R P O R A T I O N
- *	
- *  Functional Group: Fabric Viewer Application
- *
- *  File Name: ChartsView.java
- *
- *  Archive Source: $Source$
- *
- *  Archive Log:    $Log$
- *  Archive Log:    Revision 1.11  2015/09/21 21:40:32  jijunwan
- *  Archive Log:    PR 130229 - The text component of all editable combo boxes should provide validation of the input
- *  Archive Log:    - adapt to the new IntelComboBoxUI
- *  Archive Log:
- *  Archive Log:    Revision 1.10  2015/08/17 18:53:36  jijunwan
- *  Archive Log:    PR 129983 - Need to change file header's copyright text to BSD license txt
- *  Archive Log:    - changed frontend files' headers
- *  Archive Log:
- *  Archive Log:    Revision 1.9  2015/08/05 03:00:44  jijunwan
- *  Archive Log:    PR 129359 - Need navigation feature to navigate within FM GUI
- *  Archive Log:    - applied undo mechanism on charts to track chart  change, jump event
- *  Archive Log:    - applied undo mechanism on chart section to track group change
- *  Archive Log:    - improved OptionChartsView to support undoable data type and history selection
- *  Archive Log:
- *  Archive Log:    Revision 1.8  2015/06/25 20:50:06  jijunwan
- *  Archive Log:    Bug 126755 - Pin Board functionality is not working in FV
- *  Archive Log:    - applied pin framework on dynamic cards that can have different data sources
- *  Archive Log:    - change to use port counter performance item
- *  Archive Log:
- *  Archive Log:    Revision 1.7  2015/02/17 23:22:16  jijunwan
- *  Archive Log:    PR 127106 - Suggest to use same bucket range for Group Err Summary as shown in "opatop" command to plot performance graphs in FV
- *  Archive Log:     - changed error histogram chart to bar chart to show the new data ranges: 0-25%, 25-50%, 50-75%, 75-100% and 100+%
- *  Archive Log:
- *  Archive Log:    Revision 1.6  2015/02/05 21:35:38  jijunwan
- *  Archive Log:    fixed NPE issues found by klocwork
- *  Archive Log:
- *  Archive Log:    Revision 1.5  2014/10/02 21:26:19  jijunwan
- *  Archive Log:    fixed issued found by FindBugs
- *  Archive Log:    Some auto-reformate
- *  Archive Log:
- *  Archive Log:    Revision 1.4  2014/09/18 14:59:30  jijunwan
- *  Archive Log:    Added jumping to destination support to TopN chart via popup menu
- *  Archive Log:    Added label highlight for chart view
- *  Archive Log:
- *  Archive Log:    Revision 1.3  2014/09/05 21:52:31  jijunwan
- *  Archive Log:    improved IntelComboBoxUI to support editable Combo Box
- *  Archive Log:
- *  Archive Log:    Revision 1.2  2014/07/22 18:38:39  jijunwan
- *  Archive Log:    introduced DatasetDescription to support short name and full name (description) for a dataset
- *  Archive Log:
- *  Archive Log:    Revision 1.1  2014/07/21 17:03:08  jijunwan
- *  Archive Log:    moved ChartsView and ChartsCard to common package
- *  Archive Log:
- *  Archive Log:    Revision 1.10  2014/07/16 20:54:21  jijunwan
- *  Archive Log:    fixed port link
- *  Archive Log:
- *  Archive Log:    Revision 1.9  2014/07/16 15:15:08  jijunwan
- *  Archive Log:    new "Tabbed" performance view with a sparkline
- *  Archive Log:
- *  Archive Log:    Revision 1.8  2014/07/11 19:26:15  fernande
- *  Archive Log:    Adding EventBus and linking UI elements to the Performance tab
- *  Archive Log:
- *  Archive Log:    Revision 1.7  2014/06/09 21:40:55  jijunwan
- *  Archive Log:    made Chart Group Manager more general
- *  Archive Log:
- *  Archive Log:    Revision 1.6  2014/06/06 13:31:05  jypak
- *  Archive Log:    Performance-Performance subpage updates.
- *  Archive Log:    1. Synchronize y-axis(range axis) bound for a group of charts (packet, data).
- *  Archive Log:    2. Auto conversion of y-axis label title and tick label based on the max value of data in the series.
- *  Archive Log:
- *  Archive Log:    Revision 1.5  2014/05/09 14:17:16  jijunwan
- *  Archive Log:    moved JFreeChart to view side, controller side only take care dataset
- *  Archive Log:
- *  Archive Log:    Revision 1.4  2014/05/08 19:25:38  jijunwan
- *  Archive Log:    MVC refactory
- *  Archive Log:
- *  Archive Log:    Revision 1.3  2014/04/30 15:07:20  rjtierne
- *  Archive Log:    Changes to reflect renamed JCard
- *  Archive Log:
- *  Archive Log:    Revision 1.2  2014/04/16 22:36:07  jijunwan
- *  Archive Log:    added Intel style combobox
- *  Archive Log:
- *  Archive Log:    Revision 1.1  2014/04/12 19:51:18  fernande
- *  Archive Log:    Initial version
- *  Archive Log:
- *  Archive Log:    Revision 1.2  2014/04/08 17:32:56  jijunwan
- *  Archive Log:    introduced new summary section for "Home Page"
- *  Archive Log:
- *  Archive Log:    Revision 1.1  2014/04/03 20:52:18  jijunwan
- *  Archive Log:    on going work on "Home" page
- *  Archive Log:
- *
- *  Overview: 
- *
- *  @author: jijunwan
- *
- ******************************************************************************/
 
 package com.intel.stl.ui.common.view;
 
@@ -168,7 +70,7 @@ public class ChartsView extends JCardView<IChartsCardListener> {
 
     /**
      * Description:
-     * 
+     *
      * @param title
      * @param controller
      */
@@ -180,7 +82,7 @@ public class ChartsView extends JCardView<IChartsCardListener> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.intel.hpc.stl.ui.common.JCard#getExtraComponent()
      */
     @Override
@@ -193,7 +95,7 @@ public class ChartsView extends JCardView<IChartsCardListener> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.intel.hpc.stl.ui.common.JCard#getMainComponent()
      */
     @Override
@@ -208,12 +110,12 @@ public class ChartsView extends JCardView<IChartsCardListener> {
             chartPanel.addComponentListener(new ComponentAdapter() {
                 @Override
                 public void componentResized(ComponentEvent e) {
-                    chartPanel.setMaximumDrawHeight(e.getComponent()
-                            .getHeight());
+                    chartPanel
+                            .setMaximumDrawHeight(e.getComponent().getHeight());
                     chartPanel.setMaximumDrawWidth(e.getComponent().getWidth());
                     chartPanel.setMinimumDrawWidth(e.getComponent().getWidth());
-                    chartPanel.setMinimumDrawHeight(e.getComponent()
-                            .getHeight());
+                    chartPanel
+                            .setMinimumDrawHeight(e.getComponent().getHeight());
                 }
             });
             mainPanel.add(chartPanel, BorderLayout.CENTER);
@@ -228,10 +130,9 @@ public class ChartsView extends JCardView<IChartsCardListener> {
             for (DatasetDescription dd : datasets) {
                 String name = dd.getName();
                 Dataset dataset = dd.getDataset();
-                charts.put(
-                        name,
-                        new ChartWrap(chartCreator.createChart(
-                                dd.getFullName(), dataset), dd.isJumpable()));
+                charts.put(name, new ChartWrap(
+                        chartCreator.createChart(dd.getFullName(), dataset),
+                        dd.isJumpable()));
             }
         }
     }
@@ -250,14 +151,13 @@ public class ChartsView extends JCardView<IChartsCardListener> {
             setTitle(dd.getName(), dd.getFullName());
         } else {
             setTitle(null);
-            chartList =
-                    new JComboBox<DatasetDescription>(
-                            datasets.toArray(new DatasetDescription[0]));
+            chartList = new JComboBox<DatasetDescription>(
+                    datasets.toArray(new DatasetDescription[0]));
             IntelComboBoxUI ui = new IntelComboBoxUI() {
 
                 /*
                  * (non-Javadoc)
-                 * 
+                 *
                  * @see
                  * com.intel.stl.ui.common.view.IntelComboBoxUI#getValueString
                  * (java.lang.Object)
@@ -269,7 +169,7 @@ public class ChartsView extends JCardView<IChartsCardListener> {
 
                 /*
                  * (non-Javadoc)
-                 * 
+                 *
                  * @see
                  * com.intel.stl.ui.common.view.IntelComboBoxUI#getValueTooltip
                  * (java.lang.Object)
@@ -281,8 +181,8 @@ public class ChartsView extends JCardView<IChartsCardListener> {
 
             };
             ui.setEditorBorder(BorderFactory.createEmptyBorder());
-            ui.setArrowButtonTooltip(UILabels.STL10103_MORE_SELECTIONS
-                    .getDescription());
+            ui.setArrowButtonTooltip(
+                    UILabels.STL10103_MORE_SELECTIONS.getDescription());
             ui.setArrowButtonBorder(null);
             chartList.setUI(ui);
             setListListener();
@@ -292,7 +192,7 @@ public class ChartsView extends JCardView<IChartsCardListener> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.intel.stl.ui.common.view.JCardView#setCardListener(com.intel.stl.
      * ui.common.view.ICardListener)
@@ -382,7 +282,7 @@ public class ChartsView extends JCardView<IChartsCardListener> {
 
     /**
      * <i>Description:</i> enable/disable pin for all charts
-     * 
+     *
      * @see com.intel.stl.ui.common.view.JCardView#enablePin(boolean)
      */
     @Override
@@ -394,9 +294,9 @@ public class ChartsView extends JCardView<IChartsCardListener> {
     }
 
     /**
-     * 
+     *
      * <i>Description:</i> enable/disable pin for a chart
-     * 
+     *
      * @param name
      *            chart name
      * @param b
@@ -425,8 +325,14 @@ public class ChartsView extends JCardView<IChartsCardListener> {
             return null;
         }
 
-        XYDataset dataset = plot.getDataset();
-        return ComponentFactory.createXYAreaSparkline(dataset);
+        int count = plot.getDatasetCount();
+        if (count == 3) {
+            return ComponentFactory.createUtilXYAreaSparkline(
+                    plot.getDataset(0), plot.getDataset(1), plot.getDataset(2));
+        } else {
+            XYDataset dataset = plot.getDataset();
+            return ComponentFactory.createXYAreaSparkline(dataset);
+        }
     }
 
     protected ChartWrap getChartWrap(String name) {
@@ -434,8 +340,8 @@ public class ChartsView extends JCardView<IChartsCardListener> {
         if (res != null) {
             return res;
         } else {
-            throw new IllegalArgumentException("Couldn't find chart '" + name
-                    + "'");
+            throw new IllegalArgumentException(
+                    "Couldn't find chart '" + name + "'");
         }
     }
 
@@ -448,7 +354,7 @@ public class ChartsView extends JCardView<IChartsCardListener> {
 
         /**
          * Description:
-         * 
+         *
          * @param chart
          * @param isJumpable
          */

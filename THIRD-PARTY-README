@@ -1,16 +1,35 @@
-This package contains software from third party suppliers that is licensed by those parties.
-Licenses for the software may be found along with the corresponding third party software in
-this package, as follows:
+This package contains software from third party suppliers that are licensed by those parties.
+Licenses for 3rd party software may be found in the public archive where each library is stored.
 
-Hibernate 4.3.5		lib/hibernate_license.txt
-HSQLDB 2.3.2		lib/hsqldb_license.txt
-JFreeChart 1.0.17	lib/jfreechart_license.txt
-JSCH 0.1.51			lib/jsch_license.txt
-JavaHelp 2.0.05		lib/javahelp_license.html
-JavaMail 1.5.2		lib/javamail_license.txt
-LogBack 1.1.2		lib/logback_license.txt
-SLF4J 1.7.7			lib/slf4j_license.txt
-SwingX 1.6.4		lib/swingx_license.txt
-gritty 0.02			lib/gritty_license.txt
-JGraphX 2.3.05		lib/jgraphx_license.txt
-MBassador 1.1.9		lib/mbassador_license.txt
+GNU General Public License v2.0 w/ Classpath Exception
+------------------------------------------------------
+JavaHelp 2.0.05		https://javahelp.java.net/license.txt 
+JavaMail 1.5.2		https://java.net/projects/javamail/pages/License 
+
+
+GNU Lesser General Public License v2.1 or later
+-----------------------------------------------
+SwingX 1.6.4		http://www.opensource.org/licenses/lgpl-2.1.php 
+Hibernate 4.3.5		http://hibernate.org/community/license/
+JFreeChart 1.0.17	https://www.gnu.org/licenses/lgpl.txt
+LogBack 1.1.2		http://logback.qos.ch/license.html 
+gritty 0.02		http://www.gnu.org/licenses/lgpl.html
+
+
+MIT License
+-----------
+SLF4J 1.7.7		http://www.slf4j.org/license.html 
+MBassador 1.2.4.1	https://github.com/bennidi/mbassador/blob/master/LICENSE
+
+
+BSD License
+-----------
+JSCH 0.1.51		http://www.jcraft.com/jsch/LICENSE.txt 
+
+
+BSD 3-clause "New" or "Revised" License
+---------------------------------------
+HSQLDB 2.3.2		http://hsqldb.org/web/hsqlLicense.html
+JGraphX 2.3.05		https://github.com/jgraph/jgraphx/blob/master/license.txt
+
+

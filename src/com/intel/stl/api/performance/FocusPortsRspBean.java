@@ -1,9 +1,9 @@
 /**
  * Copyright (c) 2015, Intel Corporation
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  *     * Redistributions of source code must retain the above copyright notice,
  *       this list of conditions and the following disclaimer.
  *     * Redistributions in binary form must reproduce the above copyright
@@ -12,7 +12,7 @@
  *     * Neither the name of Intel Corporation nor the names of its contributors
  *       may be used to endorse or promote products derived from this software
  *       without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -25,41 +25,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*******************************************************************************
- *                       I N T E L   C O R P O R A T I O N
- *  
- *  Functional Group: Fabric Viewer Application
- *
- *  File Name: FocusPortsRspBean.java
- *
- *  Archive Source: $Source$
- *
- *  Archive Log:    $Log$
- *  Archive Log:    Revision 1.6  2015/10/08 16:18:59  fernande
- *  Archive Log:    PR130810 - Add 64bit reserved field to PA PortCounters queries for query by GUID in Gen2. Changed commands to match FM spec.
- *  Archive Log:
- *  Archive Log:    Revision 1.5  2015/08/17 18:48:41  jijunwan
- *  Archive Log:    PR 129983 - Need to change file header's copyright text to BSD license txt
- *  Archive Log:    - change backend files' headers
- *  Archive Log:
- *  Archive Log:    Revision 1.4  2015/04/09 03:29:21  jijunwan
- *  Archive Log:    updated to match FM 390
- *  Archive Log:
- *  Archive Log:    Revision 1.3  2015/02/12 19:30:00  jijunwan
- *  Archive Log:    introduced interface ITimestamped, and all timimg attributes implemented it, so we can easily know which attribute is associated with timestamp
- *  Archive Log:
- *  Archive Log:    Revision 1.2  2015/02/04 21:37:53  jijunwan
- *  Archive Log:    impoved to handle unsigned values
- *  Archive Log:     - we promote to a "bigger" data type
- *  Archive Log:     - port numbers are now short
- *  Archive Log:
- *
- *  Overview: 
- *
- *  @author: jijunwan
- *
- ******************************************************************************/
-
 package com.intel.stl.api.performance;
 
 import java.io.Serializable;
@@ -69,8 +34,6 @@ import com.intel.stl.api.ITimestamped;
 import com.intel.stl.api.Utils;
 
 /**
- * @author jijunwan
- * 
  */
 public class FocusPortsRspBean implements ITimestamped, Serializable {
     private static final long serialVersionUID = 1L;
@@ -84,6 +47,10 @@ public class FocusPortsRspBean implements ITimestamped, Serializable {
     private byte rate;
 
     private byte mtu;
+
+    private byte localFlags;
+
+    private byte neighborFlags;
 
     private long value; // list sorting factor
 
@@ -184,6 +151,36 @@ public class FocusPortsRspBean implements ITimestamped, Serializable {
      */
     public void setMtu(byte mtu) {
         this.mtu = mtu;
+    }
+
+    /**
+     * @return the localFlags
+     */
+    public byte getLocalFlags() {
+        return localFlags;
+    }
+
+    /**
+     * @param localFlags
+     *            the localFlags to set
+     */
+    public void setLocalFlags(byte localFlags) {
+        this.localFlags = localFlags;
+    }
+
+    /**
+     * @return the neighborFlags
+     */
+    public byte getNeighborFlags() {
+        return neighborFlags;
+    }
+
+    /**
+     * @param neighborFlags
+     *            the neighborFlags to set
+     */
+    public void setNeighborFlags(byte neighborFlags) {
+        this.neighborFlags = neighborFlags;
     }
 
     /**
@@ -332,7 +329,7 @@ public class FocusPortsRspBean implements ITimestamped, Serializable {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.intel.stl.api.ITimestamped#getTimestampDate()
      */
     @Override
@@ -342,19 +339,20 @@ public class FocusPortsRspBean implements ITimestamped, Serializable {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#toString()
      */
     @Override
     public String toString() {
         return "FocusPortRspBean [nodeLid=" + nodeLid + ", portNumber="
-                + portNumber + ", rate=" + rate + ", mtu=" + mtu + ", value=0x"
-                + Long.toHexString(value) + ", nodeGUID=0x"
-                + Long.toHexString(nodeGUID) + ", nodeDesc=" + nodeDesc
-                + ", neighborLid=" + neighborLid + ", neighborPortNumber="
-                + neighborPortNumber + ", neighborValue=0x"
-                + Long.toHexString(neighborValue) + ", neighborGuid=0x"
-                + Long.toHexString(neighborGuid) + ", neighborNodeDesc="
-                + neighborNodeDesc + "]";
+                + portNumber + ", rate=" + rate + ", mtu=" + mtu
+                + ", localFlags=" + localFlags + ", neighborFlags="
+                + neighborFlags + ", value=0x" + Long.toHexString(value)
+                + ", nodeGUID=0x" + Long.toHexString(nodeGUID) + ", nodeDesc="
+                + nodeDesc + ", neighborLid=" + neighborLid
+                + ", neighborPortNumber=" + neighborPortNumber
+                + ", neighborValue=0x" + Long.toHexString(neighborValue)
+                + ", neighborGuid=0x" + Long.toHexString(neighborGuid)
+                + ", neighborNodeDesc=" + neighborNodeDesc + "]";
     }
 }

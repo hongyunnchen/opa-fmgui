@@ -1,9 +1,9 @@
 /**
  * Copyright (c) 2015, Intel Corporation
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  *     * Redistributions of source code must retain the above copyright notice,
  *       this list of conditions and the following disclaimer.
  *     * Redistributions in binary form must reproduce the above copyright
@@ -12,7 +12,7 @@
  *     * Neither the name of Intel Corporation nor the names of its contributors
  *       may be used to endorse or promote products derived from this software
  *       without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -24,45 +24,6 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-/*******************************************************************************
- *                       I N T E L   C O R P O R A T I O N
- *	
- *  Functional Group: Fabric Viewer Application
- *
- *  File Name: ActionPanel.java
- *
- *  Archive Source: $Source$
- *
- *  Archive Log:    $Log$
- *  Archive Log:    Revision 1.7  2015/11/09 20:50:25  fernande
- *  Archive Log:    PR130231 - Cannot delete subnet from Wizard if subnet name is "Unknown Subnet". Fixed bug where the first time an action is set would not dirty the task
- *  Archive Log:
- *  Archive Log:    Revision 1.6  2015/08/17 18:54:40  jijunwan
- *  Archive Log:    PR 129983 - Need to change file header's copyright text to BSD license txt
- *  Archive Log:    - changed frontend files' headers
- *  Archive Log:
- *  Archive Log:    Revision 1.5  2015/03/30 15:12:50  rjtierne
- *  Archive Log:    Updated panel backgrounds to use static variable
- *  Archive Log:
- *  Archive Log:    Revision 1.4  2015/02/13 21:31:52  rjtierne
- *  Archive Log:    Multinet Wizard
- *  Archive Log:
- *  Archive Log:    Revision 1.3  2015/01/13 19:01:25  rjtierne
- *  Archive Log:    Removed warnings by specifying generic types
- *  Archive Log:
- *  Archive Log:    Revision 1.2  2014/12/23 18:36:59  rjtierne
- *  Archive Log:    Set dirty state in view when new selections are made on action list
- *  Archive Log:
- *  Archive Log:    Revision 1.1  2014/12/10 21:31:10  rjtierne
- *  Archive Log:    New Setup Wizard based on framework
- *  Archive Log:
- *
- *  Overview: Popup panel for the action column of the Event Wizard table
- *
- *  @author: rjtierne
- *
- ******************************************************************************/
 
 package com.intel.stl.ui.wizards.view.event;
 
@@ -97,6 +58,9 @@ import com.intel.stl.ui.wizards.model.event.EventRulesTableModel;
 import com.intel.stl.ui.wizards.view.IWizardView;
 import com.intel.stl.ui.wizards.view.MultinetWizardView;
 
+/**
+ * Popup panel for the action column of the Event Wizard table
+ */
 public class ActionPanel extends JPanel {
 
     private static final long serialVersionUID = -2996609094010046773L;
@@ -135,9 +99,8 @@ public class ActionPanel extends JPanel {
         // Create the toolbar and put the button on it
         JToolBar toolBar = new JToolBar();
         toolBar.setFloatable(false);
-        btnAction =
-                ComponentFactory.getIntelActionButton(STLConstants.K3004_SELECT
-                        .getValue());
+        btnAction = ComponentFactory
+                .getIntelActionButton(STLConstants.K3004_SELECT.getValue());
 
         btnAction.addActionListener(new ActionListener() {
             @Override
@@ -180,9 +143,8 @@ public class ActionPanel extends JPanel {
                     boolean found = false;
                     while (it.hasNext() && !found) {
                         JCheckBox chkbox = it.next();
-                        found =
-                                (action.name().equals(chkbox.getText())) ? true
-                                        : false;
+                        found = (action.name().equals(chkbox.getText())) ? true
+                                : false;
                         chkbox.setSelected(found);
                     }
                 }
@@ -223,39 +185,6 @@ public class ActionPanel extends JPanel {
         this.eventWizardControlListener = eventWizardControlListener;
     }
 
-    /*******************************************************************************
-     * I N T E L C O R P O R A T I O N
-     * 
-     * Functional Group: Fabric Viewer Application
-     * 
-     * File Name: PopupPanel (Inner Class)
-     * 
-     * Archive Source: $Source:
-     * /cvs/vendor/intel/fmgui/client/src/main/java/com/
-     * intel/stl/ui/wizards/view/event/ActionPanel.java,v $
-     * 
-     * Archive Log: $Log$
-     * Archive Log: Revision 1.7  2015/11/09 20:50:25  fernande
-     * Archive Log: PR130231 - Cannot delete subnet from Wizard if subnet name is "Unknown Subnet". Fixed bug where the first time an action is set would not dirty the task
-     * Archive Log: Archive Log: Revision 1.6
-     * 2015/08/17 18:54:40 jijunwan Archive Log: PR 129983 - Need to change file
-     * header's copyright text to BSD license txt Archive Log: - changed
-     * frontend files' headers Archive Log: Archive Log: Revision 1.5 2015/03/30
-     * 15:12:50 rjtierne Archive Log: Updated panel backgrounds to use static
-     * variable Archive Log: Archive Log: Revision 1.4 2015/02/13 21:31:52
-     * rjtierne Archive Log: Multinet Wizard Archive Log: Archive Log: Revision
-     * 1.3 2015/01/13 19:01:25 rjtierne Archive Log: Removed warnings by
-     * specifying generic types Archive Log: Archive Log: Revision 1.2
-     * 2014/12/23 18:36:59 rjtierne Archive Log: Set dirty state in view when
-     * new selections are made on action list Archive Log: Archive Log: Revision
-     * 1.1 2014/12/10 21:31:10 rjtierne Archive Log: New Setup Wizard based on
-     * framework Archive Log:
-     * 
-     * Overview: Popup panel class
-     * 
-     * @author: rjtierne
-     * 
-     ******************************************************************************/
     class PopupPanel extends JPanel implements ListCellRenderer<JCheckBox> {
 
         private static final long serialVersionUID = 5009991107568106318L;
@@ -279,8 +208,8 @@ public class ActionPanel extends JPanel {
 
             // Create the check boxes on a panel
             JPanel pnlActionList = new JPanel();
-            pnlActionList.setLayout(new BoxLayout(pnlActionList,
-                    BoxLayout.PAGE_AXIS));
+            pnlActionList.setLayout(
+                    new BoxLayout(pnlActionList, BoxLayout.PAGE_AXIS));
             for (EventRuleAction action : EventRuleAction.values()) {
                 final JCheckBox chkBox =
                         ComponentFactory.getIntelCheckBox(action.name());
@@ -336,7 +265,7 @@ public class ActionPanel extends JPanel {
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see
          * javax.swing.ListCellRenderer#getListCellRendererComponent(javax.swing
          * .JList, java.lang.Object, int, boolean, boolean)

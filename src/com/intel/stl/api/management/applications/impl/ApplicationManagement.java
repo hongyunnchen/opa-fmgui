@@ -1,9 +1,9 @@
 /**
  * Copyright (c) 2015, Intel Corporation
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  *     * Redistributions of source code must retain the above copyright notice,
  *       this list of conditions and the following disclaimer.
  *     * Redistributions in binary form must reproduce the above copyright
@@ -12,7 +12,7 @@
  *     * Neither the name of Intel Corporation nor the names of its contributors
  *       may be used to endorse or promote products derived from this software
  *       without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -24,61 +24,6 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-/*******************************************************************************
- *                       I N T E L   C O R P O R A T I O N
- *	
- *  Functional Group: Fabric Viewer Application
- *
- *  File Name: ApplicationsMarshaller.java
- *
- *  Archive Source: $Source$
- *
- *  Archive Log:    $Log$
- *  Archive Log:    Revision 1.5  2015/10/26 20:19:09  jijunwan
- *  Archive Log:    PR 131169 - Unable to delete Device Groups created within the opafm.xml file
- *  Archive Log:    - introduced ChangeManager to maintain changes
- *  Archive Log:    - changed changes from set to list because when the changes depend on each other, the order does matter
- *  Archive Log:    - changed xxxManagement to use ChangeManager
- *  Archive Log:
- *  Archive Log:    Revision 1.4  2015/08/17 18:48:39  jijunwan
- *  Archive Log:    PR 129983 - Need to change file header's copyright text to BSD license txt
- *  Archive Log:    - change backend files' headers
- *  Archive Log:
- *  Archive Log:    Revision 1.3  2015/08/17 17:33:05  jijunwan
- *  Archive Log:    PR 128973 - Deploy FM conf changes on all SMs
- *  Archive Log:    - fixed typo on interface name IApplicationManagement
- *  Archive Log:    - improved management to maintain changes and be able apply changes on another FM ocnf file
- *  Archive Log:
- *  Archive Log:    Revision 1.2  2015/07/28 18:20:28  fisherma
- *  Archive Log:    PR 129219 - Admin page login dialog improvement.
- *  Archive Log:
- *  Archive Log:    Revision 1.1  2015/03/16 22:01:00  jijunwan
- *  Archive Log:    changed package name from application to applications, and from devicegroup to devicegroups
- *  Archive Log:    Added #getType to ServiceID, MGID, LongNode and their subclasses,
- *  Archive Log:
- *  Archive Log:    Revision 1.3  2015/03/13 20:57:03  jijunwan
- *  Archive Log:    minor  improvement on FM Application
- *  Archive Log:    Added support on FM DeviceGroup
- *  Archive Log:    put all constants used in xml file to XMLConstants
- *  Archive Log:
- *  Archive Log:    Revision 1.2  2015/03/13 14:29:16  jijunwan
- *  Archive Log:    improved to have consistent xml format when we add, remove or replace an Application, Device Group, or Virtual Fabric node.
- *  Archive Log:    improved to add comments to indicate the change was made by FM GUI and also the time we change it
- *  Archive Log:
- *  Archive Log:    Revision 1.1  2015/03/05 17:30:41  jijunwan
- *  Archive Log:    init version to support Application management
- *  Archive Log:    1) read/write opafm.xml from/to host with backup file support
- *  Archive Log:    2) Application parser
- *  Archive Log:    3) Add/remove and update Application
- *  Archive Log:    4) unique name, reference conflication check
- *  Archive Log:
- *
- *  Overview: 
- *
- *  @author: jijunwan
- *
- ******************************************************************************/
 
 package com.intel.stl.api.management.applications.impl;
 
@@ -123,8 +68,8 @@ import com.intel.stl.api.management.applications.IApplicationManagement;
 import com.intel.stl.common.STLMessages;
 
 public class ApplicationManagement implements IApplicationManagement {
-    private final static Logger log = LoggerFactory
-            .getLogger(ApplicationManagement.class);
+    private final static Logger log =
+            LoggerFactory.getLogger(ApplicationManagement.class);
 
     private final static Set<String> RESERVED = new HashSet<String>() {
         private static final long serialVersionUID = -8507198541424973196L;
@@ -144,7 +89,7 @@ public class ApplicationManagement implements IApplicationManagement {
 
     /**
      * Description:
-     * 
+     *
      * @param confHelp
      */
     public ApplicationManagement(FMConfHelper confHelp) {
@@ -154,7 +99,7 @@ public class ApplicationManagement implements IApplicationManagement {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.intel.stl.api.management.applications.IApplicationManangement#
      * getReservedApplications()
      */
@@ -180,7 +125,7 @@ public class ApplicationManagement implements IApplicationManagement {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.intel.stl.api.management.application.IApplicationManangement#
      * getApplication(java.lang.String)
      */
@@ -193,7 +138,8 @@ public class ApplicationManagement implements IApplicationManagement {
             return apps.getApplication(name);
         } catch (Exception e) {
             throw createApplicationException(STLMessages.STL63006_GET_APP_ERR,
-                    e, name, confHelp.getHost(), StringUtils.getErrorMessage(e));
+                    e, name, confHelp.getHost(),
+                    StringUtils.getErrorMessage(e));
         }
     }
 
@@ -202,7 +148,8 @@ public class ApplicationManagement implements IApplicationManagement {
         StreamSource xml = new StreamSource(xmlFile);
         final XMLStreamReader xsr = xif.createXMLStreamReader(xml);
         while (xsr.hasNext()) {
-            if (xsr.isStartElement() && xsr.getLocalName().equals(APPLICATIONS)) {
+            if (xsr.isStartElement()
+                    && xsr.getLocalName().equals(APPLICATIONS)) {
                 break;
             }
             xsr.next();
@@ -252,8 +199,8 @@ public class ApplicationManagement implements IApplicationManagement {
         Node appsNode = doc.getElementsByTagName(APPLICATIONS).item(0);
         Node matchedApp = getApplicationByName(appsNode, app.getName());
         if (matchedApp != null) {
-            throw new IllegalArgumentException("Application '" + app.getName()
-                    + "' alreday exist!");
+            throw new IllegalArgumentException(
+                    "Application '" + app.getName() + "' alreday exist!");
         }
 
         // append app to Applications node
@@ -295,8 +242,8 @@ public class ApplicationManagement implements IApplicationManagement {
             // save back to xml file
             XMLUtils.writeDoc(doc, dstXml);
         } else {
-            throw new IllegalArgumentException("Couldn't find Application '"
-                    + name + "'");
+            // this can happen when we create a new one and then rename it
+            log.warn("Couldn't find Application '" + name + "'");
         }
     }
 

@@ -1,9 +1,9 @@
 /**
  * Copyright (c) 2015, Intel Corporation
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  *     * Redistributions of source code must retain the above copyright notice,
  *       this list of conditions and the following disclaimer.
  *     * Redistributions in binary form must reproduce the above copyright
@@ -12,7 +12,7 @@
  *     * Neither the name of Intel Corporation nor the names of its contributors
  *       may be used to endorse or promote products derived from this software
  *       without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -24,96 +24,6 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-/*******************************************************************************
- *                       I N T E L   C O R P O R A T I O N
- *	
- *  Functional Group: Fabric Viewer Application
- *
- *  File Name: TreeLayout.java
- *
- *  Archive Source: $Source$
- *
- *  Archive Log:    $Log$
- *  Archive Log:    Revision 1.21  2015/08/17 18:54:00  jijunwan
- *  Archive Log:    PR 129983 - Need to change file header's copyright text to BSD license txt
- *  Archive Log:    - changed frontend files' headers
- *  Archive Log:
- *  Archive Log:    Revision 1.20  2015/05/07 14:18:40  jypak
- *  Archive Log:    PR 128564 - Topology Tree synchronization issue:
- *  Archive Log:    Null check the context before update in the TopologyTreeController. Other safe guard code added to avoid potential synchronization issue.
- *  Archive Log:
- *  Archive Log:    Revision 1.19  2015/04/28 14:00:34  jijunwan
- *  Archive Log:    1) improved topology viz to use TopGraph copy for outline display. This will avoid graph and outline views share internal graph view that may cause sync issues.
- *  Archive Log:    2) added more debug info in log
- *  Archive Log:
- *  Archive Log:    Revision 1.18  2015/04/15 21:32:00  jijunwan
- *  Archive Log:    PR 128134 - Support other tree like toplogy
- *  Archive Log:    - minor improvement to handle tree variance that may happen when a user mis-connect devices
- *  Archive Log:
- *  Archive Log:    Revision 1.17  2015/04/06 11:14:14  jypak
- *  Archive Log:    Klockwork: Front End Critical Without Unit Test. Open issues fixed.
- *  Archive Log:
- *  Archive Log:    Revision 1.16  2015/04/02 13:33:03  jypak
- *  Archive Log:    Klockwork: Front End Critical Without Unit Test. 47 open issues fixed. All of them are for null checks.
- *  Archive Log:
- *  Archive Log:    Revision 1.15  2015/02/23 22:49:45  jijunwan
- *  Archive Log:    improved to update topology graph properly for notices
- *  Archive Log:
- *  Archive Log:    Revision 1.14  2015/02/20 23:47:04  jijunwan
- *  Archive Log:    added comment
- *  Archive Log:
- *  Archive Log:    Revision 1.13  2015/02/20 22:02:35  jijunwan
- *  Archive Log:    PR 127193 - Incorrect icons used in b2b topology
- *  Archive Log:     - improved to handle special b2b topology
- *  Archive Log:
- *  Archive Log:    Revision 1.12  2015/02/05 19:10:50  jijunwan
- *  Archive Log:    fixed NPE issues found by klocwork
- *  Archive Log:
- *  Archive Log:    Revision 1.11  2014/12/11 18:47:06  fernande
- *  Archive Log:    Switch from log4j to slf4j+logback
- *  Archive Log:
- *  Archive Log:    Revision 1.10  2014/10/09 21:29:45  jijunwan
- *  Archive Log:    new Topology Viz
- *  Archive Log:
- *  Archive Log:    Revision 1.9  2014/10/01 19:25:53  rjtierne
- *  Archive Log:    Relocated image directory to src/main/image. Added new images for Topology graph and removed hardcoded static path to images
- *  Archive Log:
- *  Archive Log:    Revision 1.8  2014/08/05 13:46:23  jijunwan
- *  Archive Log:    new implementation on topology control that uses double models to avoid synchronization issues on model and view
- *  Archive Log:
- *  Archive Log:    Revision 1.7  2014/07/07 19:06:05  jijunwan
- *  Archive Log:    minor improvements:
- *  Archive Log:    1) null check
- *  Archive Log:    2) stop previous context switching when we need to switch to a new one
- *  Archive Log:    3) auto fit when we resize split panes
- *  Archive Log:    4) put layout execution on background
- *  Archive Log:
- *  Archive Log:    Revision 1.6  2014/07/03 22:23:47  jijunwan
- *  Archive Log:    1) improved Topology to support multiple edges selection
- *  Archive Log:    2) added Tree and Graph selection synchronization
- *  Archive Log:
- *  Archive Log:    Revision 1.5  2014/06/23 04:56:56  jijunwan
- *  Archive Log:    new topology code to support interactions with a topology graph
- *  Archive Log:
- *  Archive Log:    Revision 1.4  2014/06/17 16:55:41  jijunwan
- *  Archive Log:    pan and zoom at current mouse point; shift+mouse drag to move nodes on screen; right control to clear selections; undoable node collapse and expand
- *  Archive Log:
- *  Archive Log:    Revision 1.3  2014/05/28 15:54:40  jijunwan
- *  Archive Log:    minor adjustments on topology: 1) scale vertices when they begin to overlap each other, 2) pick vertex first when we find cell under a mouse point
- *  Archive Log:
- *  Archive Log:    Revision 1.2  2014/05/27 22:09:08  jijunwan
- *  Archive Log:    added Tree_Line layout, added collapsable image
- *  Archive Log:
- *  Archive Log:    Revision 1.1  2014/05/23 19:47:54  jijunwan
- *  Archive Log:    init version of topology page
- *  Archive Log:
- *
- *  Overview: 
- *
- *  @author: jijunwan
- *
- ******************************************************************************/
 
 package com.intel.stl.ui.network;
 
@@ -143,6 +53,8 @@ public class TreeLayout extends mxGraphLayout {
     public static final double DEFAULT_INTRA_SPACE = 30.0;
 
     public static final double DEFAULT_INTER_SPACE = 30.0;
+
+    public static final double CIRCLE_ANGLE = Math.PI / 3;
 
     public enum Style {
         CIRCLE,
@@ -194,7 +106,7 @@ public class TreeLayout extends mxGraphLayout {
 
     /**
      * Description:
-     * 
+     *
      * @param graph
      */
     public TreeLayout(TopGraph graph, TopologyTreeModel model, Style style) {
@@ -284,7 +196,7 @@ public class TreeLayout extends mxGraphLayout {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.mxgraph.layout.mxGraphLayout#execute(java.lang.Object)
      */
     @Override
@@ -349,10 +261,9 @@ public class TreeLayout extends mxGraphLayout {
         double width =
                 numColumns * (GraphBuilder.SWITCH_SIZE + intraCellSpacing)
                         + intraCellSpacing * 2;
-        double height =
-                model.getNumRanks()
-                        * (GraphBuilder.SWITCH_SIZE + interRankCellSpacing)
-                        + interRankCellSpacing * 2;
+        double height = model.getNumRanks()
+                * (GraphBuilder.SWITCH_SIZE + interRankCellSpacing)
+                + interRankCellSpacing * 2;
         List<List<Integer>> ranks = model.getRanks();
         numOpenNodes = new int[ranks.size()];
         if (style == Style.CIRCLE) {
@@ -362,10 +273,9 @@ public class TreeLayout extends mxGraphLayout {
                     return null;
                 }
                 List<Integer> nodeLids = ranks.get(i);
-                double w =
-                        nodeLids.size()
-                                * (GraphBuilder.SWITCH_SIZE + intraCellSpacing)
-                                + intraCellSpacing * 2;
+                double w = nodeLids.size()
+                        * (GraphBuilder.SWITCH_SIZE + intraCellSpacing)
+                        + intraCellSpacing * 2;
                 numOpenNodes[i] = 0;
                 for (Integer nodeLid : nodeLids) {
                     GraphNode node =
@@ -379,10 +289,9 @@ public class TreeLayout extends mxGraphLayout {
             }
         }
         height = Math.max(height, width / 2);
-        mxRectangle rec =
-                new mxRectangle(GraphBuilder.SWITCH_SIZE,
-                        GraphBuilder.SWITCH_SIZE, Math.max(width, minWidth),
-                        Math.max(height, minHeight));
+        mxRectangle rec = new mxRectangle(GraphBuilder.SWITCH_SIZE,
+                GraphBuilder.SWITCH_SIZE, Math.max(width, minWidth),
+                Math.max(height, minHeight));
         return rec;
     }
 
@@ -396,12 +305,23 @@ public class TreeLayout extends mxGraphLayout {
         double stepX = 0;
         double stepY = prefRec.getHeight() / (rwen.size() - 1);
         double x = x0, y = y0;
+        // circle layout for switches
+        boolean circleLayout;
+        double startAngle = (Math.PI - CIRCLE_ANGLE) / 2;
+        double startCircleHeight = Math.sin(startAngle);
+        double angleStep = 0;
+        double circleR = 0;
         for (int i = 0; i < rwen.size(); i++) {
             List<Integer> rank = rwen.get(i);
-            stepX =
-                    (prefRec.getWidth() - numOpenNodes[i] * 2 * r)
-                            / rank.size();
+            stepX = (prefRec.getWidth() - numOpenNodes[i] * 2 * r)
+                    / rank.size();
             x = x0 + stepX / 2;
+            circleLayout = hasInternalConnection(rank);
+            if (circleLayout) {
+                angleStep = CIRCLE_ANGLE / (rank.size() - 1);
+                circleR =
+                        stepX * (rank.size() - 1) / (2 * Math.cos(startAngle));
+            }
             Map<Object, List<GraphNode>> endNodes =
                     new LinkedHashMap<Object, List<GraphNode>>();
             for (int j = 0; j < rank.size(); j++) {
@@ -413,8 +333,8 @@ public class TreeLayout extends mxGraphLayout {
                 mxCell cell = topGraph.getVertex(rank.get(j));
                 GraphNode node = null;
                 if (cell == null) {
-                    System.out.println("Couldn't find vertex lid="
-                            + rank.get(j));
+                    System.out
+                            .println("Couldn't find vertex lid=" + rank.get(j));
                     continue;
                 } else {
                     node = (GraphNode) cell.getValue();
@@ -430,7 +350,14 @@ public class TreeLayout extends mxGraphLayout {
                 }
 
                 if (isVertexMovable(vertex)) {
-                    setVertexLocation(vertex, x, y);
+                    if (circleLayout) {
+                        double circleY =
+                                y - (Math.sin(startAngle + angleStep * j)
+                                        - startCircleHeight) * circleR;
+                        setVertexLocation(vertex, x, (int) (circleY + 0.5));
+                    } else {
+                        setVertexLocation(vertex, x, y);
+                    }
                 }
                 if (style == Style.CIRCLE && node != null
                         && !node.isCollapsed()) {
@@ -478,8 +405,8 @@ public class TreeLayout extends mxGraphLayout {
                 // hack to include node collapse into currentEdit
                 // that will be used by undoManager
                 if (hasChange) {
-                    CollapseChange collapseChange =
-                            new CollapseChange(gModel, node, node.isCollapsed());
+                    CollapseChange collapseChange = new CollapseChange(gModel,
+                            node, node.isCollapsed());
                     gModel.execute(collapseChange);
                     collapseChange.setPrevious(!node.isCollapsed());
                 }
@@ -506,9 +433,22 @@ public class TreeLayout extends mxGraphLayout {
                 expandedVertices.toArray());
     }
 
+    protected boolean hasInternalConnection(List<Integer> rank) {
+        for (Integer id : rank) {
+            mxCell cell = topGraph.getVertex(id);
+            GraphNode node = (GraphNode) cell.getValue();
+            for (GraphNode peer : node.getMiddleNeighbor()) {
+                if (rank.contains(peer.getLid())) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     /**
      * Description:
-     * 
+     *
      * @param endNodes
      * @return
      */
@@ -518,9 +458,8 @@ public class TreeLayout extends mxGraphLayout {
             List<GraphNode> toPlace = endNodes.get(vertex);
             mxRectangle rec = getVertexBounds(vertex);
             double x0 = rec.getCenterX();
-            double y0 =
-                    rec.getCenterY() + interRankCellSpacing * 2
-                            + GraphBuilder.HFI_SIZE;
+            double y0 = rec.getCenterY() + interRankCellSpacing * 2
+                    + GraphBuilder.HFI_SIZE;
             if (style == Style.CIRCLE) {
                 circleNodes(toPlace, x0, y0, r - intraCellSpacing);
                 if (expand == 0) {
@@ -554,8 +493,8 @@ public class TreeLayout extends mxGraphLayout {
             alpha += step;
             weight = i % 2 == 0 ? 0.8 : 1.2;
             if (isVertexMovable(v)) {
-                setVertexLocation(v, x + r * Math.cos(alpha) * weight, y - r
-                        * Math.sin(alpha) * weight);
+                setVertexLocation(v, x + r * Math.cos(alpha) * weight,
+                        y - r * Math.sin(alpha) * weight);
             }
         }
     }
@@ -610,7 +549,7 @@ public class TreeLayout extends mxGraphLayout {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.mxgraph.layout.mxGraphLayout#setVertexLocation(java.lang.Object,
      * double, double)
      */
@@ -618,8 +557,8 @@ public class TreeLayout extends mxGraphLayout {
     public mxRectangle setVertexLocation(Object vertex, double x, double y) {
         try {
             mxRectangle rec = getVertexBounds(vertex);
-            return super.setVertexLocation(vertex, x - rec.getWidth() / 2, y
-                    - rec.getHeight() / 2);
+            return super.setVertexLocation(vertex, x - rec.getWidth() / 2,
+                    y - rec.getHeight() / 2);
         } catch (Exception e) {
             log.warn(((mxCell) vertex).getValue() + " " + e.getMessage());
             System.out.println(((mxCell) vertex).getValue());

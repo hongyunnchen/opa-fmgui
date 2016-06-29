@@ -1,9 +1,9 @@
 /**
  * Copyright (c) 2015, Intel Corporation
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  *     * Redistributions of source code must retain the above copyright notice,
  *       this list of conditions and the following disclaimer.
  *     * Redistributions in binary form must reproduce the above copyright
@@ -12,7 +12,7 @@
  *     * Neither the name of Intel Corporation nor the names of its contributors
  *       may be used to endorse or promote products derived from this software
  *       without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -24,70 +24,6 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-/*******************************************************************************
- *                       I N T E L   C O R P O R A T I O N
- *	
- *  Functional Group: Fabric Viewer Application
- *
- *  File Name: TopSummaryProcessor.java
- *
- *  Archive Source: $Source$
- *
- *  Archive Log:    $Log$
- *  Archive Log:    Revision 1.11  2015/12/16 21:38:59  jijunwan
- *  Archive Log:    PR 132107 - Error messages in log file that are not really errors
- *  Archive Log:    - change to level to warning and show message rather then stack trace
- *  Archive Log:
- *  Archive Log:    Revision 1.10  2015/08/17 18:54:00  jijunwan
- *  Archive Log:    PR 129983 - Need to change file header's copyright text to BSD license txt
- *  Archive Log:    - changed frontend files' headers
- *  Archive Log:
- *  Archive Log:    Revision 1.9  2015/08/06 22:19:03  jijunwan
- *  Archive Log:    PR 129860 - Incorrect count of other ports on Topology summary
- *  Archive Log:    - removed debug info
- *  Archive Log:
- *  Archive Log:    Revision 1.8  2015/08/06 21:34:45  jijunwan
- *  Archive Log:    PR 129860 - Incorrect count of other ports on Topology summary
- *  Archive Log:    - Counted on number of nodes by mistake. Fixed to count on port.
- *  Archive Log:
- *  Archive Log:    Revision 1.7  2015/08/06 17:26:23  jijunwan
- *  Archive Log:    PR 129825 - Topology summary doesn't catch down graded ports
- *  Archive Log:    - improved to display "abnormal" ports
- *  Archive Log:    - added undo navigation support
- *  Archive Log:
- *  Archive Log:    Revision 1.6  2015/08/05 01:58:13  jijunwan
- *  Archive Log:    PR 129825 - Topology summary doesn't catch down graded ports
- *  Archive Log:    - the calculation missed the ports connect to HFIs. Now we include them in calculation
- *  Archive Log:
- *  Archive Log:    Revision 1.5  2015/05/07 14:18:40  jypak
- *  Archive Log:    PR 128564 - Topology Tree synchronization issue:
- *  Archive Log:    Null check the context before update in the TopologyTreeController. Other safe guard code added to avoid potential synchronization issue.
- *  Archive Log:
- *  Archive Log:    Revision 1.4  2015/02/18 19:32:02  jijunwan
- *  Archive Log:    PR 127102 - Overall summary of Switches under Topology page does not report correct number of switch ports
- *  Archive Log:     - improved the calculation to count both internal and external ports
- *  Archive Log:
- *  Archive Log:    Revision 1.3  2015/01/11 23:11:15  jijunwan
- *  Archive Log:    renamed PortUtils to Utils
- *  Archive Log:
- *  Archive Log:    Revision 1.2  2014/12/11 18:47:05  fernande
- *  Archive Log:    Switch from log4j to slf4j+logback
- *  Archive Log:
- *  Archive Log:    Revision 1.1  2014/10/23 16:00:04  jijunwan
- *  Archive Log:    changed topology information display to use device property panels, and JSectionView
- *  Archive Log:
- *  Archive Log:    Revision 1.1  2014/10/22 02:21:26  jijunwan
- *  Archive Log:    1) moved update tasks into task package
- *  Archive Log:    2) added topology summary panel
- *  Archive Log:    3) improved models to be able to calculate ports distribution, nodes not in fat tree etc.
- *  Archive Log:
- *
- *  Overview: 
- *
- *  @author: jijunwan
- *
- ******************************************************************************/
 
 package com.intel.stl.ui.network;
 
@@ -122,8 +58,8 @@ import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxGraphModel;
 
 public class TopologySummaryProcessor {
-    private final Logger log = LoggerFactory
-            .getLogger(TopologySummaryProcessor.class);
+    private final Logger log =
+            LoggerFactory.getLogger(TopologySummaryProcessor.class);
 
     private final String subnetSumName;
 
@@ -148,7 +84,7 @@ public class TopologySummaryProcessor {
 
     /**
      * Description:
-     * 
+     *
      * @param name
      * @param topArch
      * @param cancelIndicator
@@ -268,8 +204,7 @@ public class TopologySummaryProcessor {
                 tiers[i].setNumHFIs(numHFIs);
                 tiers[i].setUpQuality(upQuality);
                 tiers[i].setDownQuality(downQuality);
-                tiers[i].setNumOtherPorts(totalPorts
-                        - upQuality.getTotalPorts()
+                tiers[i].setNumOtherPorts(totalPorts - upQuality.getTotalPorts()
                         - downQuality.getTotalPorts());
                 // System.out.println(tiers[i]);
             }
@@ -308,15 +243,15 @@ public class TopologySummaryProcessor {
                         port);
             }
         } catch (SubnetDataNotFoundException e) {
-            e.printStackTrace();
+            log.error("Couldn't create port map", e);
         }
         return map;
     }
 
-    protected SimplePropertyCategory populateNodes(int numSwitches, int numHFIs) {
-        SimplePropertyCategory category =
-                new SimplePropertyCategory(
-                        STLConstants.K0014_ACTIVE_NODES.getValue(), null);
+    protected SimplePropertyCategory populateNodes(int numSwitches,
+            int numHFIs) {
+        SimplePropertyCategory category = new SimplePropertyCategory(
+                STLConstants.K0014_ACTIVE_NODES.getValue(), null);
         category.setShowHeader(true);
         NodeTypeViz type = NodeTypeViz.SWITCH;
         PropertyItem<SimplePropertyKey> item =
@@ -331,9 +266,8 @@ public class TopologySummaryProcessor {
 
     protected SimplePropertyCategory populateActivePorts(int numSwitches,
             int numHFIs) {
-        SimplePropertyCategory category =
-                new SimplePropertyCategory(
-                        STLConstants.K0024_ACTIVE_PORTS.getValue(), null);
+        SimplePropertyCategory category = new SimplePropertyCategory(
+                STLConstants.K0024_ACTIVE_PORTS.getValue(), null);
         category.setShowHeader(true);
         NodeTypeViz type = NodeTypeViz.SWITCH;
         PropertyItem<SimplePropertyKey> item =
@@ -348,9 +282,8 @@ public class TopologySummaryProcessor {
 
     protected SimplePropertyCategory populateOtherPorts(int others) {
         String countString = UIConstants.INTEGER.format(others);
-        SimplePropertyCategory category =
-                new SimplePropertyCategory(
-                        STLConstants.K2071_OTHER_PORTS.getValue(), countString);
+        SimplePropertyCategory category = new SimplePropertyCategory(
+                STLConstants.K2071_OTHER_PORTS.getValue(), countString);
         category.setShowHeader(true);
         return category;
     }

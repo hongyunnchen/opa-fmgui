@@ -1,9 +1,9 @@
 /**
  * Copyright (c) 2015, Intel Corporation
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  *     * Redistributions of source code must retain the above copyright notice,
  *       this list of conditions and the following disclaimer.
  *     * Redistributions in binary form must reproduce the above copyright
@@ -12,7 +12,7 @@
  *     * Neither the name of Intel Corporation nor the names of its contributors
  *       may be used to endorse or promote products derived from this software
  *       without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -24,39 +24,13 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-/*******************************************************************************
- *                       I N T E L   C O R P O R A T I O N
- * 
- *  Functional Group: Fabric Viewer Application
- * 
- *  File Name: GroupStatistics.java
- * 
- *  Archive Source: $Source$
- * 
- *  Archive Log: $Log$
- *  Archive Log: Revision 1.9  2015/08/31 22:01:43  jijunwan
- *  Archive Log: PR 130197 - Calculated fabric health above 100% when entire fabric is rebooted
- *  Archive Log: - changed to only use information from ImageInfo for calculation
- *  Archive Log:
- *  Archive Log: Revision 1.8  2015/08/17 18:53:46  jijunwan
- *  Archive Log: PR 129983 - Need to change file header's copyright text to BSD license txt
- *  Archive Log: - changed frontend files' headers
- *  Archive Log:
- *  Archive Log: Revision 1.7  2015/06/10 19:58:50  jijunwan
- *  Archive Log: PR 129120 - Some old files have no proper file header. They cannot record change logs.
- *  Archive Log: - wrote a tool to check and insert file header
- *  Archive Log: - applied on backend files
- *  Archive Log:
- * 
- *  Overview:
- * 
- *  @author: jijunwan
- * 
- ******************************************************************************/
 package com.intel.stl.ui.model;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import com.intel.stl.api.performance.ImageInfoBean;
 import com.intel.stl.api.performance.SMInfoDataBean;
@@ -64,8 +38,6 @@ import com.intel.stl.api.subnet.NodeType;
 import com.intel.stl.api.subnet.SubnetDescription;
 
 /**
- * @author jijunwan
- * 
  */
 public class GroupStatistics {
     private final SubnetDescription subnet;
@@ -86,27 +58,42 @@ public class GroupStatistics {
 
     private int numSMs;
 
-    private SMInfoDataBean[] SMInfo;
+    private List<SMInfoDataBean> smInfo;
 
     private long msmUptimeInSeconds;
 
-    public GroupStatistics(SubnetDescription subnet, ImageInfoBean imageInfo) {
+    public GroupStatistics(SubnetDescription subnet, ImageInfoBean imageInfo,
+            List<SMInfoDataBean> sms) {
         this.subnet = subnet;
         if (imageInfo == null) {
             throw new IllegalArgumentException("No imageInfo");
         }
 
-        setImageInfo(imageInfo);
+        setImageInfo(imageInfo, sms);
     }
 
-    public void setImageInfo(ImageInfoBean imageInfo) {
+    public void setImageInfo(ImageInfoBean imageInfo,
+            List<SMInfoDataBean> sms) {
         numLinks = imageInfo.getNumLinks();
         numFailedNodes = imageInfo.getNumFailedNodes();
         numFailedPorts = imageInfo.getNumFailedPorts();
         numSkippedNodes = imageInfo.getNumSkippedNodes();
         numSkippedPorts = imageInfo.getNumSkippedPorts();
         numSMs = imageInfo.getNumSMs();
-        SMInfo = imageInfo.getSMInfo();
+        smInfo = new ArrayList<SMInfoDataBean>();
+        SMInfoDataBean[] imgSmInfo = imageInfo.getSMInfo();
+        Set<Integer> imgSMs = new HashSet<Integer>();
+        for (int i = 0; i < imgSmInfo.length; i++) {
+            smInfo.add(imgSmInfo[i]);
+            imgSMs.add(imgSmInfo[i].getLid());
+        }
+        if (sms != null) {
+            for (SMInfoDataBean sm : sms) {
+                if (!imgSMs.contains(sm.getLid())) {
+                    smInfo.add(sm);
+                }
+            }
+        }
 
         nodeTypesDist = new EnumMap<NodeType, Integer>(NodeType.class);
         nodeTypesDist.put(NodeType.SWITCH, imageInfo.getNumSwitchNodes());
@@ -194,7 +181,7 @@ public class GroupStatistics {
 
     /**
      * <i>Description:</i>
-     * 
+     *
      * @return
      */
     public long getOtherPorts() {
@@ -247,13 +234,13 @@ public class GroupStatistics {
     /**
      * @return the sMInfo
      */
-    public SMInfoDataBean[] getSMInfo() {
-        return SMInfo;
+    public List<SMInfoDataBean> getSMInfo() {
+        return smInfo;
     }
 
     public SMInfoDataBean getMasterSM() {
-        if (SMInfo != null && SMInfo.length > 0) {
-            return SMInfo[0];
+        if (smInfo != null && !smInfo.isEmpty()) {
+            return smInfo.get(0);
         } else {
             return null;
         }
@@ -261,7 +248,7 @@ public class GroupStatistics {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#toString()
      */
     @Override
@@ -271,9 +258,8 @@ public class GroupStatistics {
                 + ", portTypesDist=" + portTypesDist + ", numFailedNodes="
                 + numFailedNodes + ", numFailedPorts=" + numFailedPorts
                 + ", numSkippedNodes=" + numSkippedNodes + ", numSkippedPorts="
-                + numSkippedPorts + ", numSMs=" + numSMs + ", SMInfo="
-                + Arrays.toString(SMInfo) + ", msmUptimeInSeconds="
-                + msmUptimeInSeconds + "]";
+                + numSkippedPorts + ", numSMs=" + numSMs + ", SMInfo=" + smInfo
+                + ", msmUptimeInSeconds=" + msmUptimeInSeconds + "]";
     }
 
 }

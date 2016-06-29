@@ -1,9 +1,9 @@
 /**
  * Copyright (c) 2015, Intel Corporation
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  *     * Redistributions of source code must retain the above copyright notice,
  *       this list of conditions and the following disclaimer.
  *     * Redistributions in binary form must reproduce the above copyright
@@ -12,7 +12,7 @@
  *     * Neither the name of Intel Corporation nor the names of its contributors
  *       may be used to endorse or promote products derived from this software
  *       without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -24,47 +24,6 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-/*******************************************************************************
- *                       I N T E L   C O R P O R A T I O N
- *	
- *  Functional Group: Fabric Viewer Application
- *
- *  File Name: RefreshGraphTask.java
- *
- *  Archive Source: $Source$
- *
- *  Archive Log:    $Log$
- *  Archive Log:    Revision 1.7  2015/08/17 18:54:05  jijunwan
- *  Archive Log:    PR 129983 - Need to change file header's copyright text to BSD license txt
- *  Archive Log:    - changed frontend files' headers
- *  Archive Log:
- *  Archive Log:    Revision 1.6  2015/05/07 14:18:41  jypak
- *  Archive Log:    PR 128564 - Topology Tree synchronization issue:
- *  Archive Log:    Null check the context before update in the TopologyTreeController. Other safe guard code added to avoid potential synchronization issue.
- *  Archive Log:
- *  Archive Log:    Revision 1.5  2015/04/28 14:00:33  jijunwan
- *  Archive Log:    1) improved topology viz to use TopGraph copy for outline display. This will avoid graph and outline views share internal graph view that may cause sync issues.
- *  Archive Log:    2) added more debug info in log
- *  Archive Log:
- *  Archive Log:    Revision 1.4  2015/04/10 20:20:32  fernande
- *  Archive Log:    Changed TopologyView to be passed two background services (graphService and outlineService) which now reside in FabricController and can be properly shutdown when an error occurs.
- *  Archive Log:
- *  Archive Log:    Revision 1.3  2015/02/23 22:49:46  jijunwan
- *  Archive Log:    improved to update topology graph properly for notices
- *  Archive Log:
- *  Archive Log:    Revision 1.2  2014/11/05 23:02:29  jijunwan
- *  Archive Log:    ignore InterruptedExceptions
- *  Archive Log:
- *  Archive Log:    Revision 1.1  2014/11/05 16:29:27  jijunwan
- *  Archive Log:    synchronized topology update based on notices
- *  Archive Log:
- *
- *  Overview: 
- *
- *  @author: jijunwan
- *
- ******************************************************************************/
 
 package com.intel.stl.ui.network.task;
 
@@ -98,7 +57,7 @@ public class RefreshGraphTask extends TopologyUpdateTask {
 
     /**
      * Description:
-     * 
+     *
      * @param controller
      * @param source
      * @param selectedResources
@@ -113,13 +72,14 @@ public class RefreshGraphTask extends TopologyUpdateTask {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.intel.stl.ui.network.task.TopologyUpdateTask#createNewGraph(com.intel
      * .stl.ui.common.ICancelIndicator, com.intel.stl.ui.network.TopGraph)
      */
     @Override
-    public TopGraph createNewGraph(ICancelIndicator indicator, TopGraph oldGraph) {
+    public TopGraph createNewGraph(ICancelIndicator indicator,
+            TopGraph oldGraph) {
         if (indicator.isCancelled()) {
             return null;
         }
@@ -154,7 +114,7 @@ public class RefreshGraphTask extends TopologyUpdateTask {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.intel.stl.ui.network.task.TopologyUpdateTask#applyChanges(com.intel
      * .stl.ui.common.ICancelIndicator, com.intel.stl.ui.network.TopGraph)
@@ -168,7 +128,7 @@ public class RefreshGraphTask extends TopologyUpdateTask {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.intel.stl.ui.network.task.TopologyUpdateTask#onSuccess(com.intel.
      * stl.ui.common.ICancelIndicator, com.intel.stl.ui.network.TopGraph)
@@ -181,6 +141,7 @@ public class RefreshGraphTask extends TopologyUpdateTask {
 
         super.onSuccess(indicator, graph);
 
+        controller.setFullTopTreeModel(tmpTreeMode);
         controller.setTopTreeModel(tmpTreeMode);
 
         submitGraphTask(new Runnable() {
@@ -194,14 +155,14 @@ public class RefreshGraphTask extends TopologyUpdateTask {
             @Override
             public void run() {
                 guideView.setGraph(outlineGraph);
-                graphView.updateGraph();
+                guideView.updateGraph();
             }
         });
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.intel.stl.ui.network.task.TopologyUpdateTask#onFinally(com.intel.
      * stl.ui.common.ICancelIndicator)

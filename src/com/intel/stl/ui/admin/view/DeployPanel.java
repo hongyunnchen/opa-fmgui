@@ -25,31 +25,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*******************************************************************************
- *                       I N T E L   C O R P O R A T I O N
- *	
- *  Functional Group: Fabric Viewer Application
- *
- *  File Name: DeployPanel.java
- *
- *  Archive Source: $Source$
- *
- *  Archive Log:    $Log$
- *  Archive Log:    Revision 1.2  2015/08/17 18:53:52  jijunwan
- *  Archive Log:    PR 129983 - Need to change file header's copyright text to BSD license txt
- *  Archive Log:    - changed frontend files' headers
- *  Archive Log:
- *  Archive Log:    Revision 1.1  2015/08/17 17:37:06  jijunwan
- *  Archive Log:    PR 128973 - Deploy FM conf changes on all SMs
- *  Archive Log:    - introduced deploy panel, controller and listener
- *  Archive Log:
- *
- *  Overview: 
- *
- *  @author: jijunwan
- *
- ******************************************************************************/
-
 package com.intel.stl.ui.admin.view;
 
 import java.awt.Dimension;
@@ -325,6 +300,7 @@ public class DeployPanel extends JPanel {
     public void setSubnet(SubnetDescription subnet) {
         HostInfo hostInfo = subnet.getCurrentFE();
         masterSM.setHostInfo(hostInfo);
+        masterSM.setState(DeployState.NONE);
 
         standbySMsPanel.removeAll();
         List<HostInfo> fes = subnet.getFEList();

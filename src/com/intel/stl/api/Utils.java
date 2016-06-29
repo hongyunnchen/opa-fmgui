@@ -1,9 +1,9 @@
 /**
  * Copyright (c) 2015, Intel Corporation
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  *     * Redistributions of source code must retain the above copyright notice,
  *       this list of conditions and the following disclaimer.
  *     * Redistributions in binary form must reproduce the above copyright
@@ -12,7 +12,7 @@
  *     * Neither the name of Intel Corporation nor the names of its contributors
  *       may be used to endorse or promote products derived from this software
  *       without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -24,76 +24,6 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-/*******************************************************************************
- *                       I N T E L   C O R P O R A T I O N
- *	
- *  Functional Group: Fabric Viewer Application
- *
- *  File Name: PortUtils.java
- *
- *  Archive Source: $Source$
- *
- *  Archive Log:    $Log$
- *  Archive Log:    Revision 1.11  2015/12/08 20:54:08  rjtierne
- *  Archive Log:    PR 131945 - "UnknownHostKey" when trying to unlock console
- *  Archive Log:    - In method getKnownHosts(), create the .ssh directory if it doesn't
- *  Archive Log:    exist before attempting to create the known_hosts file.
- *  Archive Log:
- *  Archive Log:    Revision 1.10  2015/10/29 12:11:40  robertja
- *  Archive Log:    PR 131014 MailNotifier is now updated if user changes events or recipients in wizard after start-up.
- *  Archive Log:
- *  Archive Log:    Revision 1.9  2015/08/17 18:48:51  jijunwan
- *  Archive Log:    PR 129983 - Need to change file header's copyright text to BSD license txt
- *  Archive Log:    - change backend files' headers
- *  Archive Log:
- *  Archive Log:    Revision 1.8  2015/08/10 17:04:43  robertja
- *  Archive Log:    PR128974 - Email notification functionality.
- *  Archive Log:
- *  Archive Log:    Revision 1.7  2015/07/02 14:24:20  jijunwan
- *  Archive Log:    PR 129442 - login failed with FileNotFoundException
- *  Archive Log:    - fixed a typo in the utility method
- *  Archive Log:
- *  Archive Log:    Revision 1.6  2015/07/01 21:59:24  jijunwan
- *  Archive Log:    PR 129442 - login failed with FileNotFoundException
- *  Archive Log:    - Introduced a Utility method to create JSch that will
- *  Archive Log:    1) check whether known_hosts exist
- *  Archive Log:    2) if not exist, create a new file
- *  Archive Log:    3) if have valid known_hosts file, set it to Jsch. Oterwise, let Jsch maintain it's own memory based temporary file
- *  Archive Log:
- *  Archive Log:    Revision 1.5  2015/05/29 20:33:35  fernande
- *  Archive Log:    PR 128897 - STLAdapter worker thread is in a continuous loop, even when there are no requests to service. Second wave of changes: the application can be switched between the old adapter and the new; moved out several initialization pieces out of objects constructor to allow subnet initialization with a UI in place; improved generics definitions for FV commands.
- *  Archive Log:
- *  Archive Log:    Revision 1.4  2015/03/16 21:56:30  jijunwan
- *  Archive Log:    fixed typo
- *  Archive Log:
- *  Archive Log:    Revision 1.3  2015/03/05 17:30:40  jijunwan
- *  Archive Log:    init version to support Application management
- *  Archive Log:    1) read/write opafm.xml from/to host with backup file support
- *  Archive Log:    2) Application parser
- *  Archive Log:    3) Add/remove and update Application
- *  Archive Log:    4) unique name, reference conflication check
- *  Archive Log:
- *  Archive Log:    Revision 1.2  2015/01/28 23:15:20  jijunwan
- *  Archive Log:    added helpers to support unsigned byte, short and int
- *  Archive Log:
- *  Archive Log:    Revision 1.1  2015/01/11 23:09:30  jijunwan
- *  Archive Log:    renamed PortUtils to Utils
- *  Archive Log:    moved convertFromUnixTime to Utils
- *  Archive Log:
- *  Archive Log:    Revision 1.2  2015/01/11 20:47:22  jijunwan
- *  Archive Log:    updated to the latest FM as of 01/05/2015.
- *  Archive Log:    adapt to changes introduced on FM side.
- *  Archive Log:
- *  Archive Log:    Revision 1.1  2014/10/21 22:14:14  jijunwan
- *  Archive Log:    Added utilities that is able to detect port status. We should always reuse these utilities when possible to ensure we have consistent results
- *  Archive Log:
- *
- *  Overview: 
- *
- *  @author: jijunwan
- *
- ******************************************************************************/
 
 package com.intel.stl.api;
 
@@ -228,6 +158,22 @@ public class Utils {
                 || activeWidthBit != rxActiveWidthDownBit;
     }
 
+    /**
+     *
+     * <i>Description:</i>
+     *
+     * @param id
+     *            HoQLife id
+     * @return HoqLife in ms
+     */
+    public static final double getHoQLife(byte id) {
+        if (id >= 0x14) {
+            return Double.POSITIVE_INFINITY;
+        } else {
+            return (0x04 << id) / 1024.0;
+        }
+    }
+
     public static final Date convertFromUnixTime(long unixTime) {
         return new Date(unixTime * 1000);
     }
@@ -283,9 +229,8 @@ public class Utils {
         InputStream stream = null;
         KeyManagerFactory kmf;
         try {
-            kmf =
-                    KeyManagerFactory.getInstance(TRUST_MANAGEMENT_ALGORITHM,
-                            SECURITY_PROVIDER);
+            kmf = KeyManagerFactory.getInstance(TRUST_MANAGEMENT_ALGORITHM,
+                    SECURITY_PROVIDER);
             KeyStore ks = KeyStore.getInstance(KEYSTORE_TYPE);
             stream = new FileInputStream(cert);
             ks.load(stream, pwd);
@@ -367,28 +312,28 @@ public class Utils {
     public static String listToConcatenatedString(List<String> stringList,
             String delimiter) {
         StringBuffer sb = new StringBuffer();
-	    if (stringList != null){
-	        for (String str : stringList) {
-	        	if(str != null){
-		            if (str.contains(delimiter)) {
-		                throw new IllegalArgumentException("Source name '" + str
-		                        + "' contains DELIMITER '" + delimiter + "'");
-		            }
-		
-		            if (sb.length() == 0) {
-		                sb.append(str);
-		            } else {
-		                sb.append(delimiter + str);
-		            }
-	        	}
-	        }
+        if (stringList != null) {
+            for (String str : stringList) {
+                if (str != null) {
+                    if (str.contains(delimiter)) {
+                        throw new IllegalArgumentException("Source name '" + str
+                                + "' contains DELIMITER '" + delimiter + "'");
+                    }
+
+                    if (sb.length() == 0) {
+                        sb.append(str);
+                    } else {
+                        sb.append(delimiter + str);
+                    }
+                }
+            }
         }
         return sb.toString();
     }
 
     public static List<String> concatenatedStringToList(String concatString,
             String delimiter) {
-        if ((concatString == null) || concatString.isEmpty()){
+        if ((concatString == null) || concatString.isEmpty()) {
             return new ArrayList<String>();
         } else {
             return Arrays.asList(concatString.split(delimiter));

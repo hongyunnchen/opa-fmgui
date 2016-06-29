@@ -1,9 +1,9 @@
 /**
  * Copyright (c) 2015, Intel Corporation
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  *     * Redistributions of source code must retain the above copyright notice,
  *       this list of conditions and the following disclaimer.
  *     * Redistributions in binary form must reproduce the above copyright
@@ -12,7 +12,7 @@
  *     * Neither the name of Intel Corporation nor the names of its contributors
  *       may be used to endorse or promote products derived from this software
  *       without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -24,76 +24,6 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-/*******************************************************************************
- *                       I N T E L   C O R P O R A T I O N
- *	
- *  Functional Group: Fabric Viewer Application
- *
- *  File Name: PerformanceTableData.java
- *
- *  Archive Source: $Source$
- *
- *  Archive Log:    $Log$
- *  Archive Log:    Revision 1.12  2015/08/17 18:53:40  jijunwan
- *  Archive Log:    PR 129983 - Need to change file header's copyright text to BSD license txt
- *  Archive Log:    - changed frontend files' headers
- *  Archive Log:
- *  Archive Log:    Revision 1.11  2015/06/01 15:01:17  jypak
- *  Archive Log:    PR 128823 - Improve performance tables to include all portcounters fields.
- *  Archive Log:    All port counters fields added to performance table and connectivity table.
- *  Archive Log:
- *  Archive Log:    Revision 1.10  2015/05/28 15:29:22  jypak
- *  Archive Log:    PR 128873 - Add "Flits" in performance table for Data related columns.
- *  Archive Log:    Added "(MB)" to RcvData, XmitData column header.
- *  Archive Log:    Added "(MBps)" to data rates.
- *  Archive Log:    Added data in "Flits" or data rate in "(Flits/sec)" to tool tips.
- *  Archive Log:    Used the TableDataDescription to convert and format the data.
- *  Archive Log:
- *  Archive Log:    Revision 1.9  2015/05/14 17:43:07  jijunwan
- *  Archive Log:    PR 127700 - Delta data on host performance display is accumulating
- *  Archive Log:    - corrected delta value calculation
- *  Archive Log:    - changed to display data/pkts rate rather than delta on chart and table
- *  Archive Log:    - updated chart unit to show rate
- *  Archive Log:    - renamed the following classes to reflect we are dealing with rate
- *  Archive Log:      DataChartRangeUpdater -> DataRateChartRangeUpdater
- *  Archive Log:      PacketChartRangeUpdater -> PacketRateChartRangeUpdater
- *  Archive Log:      DataChartScaleGroupManager -> DataRateChartScaleGroupManager
- *  Archive Log:      PacketChartScaleGroupManager -> PacketRateChartScaleGroupManager
- *  Archive Log:
- *  Archive Log:    Revision 1.8  2015/04/10 18:20:52  jypak
- *  Archive Log:    Fall back to previous way of displaying received/transmitted data in performance page(chart section, table section, counter (error) section).
- *  Archive Log:
- *  Archive Log:    Revision 1.7  2015/04/08 19:45:03  rjtierne
- *  Archive Log:    Added Tx Data Rate
- *  Archive Log:
- *  Archive Log:    Revision 1.6  2015/04/07 14:38:27  jypak
- *  Archive Log:    PR 126998 - Received/Transmitted data counters for Device Node and Device ports should show in MB rather than Flits. Fixed by converting units to Byte/KB/MB/GB. Also, tool tips were added to show the units for each value.
- *  Archive Log:
- *  Archive Log:    Revision 1.5  2015/03/05 22:32:13  fisherma
- *  Archive Log:    Added LinkQuality icon to Performance -> Performance tab table.
- *  Archive Log:
- *  Archive Log:    Revision 1.4  2015/02/04 21:44:17  jijunwan
- *  Archive Log:    impoved to handle unsigned values
- *  Archive Log:     - we promote to a "bigger" data type
- *  Archive Log:     - port numbers are now short
- *  Archive Log:
- *  Archive Log:    Revision 1.3  2014/09/18 21:03:28  jijunwan
- *  Archive Log:    Added link (jump to) capability to Connectivity tables and PortSummary table
- *  Archive Log:
- *  Archive Log:    Revision 1.2  2014/05/30 20:35:46  rjtierne
- *  Archive Log:    Made the description of Rx/Tx Data and Packet members and
- *  Archive Log:    setters/getters more specifically described as "Delta" or "Cumulative
- *  Archive Log:
- *  Archive Log:    Revision 1.1  2014/05/23 19:25:37  rjtierne
- *  Archive Log:    Initial Version
- *  Archive Log:
- *
- *  Overview: 
- *
- *  @author: rjtierne
- *
- ******************************************************************************/
 
 package com.intel.stl.ui.monitor;
 
@@ -170,13 +100,15 @@ public class PerformanceTableData implements Serializable {
 
     private long linkDowned;
 
+    private byte numLanesDown;
+
     private short uncorrectableErrors;
 
     private long swPortCongestion;
 
     /**
      * Description:
-     * 
+     *
      * @param nodeLid
      */
     public PerformanceTableData(int nodeLid) {
@@ -545,6 +477,13 @@ public class PerformanceTableData implements Serializable {
     }
 
     /**
+     * @return the numLanesDown
+     */
+    public byte getNumLanesDown() {
+        return numLanesDown;
+    }
+
+    /**
      * @return the uncorrectableErrors
      */
     public short getUncorrectableErrors() {
@@ -692,6 +631,14 @@ public class PerformanceTableData implements Serializable {
      */
     public void setLinkDowned(long linkDowned) {
         this.linkDowned = linkDowned;
+    }
+
+    /**
+     * @param numLanesDown
+     *            the numLanesDown to set
+     */
+    public void setNumLanesDown(byte numLanesDown) {
+        this.numLanesDown = numLanesDown;
     }
 
     /**

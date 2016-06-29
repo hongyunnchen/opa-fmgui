@@ -1,9 +1,9 @@
 /**
  * Copyright (c) 2015, Intel Corporation
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  *     * Redistributions of source code must retain the above copyright notice,
  *       this list of conditions and the following disclaimer.
  *     * Redistributions in binary form must reproduce the above copyright
@@ -12,7 +12,7 @@
  *     * Neither the name of Intel Corporation nor the names of its contributors
  *       may be used to endorse or promote products derived from this software
  *       without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -25,50 +25,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*******************************************************************************
- *                       I N T E L   C O R P O R A T I O N
- *  
- *  Functional Group: Fabric Viewer Application
- *
- *  File Name: ImageInfoBean.java
- *
- *  Archive Source: $Source$
- *
- *  Archive Log:    $Log$
- *  Archive Log:    Revision 1.12  2015/09/26 03:21:08  jijunwan
- *  Archive Log:    PR 130522 - OtherPorts doesn't report a value
- *  Archive Log:    - fixed mistake on hasChange
- *  Archive Log:
- *  Archive Log:    Revision 1.11  2015/09/20 22:30:40  jijunwan
- *  Archive Log:    PR 130522 - OtherPorts doesn't report a value
- *  Archive Log:    - introduced hasChange to ImageInfo to detect if there is any statistics changes between two ImageInfo
- *  Archive Log:
- *  Archive Log:    Revision 1.10  2015/08/17 18:48:41  jijunwan
- *  Archive Log:    PR 129983 - Need to change file header's copyright text to BSD license txt
- *  Archive Log:    - change backend files' headers
- *  Archive Log:
- *  Archive Log:    Revision 1.9  2015/06/25 21:04:02  jijunwan
- *  Archive Log:    Bug 126755 - Pin Board functionality is not working in FV
- *  Archive Log:    - improvement on data randomization that ensure an attribute at the same time point get the same data where
- *  Archive Log:
- *  Archive Log:    Revision 1.8  2015/04/09 03:29:21  jijunwan
- *  Archive Log:    updated to match FM 390
- *  Archive Log:
- *  Archive Log:    Revision 1.7  2015/02/12 19:30:00  jijunwan
- *  Archive Log:    introduced interface ITimestamped, and all timimg attributes implemented it, so we can easily know which attribute is associated with timestamp
- *  Archive Log:
- *  Archive Log:    Revision 1.6  2015/02/04 21:37:53  jijunwan
- *  Archive Log:    impoved to handle unsigned values
- *  Archive Log:     - we promote to a "bigger" data type
- *  Archive Log:     - port numbers are now short
- *  Archive Log:
- *
- *  Overview: 
- *
- *  @author: jijunwan
- *
- ******************************************************************************/
-
 package com.intel.stl.api.performance;
 
 import java.io.Serializable;
@@ -79,8 +35,6 @@ import com.intel.stl.api.ITimestamped;
 import com.intel.stl.api.Utils;
 
 /**
- * @author jijunwan
- * 
  */
 public class ImageInfoBean implements ITimestamped, Serializable {
     private static final long serialVersionUID = 1L;
@@ -111,6 +65,8 @@ public class ImageInfoBean implements ITimestamped, Serializable {
 
     private long numUnexpectedClearPorts; // unsigned int
 
+    private int imageInterval; // unsigned int
+
     private SMInfoDataBean[] SMInfo;
 
     /**
@@ -130,7 +86,7 @@ public class ImageInfoBean implements ITimestamped, Serializable {
 
     /**
      * Note that sweepStart is Unix time (seconds since Jan 1st, 1970)
-     * 
+     *
      * @return the sweepStart
      */
     public long getSweepStart() {
@@ -138,9 +94,9 @@ public class ImageInfoBean implements ITimestamped, Serializable {
     }
 
     /**
-     * 
+     *
      * <i>Description:</i> returns sweepStart as Date
-     * 
+     *
      * @return sweepStart converted to Date
      */
     public Date getSweepStartDate() {
@@ -149,7 +105,7 @@ public class ImageInfoBean implements ITimestamped, Serializable {
 
     /**
      * Note that sweepStart is Unix time (seconds since Jan 1st, 1970)
-     * 
+     *
      * @param sweepStart
      *            the sweepStart to set
      */
@@ -363,6 +319,14 @@ public class ImageInfoBean implements ITimestamped, Serializable {
                 Utils.unsignedInt(numUnexpectedClearPorts);
     }
 
+    public int getImageInterval() {
+        return imageInterval;
+    }
+
+    public void setImageInterval(int imageInterval) {
+        this.imageInterval = imageInterval;
+    }
+
     /**
      * @return the sMInfo
      */
@@ -380,7 +344,7 @@ public class ImageInfoBean implements ITimestamped, Serializable {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.intel.stl.api.ITimestamped#getTimestamp()
      */
     @Override
@@ -390,7 +354,7 @@ public class ImageInfoBean implements ITimestamped, Serializable {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.intel.stl.api.ITimestamped#getTimestampDate()
      */
     @Override
@@ -400,7 +364,7 @@ public class ImageInfoBean implements ITimestamped, Serializable {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#hashCode()
      */
     @Override
@@ -413,7 +377,7 @@ public class ImageInfoBean implements ITimestamped, Serializable {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
@@ -440,7 +404,7 @@ public class ImageInfoBean implements ITimestamped, Serializable {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#toString()
      */
     @Override
@@ -454,7 +418,8 @@ public class ImageInfoBean implements ITimestamped, Serializable {
                 + numFailedPorts + ", numSkippedNodes=" + numSkippedNodes
                 + ", numSkippedPorts=" + numSkippedPorts
                 + ", numUnexpectedClearPorts=" + numUnexpectedClearPorts
-                + ", SMInfo=" + Arrays.toString(SMInfo) + "]";
+                + ", imageInterval=" + imageInterval + ", SMInfo="
+                + Arrays.toString(SMInfo) + "]";
     }
 
     public boolean hasChange(ImageInfoBean other) {
@@ -492,6 +457,9 @@ public class ImageInfoBean implements ITimestamped, Serializable {
             return true;
         }
         if (numUnexpectedClearPorts != other.numUnexpectedClearPorts) {
+            return true;
+        }
+        if (imageInterval != other.imageInterval) {
             return true;
         }
         return false;

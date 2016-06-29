@@ -1,9 +1,9 @@
 /**
  * Copyright (c) 2015, Intel Corporation
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  *     * Redistributions of source code must retain the above copyright notice,
  *       this list of conditions and the following disclaimer.
  *     * Redistributions in binary form must reproduce the above copyright
@@ -12,7 +12,7 @@
  *     * Neither the name of Intel Corporation nor the names of its contributors
  *       may be used to endorse or promote products derived from this software
  *       without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -24,60 +24,6 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-/*******************************************************************************
- *                       I N T E L   C O R P O R A T I O N
- * 
- *  Functional Group: Fabric Viewer Application
- * 
- *  File Name: AppComponentRegistry.java
- * 
- *  Archive Source: $Source$
- * 
- *  Archive Log: $Log$
- *  Archive Log: Revision 1.52  2015/12/03 19:53:36  fernande
- *  Archive Log: PR 131863 - Klocwork Issue on AppComponentRegistry. Added finally to close input stream.
- *  Archive Log:
- *  Archive Log: Revision 1.51  2015/11/18 21:08:38  fernande
- *  Archive Log: PR127008 - Allow a user delete DB files during uninstallation. Added code to invoke a script the first time the application is invoked.
- *  Archive Log:
- *  Archive Log: Revision 1.50  2015/09/02 15:55:49  fernande
- *  Archive Log: PR 130220 - FM GUI "about" window displays unmatched version and build #. Passing the OPA FM version thru the manifest.
- *  Archive Log:
- *  Archive Log: Revision 1.49  2015/09/01 15:32:40  fernande
- *  Archive Log: PR 130220 - FM GUI "about" window displays unmatched version and build #. Changed the default app version to 10.
- *  Archive Log:
- *  Archive Log: Revision 1.48  2015/08/19 19:26:45  fernande
- *  Archive Log: PR 128703 - Fail over doesn't work on A0 Fabric. Adding shutdown method to AppComponent interface for application shutdown.
- *  Archive Log:
- *  Archive Log: Revision 1.47  2015/08/17 18:48:40  jijunwan
- *  Archive Log: PR 129983 - Need to change file header's copyright text to BSD license txt
- *  Archive Log: - change backend files' headers
- *  Archive Log:
- *  Archive Log: Revision 1.46  2015/08/17 14:22:56  rjtierne
- *  Archive Log: PR 128979 - SM Log display
- *  Archive Log: This is the first version of the Log Viewer which displays select lines of text from the remote SM log file. Updates include searchable raw text from file, user-defined number of lines to display, refreshing end of file, and paging. This PR is now closed and further updates can be found by referencing PR 130011 - "Enhance SM Log Viewer to include Standard and Advanced requirements".
- *  Archive Log:
- *  Archive Log: Revision 1.45  2015/08/10 17:04:49  robertja
- *  Archive Log: PR128974 - Email notification functionality.
- *  Archive Log:
- *  Archive Log: Revision 1.44  2015/07/09 18:51:49  fernande
- *  Archive Log: PR 129447 - Database size increases a lot over a short period of time. Added method to expose application settings in the settings.xml file to higher levels in the app
- *  Archive Log:
- *  Archive Log: Revision 1.43  2015/06/17 15:35:28  fisherma
- *  Archive Log: PR129220 - partial fix for the login changes.
- *  Archive Log:
- *  Archive Log: Revision 1.42  2015/06/10 19:36:34  jijunwan
- *  Archive Log: PR 129153 - Some old files have no proper file header. They cannot record change logs.
- *  Archive Log: - wrote a tool to check and insert file header
- *  Archive Log: - applied on backend files
- *  Archive Log:
- * 
- *  Overview:
- * 
- *  @author: Fernando Fernandez
- * 
- ******************************************************************************/
-
 package com.intel.stl.configuration;
 
 import static com.intel.stl.common.STLMessages.STL10001_SETTINGS_FILE_FORMAT_INVALID;
@@ -86,7 +32,7 @@ import static com.intel.stl.common.STLMessages.STL10004_SECURITY_EXCEPTION_IN_FO
 import static com.intel.stl.common.STLMessages.STL10005_DATABASE_ENGINE_NOTSUPPORTED;
 import static com.intel.stl.common.STLMessages.STL10016_INITIALIZING_COMPONENT_REGISTRY;
 import static com.intel.stl.common.STLMessages.STL10017_CHECKING_MULTI_APP_INSTANCES;
-import static com.intel.stl.common.STLMessages.STL10025_STARTING_COMPONENT;
+import static com.intel.stl.common.STLMessages.STL10024_NO_COMPONENT_FOUND;
 import static com.intel.stl.common.STLMessages.STL10102_MULTI_INSTANCES;
 import static com.intel.stl.configuration.AppSettings.APP_ADAPTER_USENEW;
 import static com.intel.stl.configuration.AppSettings.APP_BUILD_DATE;
@@ -122,6 +68,7 @@ import java.util.InvalidPropertiesFormatException;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.jar.Attributes;
 import java.util.jar.Attributes.Name;
 import java.util.jar.Manifest;
@@ -136,7 +83,6 @@ import com.intel.stl.api.FMGui;
 import com.intel.stl.api.configuration.impl.AppContextImpl;
 import com.intel.stl.api.configuration.impl.MailManager;
 import com.intel.stl.common.AppDataUtils;
-import com.intel.stl.common.STLMessages;
 import com.intel.stl.datamanager.DatabaseManager;
 import com.intel.stl.datamanager.impl.DatabaseManagerImpl;
 import com.intel.stl.dbengine.DatabaseEngine;
@@ -147,8 +93,6 @@ import com.intel.stl.fecdriver.impl.STLAdapter;
 import com.intel.stl.fecdriver.network.ssh.impl.JSchSessionFactory;
 
 /**
- * @author Fernando Fernandez
- * 
  */
 public class AppComponentRegistry {
 
@@ -195,8 +139,8 @@ public class AppComponentRegistry {
 
     private static final int PROGRESS_DELAY = 500;
 
-    private static Logger log = LoggerFactory
-            .getLogger(AppComponentRegistry.class);
+    private static Logger log =
+            LoggerFactory.getLogger(AppComponentRegistry.class);
 
     private final Map<String, AppComponent> components;
 
@@ -205,6 +149,8 @@ public class AppComponentRegistry {
     private FMGui uiComponent;
 
     private AsyncProcessingService asyncService;
+
+    private final AtomicBoolean appShutDown = new AtomicBoolean(false);
 
     public AppComponentRegistry() {
         components = new LinkedHashMap<String, AppComponent>();
@@ -219,7 +165,7 @@ public class AppComponentRegistry {
         // driving it
         AppContext appContext = getAppContext();
         initializeUIPlugin(appContext);
-        uiComponent.showProgress(
+        uiComponent.setProgress(
                 STL10017_CHECKING_MULTI_APP_INSTANCES.getDescription(), 0);
         if (hasRunningApplication()) {
             throw new AppConfigurationException(
@@ -235,15 +181,65 @@ public class AppComponentRegistry {
         double progress = 5.0;
         for (String componentName : components.keySet()) {
             double percent = ((progress / totalWeight) * 100) + 0.5;
+            uiComponent.setProgress((int) percent);
             AppComponent component = components.get(componentName);
-            String componentDescription = component.getComponentDescription();
-            uiComponent.showProgress(STL10025_STARTING_COMPONENT
-                    .getDescription(componentDescription), (int) percent);
-            component.initialize(settings);
+            component.initialize(settings, uiComponent);
             progress += component.getInitializationWeight();
             sleep(PROGRESS_DELAY);
         }
+
+        log.info("Application build id: " + settings.getAppBuildId()
+                + " build date: " + settings.getAppBuildDate());
         sleep(PROGRESS_DELAY);
+    }
+
+    public void shutdown() {
+        boolean appIsShutDown = appShutDown.get();
+        if (appIsShutDown) {
+            log.info("Shutdown already performed.");
+            return;
+        }
+        if (!appShutDown.compareAndSet(false, true)) {
+            // Someone else is invoking this routine at the same time
+            return;
+        }
+        double totalWeight = 5.0; // we add 5 to account for the previous check
+        for (String componentName : components.keySet()) {
+            AppComponent component = components.get(componentName);
+            totalWeight += component.getInitializationWeight();
+        }
+
+        List<String> componentName = new ArrayList<String>(components.keySet());
+        if (uiComponent != null) {
+            uiComponent.shutdown();
+        }
+
+        double progress = 5.0;
+        // Shutdown in the reverse order components were created
+        for (int i = componentName.size() - 1; i >= 0; i--) {
+            double percent = ((progress / totalWeight) * 100) + 0.5;
+            if (uiComponent != null) {
+                uiComponent.setProgress((int) percent);
+            }
+            AppComponent component = components.get(componentName.get(i));
+            try {
+                component.shutdown(uiComponent);
+            } catch (Exception e) {
+                log.warn("Exception occurred during {} shutdown.",
+                        component.getComponentDescription(), e);
+            }
+            progress += component.getInitializationWeight();
+            sleep(PROGRESS_DELAY);
+        }
+        try {
+            STLAdapter.instance().close();
+        } finally {
+            try {
+                JSchSessionFactory.cleanup();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private void sleep(long time) {
@@ -288,14 +284,14 @@ public class AppComponentRegistry {
             return res;
         } else {
             String msg =
-                    STLMessages.STL10024_NO_COMPONENT_FOUND
-                            .getDescription(componentName);
+                    STL10024_NO_COMPONENT_FOUND.getDescription(componentName);
             log.error(msg);
             throw new AppConfigurationException(msg);
         }
     }
 
-    public void registerComponent(String componentName, AppComponent component) {
+    public void registerComponent(String componentName,
+            AppComponent component) {
         components.put(componentName, component);
     }
 
@@ -321,9 +317,8 @@ public class AppComponentRegistry {
                 appName = (String) attribs.get(key);
                 key = new Name(MANIFEST_IMPLEMENTATIONVERSION);
                 String strVersion = (String) attribs.get(key);
-                String[] verParts =
-                        strVersion == null ? new String[] { "0", "0" }
-                                : strVersion.split("[.]");
+                String[] verParts = strVersion == null
+                        ? new String[] { "0", "0" } : strVersion.split("[.]");
                 appVersion = parseInt(verParts[0], appVersion);
                 appRelease = parseInt(verParts[1], appRelease);
                 appModLevel = parseInt(verParts[2], appModLevel);
@@ -377,10 +372,8 @@ public class AppComponentRegistry {
     }
 
     private Manifest getManifest() throws IOException {
-        URL registryUrl =
-                AppComponentRegistry.class
-                        .getResource(AppComponentRegistry.class.getSimpleName()
-                                + ".class");
+        URL registryUrl = AppComponentRegistry.class.getResource(
+                AppComponentRegistry.class.getSimpleName() + ".class");
         URLConnection urlConn = registryUrl.openConnection();
         if (urlConn instanceof JarURLConnection) {
             // Running from a jar, we would get the manifest through this path
@@ -389,9 +382,8 @@ public class AppComponentRegistry {
         } else {
             // For unit tests, we would follow this path
             Manifest manifest = null;
-            Enumeration<URL> manifests =
-                    getClass().getClassLoader().getResources(
-                            "META-INF/MANIFEST.MF");
+            Enumeration<URL> manifests = getClass().getClassLoader()
+                    .getResources("META-INF/MANIFEST.MF");
             while (manifests.hasMoreElements()) {
                 InputStream is = manifests.nextElement().openStream();
                 try {
@@ -434,9 +426,8 @@ public class AppComponentRegistry {
             }
             settings.setConfigOption(APP_DB_PATH, folder);
         } catch (SecurityException e) {
-            String msg =
-                    STL10004_SECURITY_EXCEPTION_IN_FOLDER
-                            .getDescription(folder);
+            String msg = STL10004_SECURITY_EXCEPTION_IN_FOLDER
+                    .getDescription(folder);
             log.error(msg, e);
             AppConfigurationException ace =
                     new AppConfigurationException(msg, e);
@@ -524,9 +515,8 @@ public class AppComponentRegistry {
         if (ENGINE_HIBERNATE.equalsIgnoreCase(engineType)) {
             engine = new HibernateEngine(settings);
         } else {
-            String errMsg =
-                    STL10005_DATABASE_ENGINE_NOTSUPPORTED
-                            .getDescription(engineType);
+            String errMsg = STL10005_DATABASE_ENGINE_NOTSUPPORTED
+                    .getDescription(engineType);
             AppConfigurationException ace =
                     new AppConfigurationException(errMsg);
             throw ace;
@@ -558,9 +548,8 @@ public class AppComponentRegistry {
             adapter.registerCertsAssistant(new DefaultCertsAssistant());
             adapter.registerSecurityHandler(new DefaultSecurityHandler());
         }
-        AppComponent appContext =
-                new AppContextImpl(adapter, getDatabaseManager(),
-                        getMailManager(), asyncService);
+        AppComponent appContext = new AppContextImpl(adapter,
+                getDatabaseManager(), getMailManager(), asyncService);
         registerComponent(COMPONENT_APPLICATION_CONTEXT, appContext);
     }
 
@@ -587,31 +576,6 @@ public class AppComponentRegistry {
 
     protected AsyncProcessingService getAsyncProcessingService() {
         return asyncService;
-    }
-
-    public void shutdown() {
-        List<String> componentName = new ArrayList<String>(components.keySet());
-        // Shutdown in the reverse order components were created
-        for (int i = componentName.size() - 1; i >= 0; i--) {
-            AppComponent component = components.get(componentName.get(i));
-            log.info("Shutting down component {}...",
-                    component.getComponentDescription());
-            try {
-                component.shutdown();
-            } catch (Exception e) {
-                log.warn("Exception occurred during {} shutdown.",
-                        component.getComponentDescription(), e);
-            }
-        }
-        try {
-            STLAdapter.instance().close();
-        } finally {
-            try {
-                JSchSessionFactory.cleanup();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     private class AppLock {

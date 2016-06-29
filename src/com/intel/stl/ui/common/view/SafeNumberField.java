@@ -1,9 +1,9 @@
 /**
  * Copyright (c) 2015, Intel Corporation
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  *     * Redistributions of source code must retain the above copyright notice,
  *       this list of conditions and the following disclaimer.
  *     * Redistributions in binary form must reproduce the above copyright
@@ -12,7 +12,7 @@
  *     * Neither the name of Intel Corporation nor the names of its contributors
  *       may be used to endorse or promote products derived from this software
  *       without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -25,60 +25,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*******************************************************************************
- *                       I N T E L   C O R P O R A T I O N
- *	
- *  Functional Group: Fabric Viewer Application
- *
- *  File Name: SafeNumberField.java
- *
- *  Archive Source: $Source$
- *
- *  Archive Log:    $Log$
- *  Archive Log:    Revision 1.7  2015/08/17 18:53:36  jijunwan
- *  Archive Log:    PR 129983 - Need to change file header's copyright text to BSD license txt
- *  Archive Log:    - changed frontend files' headers
- *  Archive Log:
- *  Archive Log:    Revision 1.6  2015/07/23 11:49:13  jypak
- *  Archive Log:    PR 129645 - Tree search enhancement.
- *  Archive Log:    Search progress bar, running icon and cancel capability are added.
- *  Archive Log:
- *  Archive Log:    Revision 1.5  2015/07/17 20:54:39  jijunwan
- *  Archive Log:    PR 129528 - input validation improvement
- *  Archive Log:    - changed typo in commit comment. The comment should be "change default number format to "###", so we need to support character ','"
- *  Archive Log:
- *  Archive Log:    Revision 1.4  2015/07/17 20:32:15  jijunwan
- *  Archive Log:    PR 129528 - input validation improvement
- *  Archive Log:    - change default number format to "###", so we needn't to support character ','
- *  Archive Log:
- *  Archive Log:    Revision 1.3  2015/07/16 21:22:53  jijunwan
- *  Archive Log:    PR 129528 - input validation improvement
- *  Archive Log:    - extended SafeTextField to apply rules in name check
- *  Archive Log:    - moved valid chars to UIConstants
- *  Archive Log:    - made FieldPair more generic and flexible
- *  Archive Log:
- *  Archive Log:    Revision 1.2  2015/07/13 20:05:52  jijunwan
- *  Archive Log:    PR 129528 - input validation improvement
- *  Archive Log:    - added '%' as valid char for SafeTextFormatter since we may need it for percentage format
- *  Archive Log:
- *  Archive Log:    Revision 1.1  2015/07/13 16:02:34  jijunwan
- *  Archive Log:    PR 129528 - input validation improvement
- *  Archive Log:    - added extended FormattedTextField that will
- *  Archive Log:    1) use AbstractFormatter to verify input
- *  Archive Log:    2) when we have invalid value
- *  Archive Log:    2.1) keep focus
- *  Archive Log:    2.2) change textfield to light red background color with red border
- *  Archive Log:    2.3) automatically show tooptip for invalid value
- *  Archive Log:    - added basic SafeTextField that will check text whether it's empty or not, whether it contain chars not supported
- *  Archive Log:    - added SafeNumberField that will check value range and valid chars
- *  Archive Log:
- *
- *  Overview: 
- *
- *  @author: jijunwan
- *
- ******************************************************************************/
-
 package com.intel.stl.ui.common.view;
 
 import java.text.Format;
@@ -87,6 +33,7 @@ import java.text.ParseException;
 
 import javax.swing.text.NumberFormatter;
 
+import com.intel.stl.ui.common.STLConstants;
 import com.intel.stl.ui.common.UIConstants;
 import com.intel.stl.ui.common.UILabels;
 
@@ -99,7 +46,7 @@ public class SafeNumberField<N extends Number> extends ExFormattedTextField {
 
     /**
      * Description:
-     * 
+     *
      * @param formatter
      * @param min
      * @param max
@@ -123,8 +70,8 @@ public class SafeNumberField<N extends Number> extends ExFormattedTextField {
      * Number#byteValue, 1111 is casted to a valid byte value. So we have this
      * class to validate range directly based Number rather than value type.
      */
-    public static class SafeNumberFormatter<N extends Number> extends
-            NumberFormatter {
+    public static class SafeNumberFormatter<N extends Number>
+            extends NumberFormatter {
         private static final long serialVersionUID = 6505406066904797986L;
 
         private String validCharacters = UIConstants.NUMBER_CHARS;
@@ -146,7 +93,7 @@ public class SafeNumberField<N extends Number> extends ExFormattedTextField {
 
         /**
          * Description:
-         * 
+         *
          * @param format
          */
         public SafeNumberFormatter(NumberFormat format, N min,
@@ -184,39 +131,19 @@ public class SafeNumberField<N extends Number> extends ExFormattedTextField {
 
         /*
          * (non-Javadoc)
-         * 
-         * @see
-         * javax.swing.text.InternationalFormatter#stringToValue(java.lang.String
-         * )
+         *
+         * @see javax.swing.text.InternationalFormatter#stringToValue(java.lang.
+         * String )
          */
         @Override
         public Object stringToValue(String text) throws ParseException {
             checkValidChar(text);
 
             Format format = getFormat();
-            String maxStr = max == null ? "infinite" : format.format(max);
-            if (max == null && min.intValue() == 0 && !inclusiveMin) {
-                setValidationTooltip(UILabels.STL81020_POSITIVE_VALIDATION
-                        .getDescription());
-            } else {
-                if (inclusiveMin) {
-                    if (inclusiveMax) {
-                        setValidationTooltip(UILabels.STL81021_RANGE1_VALIDATION
-                                .getDescription(format.format(min), maxStr));
-                    } else {
-                        setValidationTooltip(UILabels.STL81022_RANGE2_VALIDATION
-                                .getDescription(format.format(min), maxStr));
-                    }
-                } else {
-                    if (inclusiveMax) {
-                        setValidationTooltip(UILabels.STL81023_RANGE3_VALIDATION
-                                .getDescription(format.format(min), maxStr));
-                    } else {
-                        setValidationTooltip(UILabels.STL81024_RANGE4_VALIDATION
-                                .getDescription(format.format(min), maxStr));
-                    }
-                }
-            }
+
+            setValidationTooltip(createOutOfRangeTooltip(min, inclusiveMin, max,
+                    inclusiveMax, format));
+
             try {
                 Object obj = format.parseObject(text);
                 if (obj instanceof Number) {
@@ -258,10 +185,10 @@ public class SafeNumberField<N extends Number> extends ExFormattedTextField {
         protected void checkValidChar(String value) throws ParseException {
             for (int i = 0; i < value.length(); i++) {
                 if (!isValidCharacter(value.charAt(i))) {
-                    setValidationTooltip(UILabels.STL50096_TEXT_FIELD_INVALID_CHAR
-                            .getDescription(value.charAt(i)));
-                    throw new ParseException("Invalid char '" + value.charAt(i)
-                            + "'", 0);
+                    setValidationTooltip(
+                            createInvalidCharTooltip(value.charAt(i)));
+                    throw new ParseException(
+                            "Invalid char '" + value.charAt(i) + "'", 0);
                 }
             }
         }
@@ -272,6 +199,38 @@ public class SafeNumberField<N extends Number> extends ExFormattedTextField {
                 return false;
             }
             return true;
+        }
+
+        protected String createInvalidCharTooltip(char target) {
+            return UILabels.STL50096_TEXT_FIELD_INVALID_CHAR
+                    .getDescription(target);
+        }
+
+        protected String createOutOfRangeTooltip(N min, boolean inclusiveMin,
+                N max, boolean inclusiveMax, Format format) {
+            String maxStr = max == null ? STLConstants.K0133_INFINITE.getValue()
+                    : format.format(max);
+            if (max == null && min.intValue() == 0 && !inclusiveMin) {
+                return UILabels.STL81020_POSITIVE_VALIDATION.getDescription();
+            } else {
+                if (inclusiveMin) {
+                    if (inclusiveMax) {
+                        return UILabels.STL81021_RANGE1_VALIDATION
+                                .getDescription(format.format(min), maxStr);
+                    } else {
+                        return UILabels.STL81022_RANGE2_VALIDATION
+                                .getDescription(format.format(min), maxStr);
+                    }
+                } else {
+                    if (inclusiveMax) {
+                        return UILabels.STL81023_RANGE3_VALIDATION
+                                .getDescription(format.format(min), maxStr);
+                    } else {
+                        return UILabels.STL81024_RANGE4_VALIDATION
+                                .getDescription(format.format(min), maxStr);
+                    }
+                }
+            }
         }
 
         protected void setValidationTooltip(String tooltip) {

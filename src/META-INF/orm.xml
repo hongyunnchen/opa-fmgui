@@ -227,6 +227,12 @@
 				<attribute-override name="maxKPps">
 					<column name="internal_maxKPps"/>
 				</attribute-override>
+				<attribute-override name="pmaFailedPorts">
+					<column name="internal_pmaFailedPorts"/>
+				</attribute-override>
+				<attribute-override name="topoFailedPorts">
+					<column name="internal_topoFailedPorts"/>
+				</attribute-override>
 			</embedded>
 			<embedded name="sendUtilStats">
 				<attribute-override name="totalMBps">
@@ -256,6 +262,12 @@
 				<attribute-override name="maxKPps">
 					<column name="send_maxKPps"/>
 				</attribute-override>
+				<attribute-override name="pmaFailedPorts">
+					<column name="send_pmaFailedPorts"/>
+				</attribute-override>
+				<attribute-override name="topoFailedPorts">
+					<column name="send_topoFailedPorts"/>
+				</attribute-override>
 			</embedded>
 			<embedded name="recvUtilStats">
 				<attribute-override name="totalMBps">
@@ -284,6 +296,12 @@
 				</attribute-override>
 				<attribute-override name="maxKPps">
 					<column name="recv_maxKPps"/>
+				</attribute-override>
+				<attribute-override name="pmaFailedPorts">
+					<column name="recv_pmaFailedPorts"/>
+				</attribute-override>
+				<attribute-override name="topoFailedPorts">
+					<column name="recv_topoFailedPorts"/>
 				</attribute-override>
 			</embedded>
 			<embedded name="internalErrorMaximums">

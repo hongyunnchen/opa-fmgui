@@ -1,9 +1,9 @@
 /**
  * Copyright (c) 2015, Intel Corporation
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  *     * Redistributions of source code must retain the above copyright notice,
  *       this list of conditions and the following disclaimer.
  *     * Redistributions in binary form must reproduce the above copyright
@@ -12,7 +12,7 @@
  *     * Neither the name of Intel Corporation nor the names of its contributors
  *       may be used to endorse or promote products derived from this software
  *       without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -24,74 +24,6 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-/*******************************************************************************
- *                       I N T E L   C O R P O R A T I O N
- *	
- *  Functional Group: Fabric Viewer Application
- *
- *  File Name: StaDetailsController.java
- *
- *  Archive Source: $Source$
- *
- *  Archive Log:    $Log$
- *  Archive Log:    Revision 1.15  2015/08/17 18:53:38  jijunwan
- *  Archive Log:    PR 129983 - Need to change file header's copyright text to BSD license txt
- *  Archive Log:    - changed frontend files' headers
- *  Archive Log:
- *  Archive Log:    Revision 1.14  2015/02/04 21:44:24  jijunwan
- *  Archive Log:    impoved to handle unsigned values
- *  Archive Log:     - we promote to a "bigger" data type
- *  Archive Log:     - port numbers are now short
- *  Archive Log:
- *  Archive Log:    Revision 1.13  2014/10/23 16:33:19  jijunwan
- *  Archive Log:    minor change on timers - intend to improve timer behavior so the action will be cancelled event if it's already in EDT queue
- *  Archive Log:
- *  Archive Log:    Revision 1.12  2014/10/15 22:00:24  jijunwan
- *  Archive Log:    display other ports on UI
- *  Archive Log:
- *  Archive Log:    Revision 1.11  2014/08/05 18:39:00  jijunwan
- *  Archive Log:    renamed FI to HFI
- *  Archive Log:
- *  Archive Log:    Revision 1.10  2014/07/21 16:28:39  jijunwan
- *  Archive Log:    integer format adjustment
- *  Archive Log:
- *  Archive Log:    Revision 1.9  2014/07/08 14:24:06  jijunwan
- *  Archive Log:    minor change - rename caXXX to fiXXX
- *  Archive Log:
- *  Archive Log:    Revision 1.8  2014/07/08 14:07:04  jijunwan
- *  Archive Log:    removed route from state chart per feedback we got
- *  Archive Log:
- *  Archive Log:    Revision 1.7  2014/06/26 20:29:33  jijunwan
- *  Archive Log:    clear UI when we switch context
- *  Archive Log:
- *  Archive Log:    Revision 1.6  2014/06/05 18:32:47  jijunwan
- *  Archive Log:    changed Channel Adapter to Fabric Interface
- *  Archive Log:
- *  Archive Log:    Revision 1.5  2014/05/29 14:25:05  jijunwan
- *  Archive Log:    jfreechart dataset is not thread safe, put all dataset related operation into EDT, so they will synchronize
- *  Archive Log:
- *  Archive Log:    Revision 1.4  2014/05/08 19:25:36  jijunwan
- *  Archive Log:    MVC refactory
- *  Archive Log:
- *  Archive Log:    Revision 1.3  2014/04/30 17:30:04  jijunwan
- *  Archive Log:    use Util.runInEDT
- *  Archive Log:
- *  Archive Log:    Revision 1.2  2014/04/16 16:20:43  jijunwan
- *  Archive Log:    minor refactory
- *  Archive Log:
- *  Archive Log:    Revision 1.1  2014/04/12 19:50:38  fernande
- *  Archive Log:    Initial version
- *  Archive Log:
- *  Archive Log:    Revision 1.1  2014/04/08 17:32:56  jijunwan
- *  Archive Log:    introduced new summary section for "Home Page"
- *  Archive Log:
- *
- *  Overview: 
- *
- *  @author: jijunwan
- *
- ******************************************************************************/
 
 package com.intel.stl.ui.main;
 
@@ -113,9 +45,9 @@ import com.intel.stl.ui.model.NodeTypeViz;
 import com.intel.stl.ui.model.StateShortTypeViz;
 
 /**
- * per feedback we got, we do not show Router info here. we intentionally
- * change it on UI side rather than backend because we need to support it
- * again in the future
+ * per feedback we got, we do not show Router info here. we intentionally change
+ * it on UI side rather than backend because we need to support it again in the
+ * future
  */
 public class StaDetailsController {
     private final NodeTypeViz[] nodeTypes;
@@ -233,13 +165,17 @@ public class StaDetailsController {
                     typeDataset.setValue(nodeType.getName(), count);
 
                     String number = UIConstants.INTEGER.format(count);
-                    String label =
-                            count == 1 ? nodeType.getName() : nodeType
-                                    .getPluralName();
+                    String label = getTypeString(count, nodeType);
                     view.setTypeInfo(nodeType, number, label);
                 }
             }
         });
+    }
+
+    protected String getTypeString(long count, NodeTypeViz nodeType) {
+        String label =
+                count == 1 ? nodeType.getName() : nodeType.getPluralName();
+        return label;
     }
 
     protected void clearTimer() {

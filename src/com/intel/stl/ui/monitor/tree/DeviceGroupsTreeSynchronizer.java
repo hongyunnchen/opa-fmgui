@@ -1,9 +1,9 @@
 /**
  * Copyright (c) 2015, Intel Corporation
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  *     * Redistributions of source code must retain the above copyright notice,
  *       this list of conditions and the following disclaimer.
  *     * Redistributions in binary form must reproduce the above copyright
@@ -12,7 +12,7 @@
  *     * Neither the name of Intel Corporation nor the names of its contributors
  *       may be used to endorse or promote products derived from this software
  *       without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -24,58 +24,6 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-/*******************************************************************************
- *                       I N T E L   C O R P O R A T I O N
- *	
- *  Functional Group: Fabric Viewer Application
- *
- *  File Name: DeviceGroupTreeUpdater.java
- *
- *  Archive Source: $Source$
- *
- *  Archive Log:    $Log$
- *  Archive Log:    Revision 1.11  2015/10/23 19:07:57  jijunwan
- *  Archive Log:    PR 129357 - Be able to hide inactive ports
- *  Archive Log:    - revert back to the old version without visible node support
- *  Archive Log:
- *  Archive Log:    Revision 1.10  2015/09/30 13:26:45  fisherma
- *  Archive Log:    PR 129357 - ability to hide inactive ports.  Also fixes PR 129689 - Connectivity table exhibits inconsistent behavior on Performance and Topology pages
- *  Archive Log:
- *  Archive Log:    Revision 1.9  2015/08/17 18:54:19  jijunwan
- *  Archive Log:    PR 129983 - Need to change file header's copyright text to BSD license txt
- *  Archive Log:    - changed frontend files' headers
- *  Archive Log:
- *  Archive Log:    Revision 1.8  2015/04/16 19:21:45  jijunwan
- *  Archive Log:    removed work around code for bug in FM 390
- *  Archive Log:
- *  Archive Log:    Revision 1.7  2015/04/09 16:09:53  jijunwan
- *  Archive Log:    workaround for PR 128038
- *  Archive Log:
- *  Archive Log:    Revision 1.6  2015/04/09 03:33:41  jijunwan
- *  Archive Log:    updated to match FM 390
- *  Archive Log:
- *  Archive Log:    Revision 1.5  2015/02/05 21:21:44  jijunwan
- *  Archive Log:    fixed NPE issues found by klocwork
- *  Archive Log:
- *  Archive Log:    Revision 1.4  2015/01/29 21:30:44  jijunwan
- *  Archive Log:    handle empty group
- *  Archive Log:
- *  Archive Log:    Revision 1.3  2014/09/03 20:38:44  jijunwan
- *  Archive Log:    minor improvement on tree synchronizer
- *  Archive Log:
- *  Archive Log:    Revision 1.2  2014/09/02 19:24:28  jijunwan
- *  Archive Log:    renamed FVTreeBuilder to tree.FVTreeManager, moved FVResourceNode and FVTreeModel  to package tree
- *  Archive Log:
- *  Archive Log:    Revision 1.1  2014/09/02 19:02:59  jijunwan
- *  Archive Log:    tree update based on merge sort algorithm
- *  Archive Log:
- *
- *  Overview: 
- *
- *  @author: jijunwan
- *
- ******************************************************************************/
 
 package com.intel.stl.ui.monitor.tree;
 
@@ -128,7 +76,7 @@ public class DeviceGroupsTreeSynchronizer extends TreeSynchronizer<String> {
 
     /**
      * Description:
-     * 
+     *
      * @param nodeComparator
      * @param subnetApi
      * @param deviceTypesTree
@@ -144,9 +92,11 @@ public class DeviceGroupsTreeSynchronizer extends TreeSynchronizer<String> {
 
     protected void initData() {
         List<GroupListBean> groupList = perfApi.getGroupList();
-        groups = new LinkedHashMap<String, Integer>();
-        for (int i = 0; i < groupList.size(); i++) {
-            groups.put(groupList.get(i).getGroupName(), i);
+        if (groupList != null) {
+            groups = new LinkedHashMap<String, Integer>();
+            for (int i = 0; i < groupList.size(); i++) {
+                groups.put(groupList.get(i).getGroupName(), i);
+            }
         }
 
         nodeMap = new HashMap<Integer, FVResourceNode>();
@@ -165,7 +115,7 @@ public class DeviceGroupsTreeSynchronizer extends TreeSynchronizer<String> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.intel.stl.ui.monitor.tree.FastTreeUpater#compare(com.intel.stl.ui
      * .monitor.FVResourceNode, java.lang.Object)
@@ -178,7 +128,7 @@ public class DeviceGroupsTreeSynchronizer extends TreeSynchronizer<String> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.intel.stl.ui.monitor.tree.TreeUpater#createNode(java.lang.Object)
      */
@@ -188,14 +138,14 @@ public class DeviceGroupsTreeSynchronizer extends TreeSynchronizer<String> {
         if (id != null) {
             return TreeNodeFactory.createGroupNode(key, id);
         } else {
-            throw new IllegalArgumentException("Couldn't find Device Group '"
-                    + key + "'");
+            throw new IllegalArgumentException(
+                    "Couldn't find Device Group '" + key + "'");
         }
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.intel.stl.ui.monitor.tree.TreeUpater#addNode(int,
      * com.intel.stl.ui.monitor.FVResourceNode,
      * com.intel.stl.ui.monitor.FVTreeModel)
@@ -213,7 +163,7 @@ public class DeviceGroupsTreeSynchronizer extends TreeSynchronizer<String> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.intel.stl.ui.monitor.tree.TreeUpater#updateNode(com.intel.stl.ui.
      * monitor.FVResourceNode, com.intel.stl.ui.monitor.FVResourceNode,
@@ -258,8 +208,8 @@ public class DeviceGroupsTreeSynchronizer extends TreeSynchronizer<String> {
             }
             if (monitors != null) {
                 for (ITreeMonitor monitor : monitors) {
-                    monitor.fireTreeNodesRemoved(this,
-                            node.getPath().getPath(), childIndex, children);
+                    monitor.fireTreeNodesRemoved(this, node.getPath().getPath(),
+                            childIndex, children);
                 }
             }
         }

@@ -1,9 +1,9 @@
 /**
  * Copyright (c) 2015, Intel Corporation
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  *     * Redistributions of source code must retain the above copyright notice,
  *       this list of conditions and the following disclaimer.
  *     * Redistributions in binary form must reproduce the above copyright
@@ -12,7 +12,7 @@
  *     * Neither the name of Intel Corporation nor the names of its contributors
  *       may be used to endorse or promote products derived from this software
  *       without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -25,71 +25,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*******************************************************************************
- *                       I N T E L   C O R P O R A T I O N
- *	
- *  Functional Group: Fabric Viewer Application
- *
- *  File Name: ConnectivityTableData.java
- *
- *  Archive Source: $Source$
- *
- *  Archive Log:    $Log$
- *  Archive Log:    Revision 1.13  2015/11/02 23:54:33  jijunwan
- *  Archive Log:    PR 131396 - Incorrect Connectivity Table for a VF port
- *  Archive Log:    - changed model to display N/A when a value is not avaiable
- *  Archive Log:
- *  Archive Log:    Revision 1.12  2015/08/17 18:53:40  jijunwan
- *  Archive Log:    PR 129983 - Need to change file header's copyright text to BSD license txt
- *  Archive Log:    - changed frontend files' headers
- *  Archive Log:
- *  Archive Log:    Revision 1.11  2015/08/04 23:00:34  jijunwan
- *  Archive Log:    PR 129821 - connectivity table has no Link Width Down Grade data
- *  Archive Log:    - added related data to data table
- *  Archive Log:
- *  Archive Log:    Revision 1.10  2015/07/17 15:40:33  rjtierne
- *  Archive Log:    PR 129547 - Need to add Node type and lid to the Connectivity
- *  Archive Log:    - Added node type to the class attributes to be displayed in the connectivity table
- *  Archive Log:    - nodeLidValue was already available and just had to be used by ConnectivityTableModel#getValueAt()
- *  Archive Log:
- *  Archive Log:    Revision 1.9  2015/07/13 21:57:00  rjtierne
- *  Archive Log:    PR 129355 - Ability to click on cables to get cable info
- *  Archive Log:    - Added the cableInfo attribute to the connectivity table data
- *  Archive Log:    - Changed deviceName to nodeName to reflect text on table displayed
- *  Archive Log:
- *  Archive Log:    Revision 1.8  2015/06/01 15:01:17  jypak
- *  Archive Log:    PR 128823 - Improve performance tables to include all portcounters fields.
- *  Archive Log:    All port counters fields added to performance table and connectivity table.
- *  Archive Log:
- *  Archive Log:    Revision 1.7  2015/02/26 20:07:36  fisherma
- *  Archive Log:    Changes to display Link Quality data to port's Performance tab and switch/port configuration table.
- *  Archive Log:
- *  Archive Log:    Revision 1.6  2015/02/04 21:44:17  jijunwan
- *  Archive Log:    impoved to handle unsigned values
- *  Archive Log:     - we promote to a "bigger" data type
- *  Archive Log:     - port numbers are now short
- *  Archive Log:
- *  Archive Log:    Revision 1.5  2014/09/18 21:03:28  jijunwan
- *  Archive Log:    Added link (jump to) capability to Connectivity tables and PortSummary table
- *  Archive Log:
- *  Archive Log:    Revision 1.4  2014/08/26 15:15:27  jijunwan
- *  Archive Log:    added refresh function to all pages
- *  Archive Log:
- *  Archive Log:    Revision 1.3  2014/08/05 17:57:05  jijunwan
- *  Archive Log:    fixed issues on ConnectivityTable to update performance data properly
- *  Archive Log:
- *  Archive Log:    Revision 1.2  2014/06/17 19:22:03  rjtierne
- *  Archive Log:    Added slowLinkState attribute to keep track of which links are running slow
- *  Archive Log:
- *  Archive Log:    Revision 1.1  2014/06/12 21:36:45  rjtierne
- *  Archive Log:    Initial Version
- *  Archive Log:
- *
- *  Overview: Data for the Connectivity table
- *
- *  @author: rjtierne
- *
- ******************************************************************************/
 package com.intel.stl.ui.monitor;
 
 import java.io.Serializable;
@@ -99,6 +34,9 @@ import com.intel.stl.api.StringUtils;
 import com.intel.stl.api.subnet.NodeType;
 import com.intel.stl.ui.common.STLConstants;
 
+/**
+ * Data for the Connectivity table
+ */
 public class ConnectivityTableData implements Serializable {
 
     /**
@@ -156,7 +94,7 @@ public class ConnectivityTableData implements Serializable {
 
     /**
      * Description:
-     * 
+     *
      */
     public ConnectivityTableData(int nodeLid, long nodeGuidValue,
             NodeType nodeType, short portNumValue, boolean isNeighbor) {
@@ -170,9 +108,8 @@ public class ConnectivityTableData implements Serializable {
 
         nodeGUID = StringUtils.longHexString(nodeGuidValue);
         if (isNeighbor) {
-            portNumber =
-                    Integer.toString(portNumValue) + " ("
-                            + STLConstants.K0525_NEIGHBOR.getValue() + ")";
+            portNumber = Integer.toString(portNumValue) + " ("
+                    + STLConstants.K0525_NEIGHBOR.getValue() + ")";
         } else {
             portNumber = Integer.toString(portNumValue);
         }
@@ -247,7 +184,7 @@ public class ConnectivityTableData implements Serializable {
     }
 
     /**
-     * 
+     *
      * @return the cableInfo
      */
     public String getCableInfo() {
@@ -255,7 +192,7 @@ public class ConnectivityTableData implements Serializable {
     }
 
     /**
-     * 
+     *
      * @param cableInfo
      *            - the cableInfo to set
      */
@@ -484,22 +421,22 @@ public class ConnectivityTableData implements Serializable {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#hashCode()
      */
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result =
-                prime * result + (int) (nodeGuidValue ^ (nodeGuidValue >>> 32));
+        result = prime * result
+                + (int) (nodeGuidValue ^ (nodeGuidValue >>> 32));
         result = prime * result + portNumValue;
         return result;
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
@@ -541,6 +478,8 @@ public class ConnectivityTableData implements Serializable {
         private Long numLinkRecoveries; // TODO Don't know where to get this
 
         private Long numLinkDown;
+
+        private Byte numLanesDown;
 
         private Long rxErrors;
 
@@ -689,6 +628,21 @@ public class ConnectivityTableData implements Serializable {
          */
         public void setNumLinkDown(Long numLinkDown) {
             this.numLinkDown = numLinkDown;
+        }
+
+        /**
+         * @return the numLanesDown
+         */
+        public Byte getNumLanesDown() {
+            return numLanesDown;
+        }
+
+        /**
+         * @param numLanesDown
+         *            the numLanesDown to set
+         */
+        public void setNumLanesDown(Byte numLanesDown) {
+            this.numLanesDown = numLanesDown;
         }
 
         /**

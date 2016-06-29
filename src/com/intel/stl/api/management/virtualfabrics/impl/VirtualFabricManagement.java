@@ -1,9 +1,9 @@
 /**
  * Copyright (c) 2015, Intel Corporation
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  *     * Redistributions of source code must retain the above copyright notice,
  *       this list of conditions and the following disclaimer.
  *     * Redistributions in binary form must reproduce the above copyright
@@ -12,7 +12,7 @@
  *     * Neither the name of Intel Corporation nor the names of its contributors
  *       may be used to endorse or promote products derived from this software
  *       without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -24,48 +24,6 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-/*******************************************************************************
- *                       I N T E L   C O R P O R A T I O N
- *	
- *  Functional Group: Fabric Viewer Application
- *
- *  File Name: VirtualFabricManagement.java
- *
- *  Archive Source: $Source$
- *
- *  Archive Log:    $Log$
- *  Archive Log:    Revision 1.6  2015/11/10 18:43:59  jijunwan
- *  Archive Log:    PR 131078 - Default virtual fabric un-editable
- *  Archive Log:    - removed Default from reserved item list
- *  Archive Log:
- *  Archive Log:    Revision 1.5  2015/10/26 20:19:10  jijunwan
- *  Archive Log:    PR 131169 - Unable to delete Device Groups created within the opafm.xml file
- *  Archive Log:    - introduced ChangeManager to maintain changes
- *  Archive Log:    - changed changes from set to list because when the changes depend on each other, the order does matter
- *  Archive Log:    - changed xxxManagement to use ChangeManager
- *  Archive Log:
- *  Archive Log:    Revision 1.4  2015/08/17 18:49:46  jijunwan
- *  Archive Log:    PR 129983 - Need to change file header's copyright text to BSD license txt
- *  Archive Log:    - change backend files' headers
- *  Archive Log:
- *  Archive Log:    Revision 1.3  2015/08/17 17:33:04  jijunwan
- *  Archive Log:    PR 128973 - Deploy FM conf changes on all SMs
- *  Archive Log:    - fixed typo on interface name IApplicationManagement
- *  Archive Log:    - improved management to maintain changes and be able apply changes on another FM ocnf file
- *  Archive Log:
- *  Archive Log:    Revision 1.2  2015/07/28 18:20:27  fisherma
- *  Archive Log:    PR 129219 - Admin page login dialog improvement.
- *  Archive Log:
- *  Archive Log:    Revision 1.1  2015/03/25 19:10:03  jijunwan
- *  Archive Log:    first version of VirtualFabric support
- *  Archive Log:
- *
- *  Overview: 
- *
- *  @author: jijunwan
- *
- ******************************************************************************/
 
 package com.intel.stl.api.management.virtualfabrics.impl;
 
@@ -109,8 +67,8 @@ import com.intel.stl.api.management.virtualfabrics.VirtualFabrics;
 import com.intel.stl.common.STLMessages;
 
 public class VirtualFabricManagement implements IVirtualFabricManagement {
-    private final static Logger log = LoggerFactory
-            .getLogger(VirtualFabricManagement.class);
+    private final static Logger log =
+            LoggerFactory.getLogger(VirtualFabricManagement.class);
 
     private final static Set<String> RESERVED = new HashSet<String>() {
         private static final long serialVersionUID = -8507198541424973196L;
@@ -127,7 +85,7 @@ public class VirtualFabricManagement implements IVirtualFabricManagement {
 
     /**
      * Description:
-     * 
+     *
      * @param confHelp
      */
     public VirtualFabricManagement(FMConfHelper confHelp) {
@@ -137,7 +95,7 @@ public class VirtualFabricManagement implements IVirtualFabricManagement {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.intel.stl.api.management.virtualfabrics.IVirtualFabricManagement#
      * getReservedVirtualFabrics()
@@ -149,7 +107,7 @@ public class VirtualFabricManagement implements IVirtualFabricManagement {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.intel.stl.api.management.virtualfabrics.IVirtualFabricManagement#
      * getVirtualFabrics()
@@ -164,15 +122,14 @@ public class VirtualFabricManagement implements IVirtualFabricManagement {
                     + " Device Groups from host '" + confHelp.getHost() + "'");
             return vfs.getVFs();
         } catch (Exception e) {
-            throw createVirtualFabricException(
-                    STLMessages.STL63021_GET_VFS_ERR, e, confHelp.getHost(),
-                    StringUtils.getErrorMessage(e));
+            throw createVirtualFabricException(STLMessages.STL63021_GET_VFS_ERR,
+                    e, confHelp.getHost(), StringUtils.getErrorMessage(e));
         }
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.intel.stl.api.management.virtualfabrics.IVirtualFabricManagement#
      * getVirtualFabric(java.lang.String)
@@ -186,13 +143,14 @@ public class VirtualFabricManagement implements IVirtualFabricManagement {
             return vfs.getVF(name);
         } catch (Exception e) {
             throw createVirtualFabricException(STLMessages.STL63026_GET_VF_ERR,
-                    e, name, confHelp.getHost(), StringUtils.getErrorMessage(e));
+                    e, name, confHelp.getHost(),
+                    StringUtils.getErrorMessage(e));
         }
     }
 
     /**
      * <i>Description:</i>
-     * 
+     *
      * @param confFile
      * @return
      */
@@ -219,7 +177,7 @@ public class VirtualFabricManagement implements IVirtualFabricManagement {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.intel.stl.api.management.virtualfabrics.IVirtualFabricManagement#
      * addVirtualFabric
@@ -259,8 +217,8 @@ public class VirtualFabricManagement implements IVirtualFabricManagement {
         Node groupsNode = doc.getElementsByTagName(VIRTUAL_FABRICS).item(0);
         Node matchedGroup = getVFByName(groupsNode, vf.getName());
         if (matchedGroup != null) {
-            throw new IllegalArgumentException("Virtual Fabric '"
-                    + vf.getName() + "' alreday exist!");
+            throw new IllegalArgumentException(
+                    "Virtual Fabric '" + vf.getName() + "' alreday exist!");
         }
 
         // append app to Applications node
@@ -272,7 +230,7 @@ public class VirtualFabricManagement implements IVirtualFabricManagement {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.intel.stl.api.management.virtualfabrics.IVirtualFabricManagement#
      * removeVirtualFabric(java.lang.String)
@@ -307,14 +265,14 @@ public class VirtualFabricManagement implements IVirtualFabricManagement {
             // save back to xml file
             XMLUtils.writeDoc(doc, dstXml);
         } else {
-            throw new IllegalArgumentException("Couldn't find Virtual Fabric '"
-                    + name + "'");
+            // this can happen when we create a new one and then rename it
+            log.warn("Couldn't find Virtual Fabric '" + name + "'");
         }
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.intel.stl.api.management.virtualfabrics.IVirtualFabricManagement#
      * updateVirtualFabric(java.lang.String,
@@ -342,7 +300,7 @@ public class VirtualFabricManagement implements IVirtualFabricManagement {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.intel.stl.api.management.virtualfabrics.IVirtualFabricManagement#
      * addOrUpdateVirtualFabric(java.lang.String,
@@ -364,9 +322,8 @@ public class VirtualFabricManagement implements IVirtualFabricManagement {
         }
     }
 
-    protected void updateVirtualFabric(File srcXml, File dstXml,
-            String oldName, VirtualFabric vf, boolean allowAdd)
-            throws Exception {
+    protected void updateVirtualFabric(File srcXml, File dstXml, String oldName,
+            VirtualFabric vf, boolean allowAdd) throws Exception {
         // transfer app to DOM
         DOMResult res = new DOMResult();
         JAXBContext context = JAXBContext.newInstance(vf.getClass());

@@ -1,0 +1,112 @@
+#!/bin/bash
+
+# Copyright (c) 2015, Intel Corporation
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+#
+#     * Redistributions of source code must retain the above copyright notice,
+#       this list of conditions and the following disclaimer.
+#     * Redistributions in binary form must reproduce the above copyright
+#       notice, this list of conditions and the following disclaimer in the
+#       documentation and/or other materials provided with the distribution.
+#     * Neither the name of Intel Corporation nor the names of its contributors
+#       may be used to endorse or promote products derived from this software
+#       without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+# DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
+# FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+# DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+# SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+# CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+# OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+# OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+OPA_DIR=/usr/share/java/opa-fmgui
+TARGET_DIR=${OPA_DIR}/lib
+
+declare -a arr=(
+	/usr/share/java/antlr.jar
+	/usr/share/java/dom4j.jar
+	/usr/share/java/hibernate-commons-annotations/hibernate-commons-annotations.jar
+	/usr/share/java/hibernate/hibernate-core.jar
+	/usr/share/java/hibernate/hibernate-entitymanager.jar
+	/usr/share/java/hibernate-jpa-2.1-api.jar
+	/usr/share/java/hsqldb.jar
+	/usr/share/java/jandex/jandex.jar
+	/usr/share/java/javassist.jar
+	/usr/share/java/javamail/javax.mail.jar
+	/usr/share/java/jboss-logging/jboss-logging.jar
+	/usr/share/java/jboss-logging-tools/jboss-logging-annotations.jar
+	/usr/share/java/javahelp2.jar
+	/usr/share/java/jboss-transaction-1.2-api/jboss-transaction-api_1.2_spec.jar
+	/usr/share/java/jcommon/jcommon.jar
+	/usr/share/java/jfreechart/jfreechart.jar
+	/usr/share/java/jgraphx/jgraphx.jar
+	/usr/share/java/jsch.jar
+	/usr/share/java/slf4j/log4j-over-slf4j.jar
+	/usr/share/java/logback/logback-classic.jar
+	/usr/share/java/logback/logback-core.jar
+	/usr/share/java/mbassador/mbassador.jar
+	/usr/share/java/slf4j/slf4j-api.jar
+	/usr/share/java/swingx/swingx-all.jar
+	/usr/share/java/swingx/swingx-action.jar
+	/usr/share/java/swingx/swingx-autocomplete.jar
+	/usr/share/java/swingx/swingx-beaninfo.jar
+	/usr/share/java/swingx/swingx-common.jar
+	/usr/share/java/swingx/swingx-core.jar
+	/usr/share/java/swingx/swingx-graphics.jar
+	/usr/share/java/swingx/swingx-mavensupport.jar
+	/usr/share/java/swingx/swingx-painters.jar
+	/usr/share/java/swingx/swingx-plaf.jar
+	/usr/share/java/swingx/swingx-testsupport.jar
+)
+
+clear
+
+createLinks() {
+   for f in "${arr[@]}"; do
+      ln -s $f `basename $f`
+   done
+   ln -s ../gritty/gritty.jar gritty.jar
+}
+
+
+removeLinks() {
+   for f in "${arr[@]}"; do
+      if [ -f $f ]; then
+        unlink `basename $f`
+      fi
+   done
+   unlink gritty.jar
+}
+
+#Remove the symbolic links if they already exist
+if [ -d $TARGET_DIR ]; then
+  cd $TARGET_DIR
+  removeLinks
+  cd ..
+  rm -rf lib
+fi
+
+mkdir $TARGET_DIR
+cd $TARGET_DIR
+
+#Check command line arguments
+if [ ! "$#" -eq 1 ]; then
+  clear
+  echo "Usage: `basename $0` [link | unlink]"
+  echo
+  exit 1
+elif [ "$1" == "link" ]; then
+  createLinks
+elif [ "$1" == "unlink" ]; then
+  removeLinks
+else
+   echo ERROR: Unknown argument $1
+   echo "Usage: `basename $0` [link | unlink]"
+fi
+

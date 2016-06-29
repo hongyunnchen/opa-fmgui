@@ -1,9 +1,9 @@
 /**
  * Copyright (c) 2015, Intel Corporation
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  *     * Redistributions of source code must retain the above copyright notice,
  *       this list of conditions and the following disclaimer.
  *     * Redistributions in binary form must reproduce the above copyright
@@ -12,7 +12,7 @@
  *     * Neither the name of Intel Corporation nor the names of its contributors
  *       may be used to endorse or promote products derived from this software
  *       without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -24,31 +24,6 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-/*******************************************************************************
- *                       I N T E L   C O R P O R A T I O N
- * 
- *  Functional Group: Fabric Viewer Application
- * 
- *  File Name: ImageInfo.java
- * 
- *  Archive Source: $Source$
- * 
- *  Archive Log: $Log$
- *  Archive Log: Revision 1.8  2015/08/17 18:49:17  jijunwan
- *  Archive Log: PR 129983 - Need to change file header's copyright text to BSD license txt
- *  Archive Log: - change backend files' headers
- *  Archive Log:
- *  Archive Log: Revision 1.7  2015/06/10 19:36:29  jijunwan
- *  Archive Log: PR 129153 - Some old files have no proper file header. They cannot record change logs.
- *  Archive Log: - wrote a tool to check and insert file header
- *  Archive Log: - applied on backend files
- *  Archive Log:
- * 
- *  Overview:
- * 
- *  @author: jijunwan
- * 
- ******************************************************************************/
 package com.intel.stl.fecdriver.messages.adapter.pa;
 
 import com.intel.stl.api.performance.ImageIdBean;
@@ -59,8 +34,8 @@ import com.intel.stl.common.StringUtils;
 import com.intel.stl.fecdriver.messages.adapter.SimpleDatagram;
 
 /**
- * ref: /ALL_EMB/IbAccess/Common/Inc/stl_pa.h v1.45
- * 
+ * ref: /ALL_EMB/IbAccess/Common/Inc/stl_pa.h v1.55
+ *
  * <pre>
  *  typedef struct _STL_SMINFO_DATA {
  * [4] 	STL_LID_32				lid;
@@ -72,7 +47,7 @@ import com.intel.stl.fecdriver.messages.adapter.SimpleDatagram;
  * [16] 	uint64					smPortGuid;
  * [80] 	char					smNodeDesc[64]; // can be 64 char w/o \0
  *  } PACK_SUFFIX STL_SMINFO_DATA;
- *  
+ *
  *  typedef struct _STL_IMAGE_INFO_DATA {
  * [16] 	STL_PA_IMAGE_ID_DATA	imageId;
  * [24] 	uint64					sweepStart;
@@ -89,19 +64,17 @@ import com.intel.stl.fecdriver.messages.adapter.SimpleDatagram;
  * [60] 	uint32					numSkippedNodes;
  * [64] 	uint32					numSkippedPorts;
  * [68] 	uint32					numUnexpectedClearPorts;
- * [72] 	uint32					reserved2;
+ * [72] 	uint32					imageInterval;
  * [232] 	STL_SMINFO_DATA			SMInfo[2];
  *  } PACK_SUFFIX STL_IMAGE_INFO_DATA;
- *  
+ *
  *  typedef struct _STL_PA_Image_ID_Data {
  *  	uint64					imageNumber;
  *  	int32					imageOffset;
  *  	uint32					reserved;
  *  } PACK_SUFFIX STL_PA_IMAGE_ID_DATA;
  * </pre>
- * 
- * @author jijunwan
- * 
+ *
  */
 public class ImageInfo extends SimpleDatagram<ImageInfoBean> {
     public ImageInfo() {
@@ -136,7 +109,7 @@ public class ImageInfo extends SimpleDatagram<ImageInfoBean> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.intel.hpc.stl.resourceadapter.data.SimpleDatagram#toObject()
      */
     @Override
@@ -159,6 +132,7 @@ public class ImageInfo extends SimpleDatagram<ImageInfoBean> {
         bean.setNumSkippedNodes(buffer.getInt());
         bean.setNumSkippedPorts(buffer.getInt());
         bean.setNumUnexpectedClearPorts(buffer.getInt());
+        bean.setImageInterval(buffer.getInt());
         SMInfoDataBean[] smInfo =
                 new SMInfoDataBean[] { getSMInfoBean(72), getSMInfoBean(152) };
         bean.setSMInfo(smInfo);

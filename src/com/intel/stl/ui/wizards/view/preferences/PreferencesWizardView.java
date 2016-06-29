@@ -1,9 +1,9 @@
 /**
  * Copyright (c) 2015, Intel Corporation
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  *     * Redistributions of source code must retain the above copyright notice,
  *       this list of conditions and the following disclaimer.
  *     * Redistributions in binary form must reproduce the above copyright
@@ -12,7 +12,7 @@
  *     * Neither the name of Intel Corporation nor the names of its contributors
  *       may be used to endorse or promote products derived from this software
  *       without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -24,112 +24,6 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-/*******************************************************************************
- *                       I N T E L   C O R P O R A T I O N
- *	
- *  Functional Group: Fabric Viewer Application
- *
- *  File Name: PreferencesWizardView.java
- *
- *  Archive Source: $Source$
- *
- *  Archive Log:    $Log$
- *  Archive Log:    Revision 1.23  2015/12/09 16:06:07  jijunwan
- *  Archive Log:    PR 131944 - If "# Worst Nodes" is <10 or >100, there is a Entry Validation warning for the Refresh Rate
- *  Archive Log:
- *  Archive Log:    - added value range to "# Worst Nodes" text field
- *  Archive Log:
- *  Archive Log:    Revision 1.22  2015/11/09 20:51:57  fernande
- *  Archive Log:    PR130852 - The 1st subnet in the Subnet Wizard displays "Abandon Changes" message when no changes are made. Added special listener for dirty state
- *  Archive Log:
- *  Archive Log:    Revision 1.21  2015/09/14 19:04:34  jijunwan
- *  Archive Log:    PR 130229 - The text component of all editable combo boxes should provide validation of the input
- *  Archive Log:    - added exception check just in case
- *  Archive Log:
- *  Archive Log:    Revision 1.20  2015/09/14 16:06:58  jijunwan
- *  Archive Log:    PR 130229 - The text component of all editable combo boxes should provide validation of the input
- *  Archive Log:    - apply FormattedComboBoxEditor on ComponentFactory and PreferenceWizard
- *  Archive Log:
- *  Archive Log:    Revision 1.19  2015/09/01 12:56:16  rjtierne
- *  Archive Log:    PR 130174 - Inconsistent checking for blank subnet "Name" field in wizard
- *  Archive Log:    - On subnet creation, set the default subnet name to match the subnet button.
- *  Archive Log:    Then there is no possibility to move to the next wizard with a blank subnet name.
- *  Archive Log:    Since all fields are populated, if a field is made blank, the Next/Apply button is
- *  Archive Log:    disabled. If any field is invalid, then clicking on Next/Apply results in an error message.
- *  Archive Log:    - Changed cboxRefreshRateUnits to be non-editable
- *  Archive Log:
- *  Archive Log:    Revision 1.18  2015/08/17 18:53:48  jijunwan
- *  Archive Log:    PR 129983 - Need to change file header's copyright text to BSD license txt
- *  Archive Log:    - changed frontend files' headers
- *  Archive Log:
- *  Archive Log:    Revision 1.17  2015/08/12 20:41:55  fisherma
- *  Archive Log:    PR 129747 - Time Window failed when updating recommended value in Time Window.  Updated the validation and upper limit on the time property.
- *  Archive Log:
- *  Archive Log:    Revision 1.16  2015/08/12 19:28:13  fisherma
- *  Archive Log:    Store/retrieve SMTP settings in/from SECTION_PREFERENCE properties.  Cleanup unused interface.
- *  Archive Log:
- *  Archive Log:    Revision 1.15  2015/08/10 22:25:05  fisherma
- *  Archive Log:    PR 128974 - Email notification functionality.  Updated layout in the preferences tab.  Added strings to localization file.
- *  Archive Log:
- *  Archive Log:    Revision 1.14  2015/08/10 17:55:48  robertja
- *  Archive Log:    PR 128974 - Email notification functionality.
- *  Archive Log:
- *  Archive Log:    Revision 1.13  2015/07/17 20:48:27  jijunwan
- *  Archive Log:    PR 129594 - Apply new input verification on setup wizard
- *  Archive Log:    - introduced isEditValid to allow us check whether we have valid edit
- *  Archive Log:
- *  Archive Log:    Revision 1.12  2015/05/11 12:37:44  rjtierne
- *  Archive Log:    PR 128585 - Fix errors found by Klocwork and FindBugs
- *  Archive Log:    - Added new method addDocumentListeners() which provides null pointer protection
- *  Archive Log:    to the view form fields.
- *  Archive Log:    - Invoked addDocumentListeners() in both constructors.
- *  Archive Log:
- *  Archive Log:    Revision 1.11  2015/04/21 21:18:41  rjtierne
- *  Archive Log:    Fixed document listeners on form fields so the Apply and Reset buttons are enabled only
- *  Archive Log:    when the fields change.
- *  Archive Log:
- *  Archive Log:    Revision 1.10  2015/03/30 15:12:49  rjtierne
- *  Archive Log:    Updated panel backgrounds to use static variable
- *  Archive Log:
- *  Archive Log:    Revision 1.9  2015/03/11 15:26:25  rjtierne
- *  Archive Log:    Multinet Wizard: Removed title from titled border
- *  Archive Log:    Using text field creation methods in ComponentFactory with input verifiers
- *  Archive Log:    Removed print statements
- *  Archive Log:
- *  Archive Log:    Revision 1.8  2015/02/27 15:34:28  rjtierne
- *  Archive Log:    Fixed preferences model/view sync issue when creating new subnet
- *  Archive Log:
- *  Archive Log:    Revision 1.7  2015/02/23 15:06:53  rjtierne
- *  Archive Log:    Replaced hard coded string constants with STLConstants
- *  Archive Log:
- *  Archive Log:    Revision 1.6  2015/02/20 21:16:09  rjtierne
- *  Archive Log:    Multinet Wizard: New instalment of the multinet wizard targeting display of subnet specific data for all sub-wizards; using a unique model for each wizard
- *  Archive Log:
- *  Archive Log:    Revision 1.5  2015/02/13 21:31:56  rjtierne
- *  Archive Log:    Multinet Wizard
- *  Archive Log:
- *  Archive Log:    Revision 1.4  2015/02/10 23:18:05  jijunwan
- *  Archive Log:    changed to store refreshRate rather than refreshRateinSeconds, store TimeUnit by name rather than ordinary
- *  Archive Log:
- *  Archive Log:    Revision 1.3  2015/01/20 19:14:20  rjtierne
- *  Archive Log:    Moved all computational logic to controller; view only deals with String values.
- *  Archive Log:    Corrected document listeners for wizard fields
- *  Archive Log:    Minor L&F changes
- *  Archive Log:
- *  Archive Log:    Revision 1.2  2015/01/15 19:09:45  rjtierne
- *  Archive Log:    Create fields for refresh rate, refresh rate units, timing window, and # worst nodes.
- *  Archive Log:    Store user-entered values in user settings for storage in database
- *  Archive Log:
- *  Archive Log:    Revision 1.1  2015/01/13 19:01:51  rjtierne
- *  Archive Log:    Initial Version
- *  Archive Log:
- *
- *  Overview: View for the User Preferences Wizard
- *
- *  @author: rjtierne
- *
- ******************************************************************************/
 
 package com.intel.stl.ui.wizards.view.preferences;
 
@@ -148,6 +42,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.text.DecimalFormat;
+import java.text.Format;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
@@ -176,10 +71,13 @@ import com.intel.stl.ui.common.DocumentDirtyListener;
 import com.intel.stl.ui.common.STLConstants;
 import com.intel.stl.ui.common.UIConstants;
 import com.intel.stl.ui.common.UIImages;
+import com.intel.stl.ui.common.UILabels;
 import com.intel.stl.ui.common.Util;
 import com.intel.stl.ui.common.Validator;
 import com.intel.stl.ui.common.view.ComponentFactory;
+import com.intel.stl.ui.common.view.ExFormattedTextField;
 import com.intel.stl.ui.common.view.SafeNumberField;
+import com.intel.stl.ui.common.view.SafeNumberField.SafeNumberFormatter;
 import com.intel.stl.ui.wizards.impl.IWizardTask;
 import com.intel.stl.ui.wizards.impl.preferences.PreferencesInputValidator;
 import com.intel.stl.ui.wizards.model.MultinetWizardModel;
@@ -189,8 +87,11 @@ import com.intel.stl.ui.wizards.view.IMultinetWizardView;
 import com.intel.stl.ui.wizards.view.IWizardView;
 import com.intel.stl.ui.wizards.view.MultinetWizardView;
 
-public class PreferencesWizardView extends AbstractTaskView implements
-        IPreferencesView {
+/**
+ * View for the User Preferences Wizard
+ */
+public class PreferencesWizardView extends AbstractTaskView
+        implements IPreferencesView {
 
     private static final long serialVersionUID = 6356778995911484484L;
 
@@ -198,14 +99,14 @@ public class PreferencesWizardView extends AbstractTaskView implements
 
     private final int MAX_REFRESH_RATE = 1800;
 
-    private static Logger log = LoggerFactory
-            .getLogger(PreferencesWizardView.class);
+    private static Logger log =
+            LoggerFactory.getLogger(PreferencesWizardView.class);
 
     private Integer[] defaultRefreshRates;
 
     private JComboBox<Integer> cboxRefreshRate;
 
-    private SafeNumberField<Integer> txtFldRefreshRate;
+    private ExFormattedTextField txtFldRefreshRate;
 
     private JComboBox<String> cboxRefreshRateUnits;
 
@@ -225,6 +126,8 @@ public class PreferencesWizardView extends AbstractTaskView implements
     private PreferencesModel preferencesModel;
 
     private boolean dirty;
+
+    private JLabel emailLbl;
 
     private JTextArea emailListArea;
 
@@ -278,17 +181,16 @@ public class PreferencesWizardView extends AbstractTaskView implements
     protected void addDocumentListeners() {
 
         if (cboxRefreshRate != null) {
-            JTextComponent tcRefreshRate =
-                    (JTextComponent) cboxRefreshRate.getEditor()
-                            .getEditorComponent();
-            DocumentListener[] docListeners =
-                    new DocumentListener[] { isDirtyListener, setDirtyListener };
+            JTextComponent tcRefreshRate = (JTextComponent) cboxRefreshRate
+                    .getEditor().getEditorComponent();
+            DocumentListener[] docListeners = new DocumentListener[] {
+                    isDirtyListener, setDirtyListener };
             for (DocumentListener docListener : docListeners) {
                 tcRefreshRate.getDocument().addDocumentListener(docListener);
-                txtFldTimingWindow.getDocument().addDocumentListener(
-                        docListener);
-                txtFldNumWorstNodes.getDocument().addDocumentListener(
-                        docListener);
+                txtFldTimingWindow.getDocument()
+                        .addDocumentListener(docListener);
+                txtFldNumWorstNodes.getDocument()
+                        .addDocumentListener(docListener);
                 emailListArea.getDocument().addDocumentListener(docListener);
             }
         } else {
@@ -298,7 +200,7 @@ public class PreferencesWizardView extends AbstractTaskView implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.intel.stl.ui.wizards.view.AbstractTaskView#getOptionComponent()
      */
     @Override
@@ -317,10 +219,29 @@ public class PreferencesWizardView extends AbstractTaskView implements
         gc.fill = GridBagConstraints.HORIZONTAL;
         gc.weighty = 1;
 
-        txtFldRefreshRate =
-                new SafeNumberField<Integer>(new DecimalFormat("###"),
-                        MIN_REFRESH_RATE, true, MAX_REFRESH_RATE, true);
-        txtFldRefreshRate.setValidChars(UIConstants.DIGITS);
+        SafeNumberFormatter<Integer> formatter =
+                new SafeNumberFormatter<Integer>(new DecimalFormat("###"),
+                        MIN_REFRESH_RATE, true, MAX_REFRESH_RATE, true) {
+                    private static final long serialVersionUID =
+                            -2427404150726283307L;
+
+                    @Override
+                    protected String createOutOfRangeTooltip(Integer min,
+                            boolean inclusiveMin, Integer max,
+                            boolean inclusiveMax, Format format) {
+                        StringBuffer sb = new StringBuffer("<html>");
+                        sb.append(
+                                super.createOutOfRangeTooltip(min, inclusiveMin,
+                                        max, inclusiveMax, format) + "<br>");
+                        sb.append(UILabels.STL81025_SWEEP_INTERVAL_VALIDATION
+                                .getDescription() + "</html>");
+                        return sb.toString();
+                    }
+
+                };
+        formatter.setValidCharacters(UIConstants.DIGITS);
+        txtFldRefreshRate = new ExFormattedTextField(formatter);
+        formatter.setParent(txtFldRefreshRate);
         cboxRefreshRate =
                 ComponentFactory.createComboBox(getDefaultRefreshRates(),
                         txtFldRefreshRate, setDirtyListener, isDirtyListener);
@@ -333,17 +254,15 @@ public class PreferencesWizardView extends AbstractTaskView implements
             }
         });
 
-        JLabel lblRefreshRate =
-                ComponentFactory.getH5Label(
-                        STLConstants.K3007_REFRESH_RATE.getValue(), Font.BOLD);
+        JLabel lblRefreshRate = ComponentFactory.getH5Label(
+                STLConstants.K3007_REFRESH_RATE.getValue(), Font.BOLD);
         // Right-align the label:
         lblRefreshRate.setHorizontalAlignment(SwingConstants.RIGHT);
 
-        cboxRefreshRateUnits =
-                ComponentFactory.createComboBox(new String[] {
-                        STLConstants.K0012_SECONDS.getValue(),
+        cboxRefreshRateUnits = ComponentFactory.createComboBox(
+                new String[] { STLConstants.K0012_SECONDS.getValue(),
                         STLConstants.K0011_MINUTES.getValue() },
-                        setDirtyListener, isDirtyListener);
+                setDirtyListener, isDirtyListener);
         cboxRefreshRateUnits.setEditable(false);
         cboxRefreshRateUnits.addItemListener(new ItemListener() {
 
@@ -353,37 +272,31 @@ public class PreferencesWizardView extends AbstractTaskView implements
             }
         });
 
-        txtFldTimingWindow =
-                ComponentFactory.createNumericTextField(
-                        PreferencesInputValidator.getInstance()
-                                .getMaxTimingLimit(), isDirtyListener,
-                        setDirtyListener);
-        JLabel lblTimeWindow =
-                ComponentFactory.getH5Label(
-                        STLConstants.K3008_TIME_WINDOW.getValue(), Font.BOLD);
+        txtFldTimingWindow = ComponentFactory.createNumericTextField(
+                PreferencesInputValidator.getInstance().getMaxTimingLimit(),
+                isDirtyListener, setDirtyListener);
+        JLabel lblTimeWindow = ComponentFactory.getH5Label(
+                STLConstants.K3008_TIME_WINDOW.getValue(), Font.BOLD);
         // Right-align the label:
         lblTimeWindow.setHorizontalAlignment(SwingConstants.RIGHT);
 
-        JLabel lblSeconds =
-                ComponentFactory.getH5Label(
-                        STLConstants.K0012_SECONDS.getValue(), Font.BOLD);
+        JLabel lblSeconds = ComponentFactory
+                .getH5Label(STLConstants.K0012_SECONDS.getValue(), Font.BOLD);
 
         txtFldNumWorstNodes =
                 new SafeNumberField<Integer>(new DecimalFormat("###"),
                         PreferencesInputValidator.getInstance()
-                                .getMinNumWorstNode(), true,
-                        PreferencesInputValidator.getInstance()
-                                .getMaxNumWorstNode(), true);
-        JLabel lblNumWorstNodes =
-                ComponentFactory.getH5Label(
-                        STLConstants.K3009_NUM_WORST_NODES.getValue(),
-                        Font.BOLD);
+                                .getMinNumWorstNode(),
+                        true, PreferencesInputValidator.getInstance()
+                                .getMaxNumWorstNode(),
+                        true);
+        JLabel lblNumWorstNodes = ComponentFactory.getH5Label(
+                STLConstants.K3009_NUM_WORST_NODES.getValue(), Font.BOLD);
         // Right-align the label:
         lblNumWorstNodes.setHorizontalAlignment(SwingConstants.RIGHT);
 
-        JLabel lblNodes =
-                ComponentFactory.getH5Label(
-                        STLConstants.K1024_NODE_RESOURCE.getValue(), Font.BOLD);
+        JLabel lblNodes = ComponentFactory.getH5Label(
+                STLConstants.K1024_NODE_RESOURCE.getValue(), Font.BOLD);
 
         gc.gridwidth = 1;
         propertiesPanel.add(lblRefreshRate, gc);
@@ -416,10 +329,9 @@ public class PreferencesWizardView extends AbstractTaskView implements
     }
 
     private JPanel createEmailSettingsPanel() {
-        JLabel emailLbl =
-                ComponentFactory.getH5Label(
-                        STLConstants.K5007_WIZARD_EMAIL_PREFERENCES_LIST
-                                .getValue(), Font.BOLD);
+        emailLbl = ComponentFactory.getH5Label(
+                STLConstants.K5007_WIZARD_EMAIL_PREFERENCES_LIST.getValue(),
+                Font.BOLD);
 
         // Email pattern to make sure user enters valid email
         pattern = Pattern.compile(Util.EMAIL_PATTERN);
@@ -432,16 +344,17 @@ public class PreferencesWizardView extends AbstractTaskView implements
         emailListArea.setWrapStyleWord(true);
         emailListArea.setLineWrap(true);
         emailListArea.getDocument().putProperty("emailList", emailListArea);
+        Util.makeUndoable(emailListArea);
 
         scrollPane = new JScrollPane(emailListArea);
-        scrollPane.setBorder(BorderFactory
-                .createLineBorder(UIConstants.INTEL_BORDER_GRAY));
+        scrollPane.setBorder(
+                BorderFactory.createLineBorder(UIConstants.INTEL_BORDER_GRAY));
 
         emailTestBtn =
                 ComponentFactory.getImageButton(UIImages.PLAY.getImageIcon());
-        emailTestBtn
-                .setToolTipText(STLConstants.K5008_WIZARD_EMAIL_TEST_BTN_TOOLTIP
-                        .getValue());
+        emailTestBtn.setToolTipText(
+                STLConstants.K5008_WIZARD_EMAIL_TEST_BTN_TOOLTIP.getValue());
+        emailTestBtn.setDisabledIcon(UIImages.PLAY_GRAY.getImageIcon());
         emailTestBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -449,18 +362,17 @@ public class PreferencesWizardView extends AbstractTaskView implements
             }
         });
 
-        JLabel emailTestLbl =
-                ComponentFactory.getH5Label(
-                        STLConstants.K5009_WIZARD_EMAIL_TEST_LABEL_TEXT
-                                .getValue(), Font.BOLD);
+        JLabel emailTestLbl = ComponentFactory.getH5Label(
+                STLConstants.K5009_WIZARD_EMAIL_TEST_LABEL_TEXT.getValue(),
+                Font.BOLD);
         emailTestLbl.setHorizontalAlignment(SwingConstants.RIGHT);
 
         JPanel emailSettingsPanel = new JPanel();
         emailSettingsPanel.setOpaque(true);
         emailSettingsPanel.setBackground(UIConstants.INTEL_WHITE);
 
-        emailSettingsPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0,
-                10));
+        emailSettingsPanel
+                .setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
         emailSettingsPanel.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -488,8 +400,23 @@ public class PreferencesWizardView extends AbstractTaskView implements
     }
 
     public void sendTestEmail() {
-        String recipients = emailListArea.getText();
-        multinetWizardViewListener.onEmailTest(recipients);
+        showTesting(true);
+        try {
+            String recipients = emailListArea.getText();
+            multinetWizardViewListener.onEmailTest(recipients);
+        } finally {
+            showTesting(false);
+        }
+    }
+
+    protected void showTesting(boolean isTesting) {
+        if (isTesting) {
+            emailLbl.setText(STLConstants.K5017_SENDING_EMAIL.getValue());
+            emailTestBtn.setEnabled(false);
+        } else {
+            emailLbl.setText(STLConstants.K5018_EMAIL_SENT_OUT.getValue());
+            emailTestBtn.setEnabled(true);
+        }
     }
 
     @Override
@@ -508,10 +435,10 @@ public class PreferencesWizardView extends AbstractTaskView implements
     }
 
     /**
-     * 
+     *
      * <i>Description: Document listeners to detect when changes occur to the
      * subnet wizard fields</i>
-     * 
+     *
      */
     protected void createDocumentListener() {
 
@@ -528,6 +455,24 @@ public class PreferencesWizardView extends AbstractTaskView implements
 
         if (setDirtyListener == null) {
             setDirtyListener = new DocumentDirtyListener() {
+
+                @Override
+                public void insertUpdate(DocumentEvent e) {
+                    super.insertUpdate(e);
+                    checkEmailLabel(e);
+                }
+
+                @Override
+                public void removeUpdate(DocumentEvent e) {
+                    super.removeUpdate(e);
+                    checkEmailLabel(e);
+                }
+
+                @Override
+                public void changedUpdate(DocumentEvent e) {
+                    super.changedUpdate(e);
+                    checkEmailLabel(e);
+                }
 
                 @Override
                 public void setDirty(DocumentEvent e) {
@@ -548,6 +493,20 @@ public class PreferencesWizardView extends AbstractTaskView implements
         } else {
             // For all other components call setDirty():
             setDirty();
+        }
+    }
+
+    private void checkEmailLabel(DocumentEvent e) {
+        Object emailListComp = e.getDocument().getProperty("emailList");
+        if (emailListComp == null || emailListComp != emailListArea) {
+            return;
+        }
+
+        if (emailLbl
+                .getText() != STLConstants.K5007_WIZARD_EMAIL_PREFERENCES_LIST
+                        .getValue()) {
+            emailLbl.setText(STLConstants.K5007_WIZARD_EMAIL_PREFERENCES_LIST
+                    .getValue());
         }
     }
 
@@ -617,7 +576,7 @@ public class PreferencesWizardView extends AbstractTaskView implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.intel.stl.ui.wizards.view.ITaskView#resetPanel()
      */
     @Override
@@ -660,14 +619,15 @@ public class PreferencesWizardView extends AbstractTaskView implements
             }
 
             // Display the timing window and # worst nodes
-            txtFldTimingWindow.setText(preferences
-                    .getProperty(PROPERTY_TIMING_WINDOW));
-            txtFldNumWorstNodes.setText(preferences
-                    .getProperty(PROPERTY_NUM_WORST_NODES));
+            txtFldTimingWindow
+                    .setText(preferences.getProperty(PROPERTY_TIMING_WINDOW));
+            txtFldNumWorstNodes
+                    .setText(preferences.getProperty(PROPERTY_NUM_WORST_NODES));
 
-            emailListArea.setText(preferences
-                    .getProperty(PROPERTY_MAIL_RECIPIENTS));
-            emailTestBtn.setEnabled(true);
+            emailListArea
+                    .setText(preferences.getProperty(PROPERTY_MAIL_RECIPIENTS));
+            emailTestBtn.setEnabled(preferences
+                    .getProperty(PROPERTY_MAIL_RECIPIENTS).length() > 0);
 
             closeStatusPanel();
             dirty = false;
@@ -676,7 +636,7 @@ public class PreferencesWizardView extends AbstractTaskView implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.intel.stl.ui.wizards.view.ITaskView#setDirty(boolean)
      */
     @Override
@@ -689,7 +649,7 @@ public class PreferencesWizardView extends AbstractTaskView implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.intel.stl.ui.wizards.view.ITaskView#isDirty()
      */
     @Override
@@ -700,10 +660,9 @@ public class PreferencesWizardView extends AbstractTaskView implements
 
     /*
      * (non-Javadoc)
-     * 
-     * @see
-     * com.intel.stl.ui.wizards.view.ITaskView#setSubnet(com.intel.stl.api.subnet
-     * .SubnetDescription)
+     *
+     * @see com.intel.stl.ui.wizards.view.ITaskView#setSubnet(com.intel.stl.api.
+     * subnet .SubnetDescription)
      */
     @Override
     public void setSubnet(SubnetDescription subnet) {
@@ -713,7 +672,7 @@ public class PreferencesWizardView extends AbstractTaskView implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.intel.stl.ui.wizards.view.preferences.IPreferencesView#
      * getRefreshRate()
      */
@@ -724,7 +683,7 @@ public class PreferencesWizardView extends AbstractTaskView implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.intel.stl.ui.wizards.view.preferences.IPreferencesView#
      * getRefreshRateUnits()
      */
@@ -736,7 +695,7 @@ public class PreferencesWizardView extends AbstractTaskView implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.intel.stl.ui.wizards.view.preferences.IPreferencesView#
      * getTimeWindowInSeconds ()
      */
@@ -748,10 +707,9 @@ public class PreferencesWizardView extends AbstractTaskView implements
 
     /*
      * (non-Javadoc)
-     * 
-     * @see
-     * com.intel.stl.ui.wizards.view.preferences.IPreferencesView#getNumWorstNodes
-     * ()
+     *
+     * @see com.intel.stl.ui.wizards.view.preferences.IPreferencesView#
+     * getNumWorstNodes ()
      */
     @Override
     public String getNumWorstNodes() {
@@ -761,7 +719,7 @@ public class PreferencesWizardView extends AbstractTaskView implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.intel.stl.ui.wizards.view.ITaskView#update(com.intel.stl.ui.wizards
      * .model.MultinetWizardModel)
@@ -776,9 +734,8 @@ public class PreferencesWizardView extends AbstractTaskView implements
                 preferencesModel = model.getPreferencesModel();
 
                 try {
-                    Integer refreshRate =
-                            Integer.valueOf(preferencesModel
-                                    .getRefreshRateInSeconds());
+                    Integer refreshRate = Integer.valueOf(
+                            preferencesModel.getRefreshRateInSeconds());
                     addCBoxItem(refreshRate, cboxRefreshRate);
                     cboxRefreshRate.setSelectedItem(refreshRate);
                 } catch (NumberFormatException nfe) {
@@ -787,13 +744,14 @@ public class PreferencesWizardView extends AbstractTaskView implements
                     cboxRefreshRate.setSelectedIndex(0);
                 }
 
-                cboxRefreshRateUnits.setSelectedItem(preferencesModel
-                        .getRefreshRateUnits());
+                cboxRefreshRateUnits.setSelectedItem(
+                        preferencesModel.getRefreshRateUnits());
 
-                txtFldTimingWindow.setText(preferencesModel
-                        .getTimingWindowInSeconds());
+                txtFldTimingWindow
+                        .setText(preferencesModel.getTimingWindowInSeconds());
 
-                txtFldNumWorstNodes.setText(preferencesModel.getNumWorstNodes());
+                txtFldNumWorstNodes
+                        .setText(preferencesModel.getNumWorstNodes());
 
                 emailListArea.setText(preferencesModel.getMailRecipients());
 
@@ -804,7 +762,7 @@ public class PreferencesWizardView extends AbstractTaskView implements
 
     /**
      * <i>Description:</i>
-     * 
+     *
      * @return
      */
     public boolean isEditValid() {
@@ -815,10 +773,10 @@ public class PreferencesWizardView extends AbstractTaskView implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.intel.stl.ui.wizards.view.preferences.IPreferencesView#getEmailList()
-     * 
+     *
      * Returns a String of email addresses separated by semicolon. This string
      * may contain white spaces.
      */

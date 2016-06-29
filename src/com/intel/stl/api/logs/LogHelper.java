@@ -1,9 +1,9 @@
 /**
  * Copyright (c) 2015, Intel Corporation
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  *     * Redistributions of source code must retain the above copyright notice,
  *       this list of conditions and the following disclaimer.
  *     * Redistributions in binary form must reproduce the above copyright
@@ -12,7 +12,7 @@
  *     * Neither the name of Intel Corporation nor the names of its contributors
  *       may be used to endorse or promote products derived from this software
  *       without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -24,63 +24,6 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-/*******************************************************************************
- *                       I N T E L   C O R P O R A T I O N
- *	
- *  Functional Group: Fabric Viewer Application
- *
- *  File Name: LogHelper2.java
- *
- *  Archive Source: $Source$
- *
- *  Archive Log:    $Log$
- *  Archive Log:    Revision 1.8  2015/11/18 23:50:00  rjtierne
- *  Archive Log:    PR 130965 - ESM support on Log Viewer
- *  Archive Log:    - Modified initializationTask() and initializeSsh() to accommodate user-configured login info
- *  Archive Log:    - Refactored error handling
- *  Archive Log:
- *  Archive Log:    Revision 1.7  2015/10/06 15:50:35  rjtierne
- *  Archive Log:    PR 130390 - Windows FM GUI - Admin tab->Logs side-tab - unable to login to switch SM for log access
- *  Archive Log:    - Changed the behavior of the Log Viewer when logging into an ESM. Instead of restricting login to user name
- *  Archive Log:    "root" only, now disabling the Low Viewer and displaying a message since there is no SM Log in an ESM.
- *  Archive Log:
- *  Archive Log:    Revision 1.6  2015/09/29 15:30:24  rjtierne
- *  Archive Log:    PR 130332 - windows FM GUI - Admin-Logs - when logging in it displays error message about NULL log
- *  Archive Log:    - Reorganized initializationTask() to initialize the log file path
- *  Archive Log:    - Now checking for existence of a log file regardless of whether it is user defined in the config file
- *  Archive Log:    or the default file.
- *  Archive Log:    - Only issuing an error if no log file can be found
- *  Archive Log:    - Removed call to display error when using the default log file
- *  Archive Log:
- *  Archive Log:    Revision 1.5  2015/09/25 13:53:35  rjtierne
- *  Archive Log:    PR 130011 - Enhance SM Log Viewer to include Standard and Advanced requirements
- *  Archive Log:    - Prevent non-root users from logging in to view the log
- *  Archive Log:    - Implemented setStartLine() and setEndLine()
- *  Archive Log:
- *  Archive Log:    Revision 1.4  2015/09/10 20:56:49  jijunwan
- *  Archive Log:    PR 130409 - [Dell]: FMGUI Admin Console login fails when switch is configured without username and password
- *  Archive Log:    - improved code to better handle conf file not found
- *  Archive Log:
- *  Archive Log:    Revision 1.3  2015/08/18 21:31:34  jijunwan
- *  Archive Log:    PR 128979 - SM Log display
- *  Archive Log:    - checked in Rick's code that fixed currentLine calculation issues
- *  Archive Log:
- *  Archive Log:    Revision 1.2  2015/08/17 18:48:54  jijunwan
- *  Archive Log:    PR 129983 - Need to change file header's copyright text to BSD license txt
- *  Archive Log:    - change backend files' headers
- *  Archive Log:
- *  Archive Log:    Revision 1.1  2015/08/17 14:22:52  rjtierne
- *  Archive Log:    PR 128979 - SM Log display
- *  Archive Log:    This is the first version of the Log Viewer which displays select lines of text from the remote SM log file. Updates include searchable raw text from file, user-defined number of lines to display, refreshing end of file, and paging. This PR is now closed and further updates can be found by referencing PR 130011 - "Enhance SM Log Viewer to include Standard and Advanced requirements".
- *  Archive Log:
- *
- *  Overview: Over-arching helper class to the LogApi, to submit commands to
- *  the LogCommandProcessor, and process responses for the UI
- *
- *  @author: rjtierne
- *
- ******************************************************************************/
 
 package com.intel.stl.api.logs;
 
@@ -102,8 +45,12 @@ import com.intel.stl.fecdriver.network.ssh.impl.JSchSession;
 import com.intel.stl.fecdriver.network.ssh.impl.JSchSessionFactory;
 import com.jcraft.jsch.JSchException;
 
-public class LogHelper implements IResponseListener, ILogErrorListener,
-        ILogPageListener {
+/**
+ * Over-arching helper class to the LogApi, to submit commands to the
+ * LogCommandProcessor, and process responses for the UI
+ */
+public class LogHelper
+        implements IResponseListener, ILogErrorListener, ILogPageListener {
 
     private final static Logger log = LoggerFactory.getLogger(LogHelper.class);
 
@@ -178,10 +125,9 @@ public class LogHelper implements IResponseListener, ILogErrorListener,
 
                     if (errorCode == LogErrorType.LOG_OK) {
                         // Initialize the User Command Processor
-                        userCommandProcessor =
-                                new LogCommandProcessor(jschSession,
-                                        RESPONSE_TIMEOUT, helper.getClass()
-                                                .getSimpleName());
+                        userCommandProcessor = new LogCommandProcessor(
+                                jschSession, RESPONSE_TIMEOUT,
+                                helper.getClass().getSimpleName());
                         userCommandProcessor.setResponseListener(helper);
 
                         // Initialize the log file path
@@ -239,9 +185,8 @@ public class LogHelper implements IResponseListener, ILogErrorListener,
 
     protected void startLogStatusTask(long delay, long timeBetweenExecutions) {
         // Initialize the timer task to retrieve total # lines
-        logStatusTask =
-                new LogStatusTask(logFilePath, LogMessageType.NUM_LINES,
-                        jschSession);
+        logStatusTask = new LogStatusTask(logFilePath, LogMessageType.NUM_LINES,
+                jschSession);
         logStatusTask.setResponseListener(helper);
         logStatusTask.setErrorListener(helper);
         logStatusTask.start(delay, timeBetweenExecutions);
@@ -341,20 +286,20 @@ public class LogHelper implements IResponseListener, ILogErrorListener,
             HostInfo hostInfo = subnet.getCurrentFE();
             SshLoginBean sshLoginBean =
                     new SshLoginBean(subnet.getSubnetId(), subnet.getName(),
-                    /* hostInfo.getSshUserName(), */logInitBean.getUserName(),
-                            logInitBean.getLogHost(), Integer.valueOf(hostInfo
-                                    .getPort()), subnet.getCurrentFE()
-                                    .getCertsDescription());
+                            /* hostInfo.getSshUserName(), */logInitBean
+                                    .getUserName(),
+                            logInitBean.getLogHost(),
+                            Integer.valueOf(hostInfo.getPort()),
+                            subnet.getCurrentFE().getCertsDescription());
             SubnetDescription sNet = new SubnetDescription(sshLoginBean);
 
             // Initialize the session with the copied subnet
-            jschSession =
-                    JSchSessionFactory.getSession(sNet,
-                            logInitBean.isStrictHostKey(), password,
-                            SshKeyType.LOG_KEY.getKey(subnet.getSubnetId()));
+            jschSession = JSchSessionFactory.getSession(sNet,
+                    logInitBean.isStrictHostKey(), password,
+                    SshKeyType.LOG_KEY.getKey(subnet.getSubnetId()));
         } catch (JSchException e) {
             error = LogErrorType.SSH_HOST_CONNECT_ERROR;
-            log.error(e.getMessage());
+            log.error(e.getMessage(), e);
         }
         return error;
     }
@@ -368,9 +313,8 @@ public class LogHelper implements IResponseListener, ILogErrorListener,
 
         // Check if the factory has a session for this subnet
         // and if it does, verify that it is connected
-        JSchSession session =
-                JSchSessionFactory.getSessionFromMap(SshKeyType.LOG_KEY
-                        .getKey(subnet.getSubnetId()));
+        JSchSession session = JSchSessionFactory.getSessionFromMap(
+                SshKeyType.LOG_KEY.getKey(subnet.getSubnetId()));
 
         if (session != null) {
             connectionStatus = session.isConnected();
@@ -403,7 +347,7 @@ public class LogHelper implements IResponseListener, ILogErrorListener,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.intel.stl.api.logs.IErrorListener#stopLog()
      */
     @Override
@@ -429,8 +373,8 @@ public class LogHelper implements IResponseListener, ILogErrorListener,
         } finally {
             try {
                 // Shut down the session
-                JSchSessionFactory.closeSession(SshKeyType.LOG_KEY
-                        .getKey(subnet.getSubnetId()));
+                JSchSessionFactory.closeSession(
+                        SshKeyType.LOG_KEY.getKey(subnet.getSubnetId()));
             } finally {
                 logRunning = false;
             }
@@ -439,7 +383,7 @@ public class LogHelper implements IResponseListener, ILogErrorListener,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.intel.stl.api.logs.ICommandListener#onResponseReceived(LogResponse)
      */
@@ -502,7 +446,7 @@ public class LogHelper implements IResponseListener, ILogErrorListener,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.intel.stl.api.logs.IResponseListener#onResponseError(LogErrorType,
      * LogMessageType)
@@ -563,7 +507,7 @@ public class LogHelper implements IResponseListener, ILogErrorListener,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.intel.stl.api.logs.ILogPageListener#setFirstPage(boolean)
      */
     @Override
@@ -573,7 +517,7 @@ public class LogHelper implements IResponseListener, ILogErrorListener,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.intel.stl.api.logs.ILogPageListener#setLastPage(boolean)
      */
     @Override
@@ -583,7 +527,7 @@ public class LogHelper implements IResponseListener, ILogErrorListener,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.intel.stl.api.logs.ILogPageListener#setStartLine(long)
      */
     @Override
@@ -593,7 +537,7 @@ public class LogHelper implements IResponseListener, ILogErrorListener,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.intel.stl.api.logs.ILogPageListener#setEndLine(long)
      */
     @Override

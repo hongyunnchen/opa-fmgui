@@ -1,9 +1,9 @@
 /**
  * Copyright (c) 2015, Intel Corporation
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  *     * Redistributions of source code must retain the above copyright notice,
  *       this list of conditions and the following disclaimer.
  *     * Redistributions in binary form must reproduce the above copyright
@@ -12,7 +12,7 @@
  *     * Neither the name of Intel Corporation nor the names of its contributors
  *       may be used to endorse or promote products derived from this software
  *       without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -24,81 +24,6 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-/*******************************************************************************
- *                       I N T E L   C O R P O R A T I O N
- *	
- *  Functional Group: Fabric Viewer Application
- *
- *  File Name: PerformanceTableColumns.java
- *
- *  Archive Source: $Source$
- *
- *  Archive Log:    $Log$
- *  Archive Log:    Revision 1.13  2015/11/02 20:26:15  jijunwan
- *  Archive Log:    PR 131384 - Incorrect label name on port counter panel
- *  Archive Log:    - renamed constant RX_CUMULATIVE_DATA to RX_CUMULATIVE_DATA_MB, and TX_CUMULATIVE_DATA to TX_CUMULATIVE_DATA_MB
- *  Archive Log:    - introduced new constants for RvcData and XmitData and applied them on port counters panel
- *  Archive Log:
- *  Archive Log:    Revision 1.12  2015/08/17 18:53:46  jijunwan
- *  Archive Log:    PR 129983 - Need to change file header's copyright text to BSD license txt
- *  Archive Log:    - changed frontend files' headers
- *  Archive Log:
- *  Archive Log:    Revision 1.11  2015/06/01 15:01:22  jypak
- *  Archive Log:    PR 128823 - Improve performance tables to include all portcounters fields.
- *  Archive Log:    All port counters fields added to performance table and connectivity table.
- *  Archive Log:
- *  Archive Log:    Revision 1.10  2015/05/28 15:29:25  jypak
- *  Archive Log:    PR 128873 - Add "Flits" in performance table for Data related columns.
- *  Archive Log:    Added "(MB)" to RcvData, XmitData column header.
- *  Archive Log:    Added "(MBps)" to data rates.
- *  Archive Log:    Added data in "Flits" or data rate in "(Flits/sec)" to tool tips.
- *  Archive Log:    Used the TableDataDescription to convert and format the data.
- *  Archive Log:
- *  Archive Log:    Revision 1.9  2015/05/26 12:33:30  jypak
- *  Archive Log:    PR 128873 - Add "Flits" in performance table for Data related columns
- *  Archive Log:    Added "(Flits)" to RcvData, XmitData column header in the performance table.
- *  Archive Log:
- *  Archive Log:    Revision 1.8  2015/05/14 17:43:12  jijunwan
- *  Archive Log:    PR 127700 - Delta data on host performance display is accumulating
- *  Archive Log:    - corrected delta value calculation
- *  Archive Log:    - changed to display data/pkts rate rather than delta on chart and table
- *  Archive Log:    - updated chart unit to show rate
- *  Archive Log:    - renamed the following classes to reflect we are dealing with rate
- *  Archive Log:      DataChartRangeUpdater -> DataRateChartRangeUpdater
- *  Archive Log:      PacketChartRangeUpdater -> PacketRateChartRangeUpdater
- *  Archive Log:      DataChartScaleGroupManager -> DataRateChartScaleGroupManager
- *  Archive Log:      PacketChartScaleGroupManager -> PacketRateChartScaleGroupManager
- *  Archive Log:
- *  Archive Log:    Revision 1.7  2015/04/08 19:44:01  rjtierne
- *  Archive Log:    PR 126844 - Can make Port counter names in UIs more concise.
- *  Archive Log:    Added a tool tip field to the enumeration using fast fabric tool names
- *  Archive Log:
- *  Archive Log:    Revision 1.6  2015/03/05 22:32:16  fisherma
- *  Archive Log:    Added LinkQuality icon to Performance -> Performance tab table.
- *  Archive Log:
- *  Archive Log:    Revision 1.5  2014/05/30 19:41:40  rjtierne
- *  Archive Log:    Made the description of Rx/Tx Data and Packet constants more
- *  Archive Log:    specifically described as "Delta" data for the Performance table
- *  Archive Log:
- *  Archive Log:    Revision 1.4  2014/05/29 22:06:42  jijunwan
- *  Archive Log:    support both delta and cumulative portCounters
- *  Archive Log:
- *  Archive Log:    Revision 1.3  2014/05/28 17:44:33  rjtierne
- *  Archive Log:    Changed string constant to Port # instead of Rx Port
- *  Archive Log:
- *  Archive Log:    Revision 1.2  2014/05/23 19:13:14  rjtierne
- *  Archive Log:    Added id field to the enum
- *  Archive Log:
- *  Archive Log:    Revision 1.1  2014/05/21 14:44:06  rjtierne
- *  Archive Log:    Initial Version
- *  Archive Log:
- *
- *  Overview: Enum for the Performance table columns
- *
- *  @author: rjtierne
- *
- ******************************************************************************/
 
 package com.intel.stl.ui.model;
 
@@ -184,7 +109,8 @@ public enum PerformanceTableColumns {
     FM_CONFIG_ERRORS(STLConstants.K0737_FM_CONFIG_ERRRORS.getValue(),
             STLConstants.K3201_FM_CONFIG_ERR_DESCRIPTION.getValue()),
 
-    EXCESSIVE_BUFFER_OVERRUNS(STLConstants.K0719_EXCESS_BUFF_OVERRUNS.getValue(),
+    EXCESSIVE_BUFFER_OVERRUNS(
+            STLConstants.K0719_EXCESS_BUFF_OVERRUNS.getValue(),
             STLConstants.K3200_EXCESS_BUFF_OVERRUNS_DESCRIPTION.getValue()),
 
     SW_PORT_CONGESTION(STLConstants.K0835_SW_PORT_CONG.getValue(),
@@ -198,6 +124,9 @@ public enum PerformanceTableColumns {
 
     LINK_DOWNED(STLConstants.K0518_LINK_DOWN.getValue(),
             STLConstants.K3202_LINK_DOWN_DESCRIPTION.getValue()),
+
+    NUM_LANES_DOWN(STLConstants.K1655_NUM_LANES_DOWN.getValue(),
+            STLConstants.K3234_NUM_LANES_DOWN_DESCRIPTION.getValue()),
 
     UNCORRECTABLE_ERRORS(STLConstants.K0716_UNCORR_ERR.getValue(),
             STLConstants.K3232_UNCORR_ERR_DESCRIPTION.getValue());

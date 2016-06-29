@@ -1,9 +1,9 @@
 /**
  * Copyright (c) 2015, Intel Corporation
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  *     * Redistributions of source code must retain the above copyright notice,
  *       this list of conditions and the following disclaimer.
  *     * Redistributions in binary form must reproduce the above copyright
@@ -12,7 +12,7 @@
  *     * Neither the name of Intel Corporation nor the names of its contributors
  *       may be used to endorse or promote products derived from this software
  *       without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -24,79 +24,6 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-/*******************************************************************************
- *                       I N T E L   C O R P O R A T I O N
- *	
- *  Functional Group: Fabric Viewer Application
- *
- *  File Name: GraphBuilder.java
- *
- *  Archive Source: $Source$
- *
- *  Archive Log:    $Log$
- *  Archive Log:    Revision 1.17  2015/08/17 18:54:00  jijunwan
- *  Archive Log:    PR 129983 - Need to change file header's copyright text to BSD license txt
- *  Archive Log:    - changed frontend files' headers
- *  Archive Log:
- *  Archive Log:    Revision 1.16  2015/04/28 13:55:04  jijunwan
- *  Archive Log:    minor improvement to ignore "missed nodes" that only happen when we turn on random value that will creates unmatched list of nodes and links via simulated notices
- *  Archive Log:
- *  Archive Log:    Revision 1.15  2015/04/15 21:32:00  jijunwan
- *  Archive Log:    PR 128134 - Support other tree like toplogy
- *  Archive Log:    - minor improvement to handle tree variance that may happen when a user mis-connect devices
- *  Archive Log:
- *  Archive Log:    Revision 1.14  2015/02/05 19:10:50  jijunwan
- *  Archive Log:    fixed NPE issues found by klocwork
- *  Archive Log:
- *  Archive Log:    Revision 1.13  2014/12/11 18:47:05  fernande
- *  Archive Log:    Switch from log4j to slf4j+logback
- *  Archive Log:
- *  Archive Log:    Revision 1.12  2014/10/22 02:21:26  jijunwan
- *  Archive Log:    1) moved update tasks into task package
- *  Archive Log:    2) added topology summary panel
- *  Archive Log:    3) improved models to be able to calculate ports distribution, nodes not in fat tree etc.
- *  Archive Log:
- *  Archive Log:    Revision 1.11  2014/10/09 21:29:45  jijunwan
- *  Archive Log:    new Topology Viz
- *  Archive Log:
- *  Archive Log:    Revision 1.10  2014/10/01 19:25:53  rjtierne
- *  Archive Log:    Relocated image directory to src/main/image. Added new images for Topology graph and removed hardcoded static path to images
- *  Archive Log:
- *  Archive Log:    Revision 1.9  2014/09/02 18:57:21  jijunwan
- *  Archive Log:    improvement on topology graph refresh - clear and then update graph
- *  Archive Log:
- *  Archive Log:    Revision 1.8  2014/08/05 18:39:05  jijunwan
- *  Archive Log:    renamed FI to HFI
- *  Archive Log:
- *  Archive Log:    Revision 1.7  2014/08/05 13:46:23  jijunwan
- *  Archive Log:    new implementation on topology control that uses double models to avoid synchronization issues on model and view
- *  Archive Log:
- *  Archive Log:    Revision 1.6  2014/07/03 22:23:47  jijunwan
- *  Archive Log:    1) improved Topology to support multiple edges selection
- *  Archive Log:    2) added Tree and Graph selection synchronization
- *  Archive Log:
- *  Archive Log:    Revision 1.5  2014/06/26 15:08:24  jijunwan
- *  Archive Log:    improved GraphBuilder to handle isolated nodes
- *  Archive Log:
- *  Archive Log:    Revision 1.4  2014/06/05 18:32:52  jijunwan
- *  Archive Log:    changed Channel Adapter to Fabric Interface
- *  Archive Log:
- *  Archive Log:    Revision 1.3  2014/05/27 22:08:10  jijunwan
- *  Archive Log:    added tooltip for topology
- *  Archive Log:
- *  Archive Log:    Revision 1.2  2014/05/27 13:48:39  jijunwan
- *  Archive Log:    added connection highlight
- *  Archive Log:
- *  Archive Log:    Revision 1.1  2014/05/23 19:47:54  jijunwan
- *  Archive Log:    init version of topology page
- *  Archive Log:
- *
- *  Overview: 
- *
- *  @author: jijunwan
- *
- ******************************************************************************/
 
 package com.intel.stl.ui.network;
 
@@ -121,8 +48,8 @@ import com.mxgraph.model.mxCell;
 import com.mxgraph.view.mxGraph;
 
 public class GraphBuilder {
-    private static final Logger log = LoggerFactory
-            .getLogger(GraphBuilder.class);
+    private static final Logger log =
+            LoggerFactory.getLogger(GraphBuilder.class);
 
     public static final int SWITCH_SIZE = 64;
 
@@ -135,10 +62,9 @@ public class GraphBuilder {
 
     public TopologyTreeModel build(TopGraph graph, List<NodeRecordBean> nodes,
             List<LinkRecordBean> links) {
-        // new Exception().printStackTrace();
         long t = System.currentTimeMillis();
-        log.info("Create graph with " + nodes.size() + " nodes, "
-                + links.size() + " links");
+        log.info("Create graph with " + nodes.size() + " nodes, " + links.size()
+                + " links");
         Map<Integer, GraphNode> nodesMap = new HashMap<Integer, GraphNode>();
         Set<GraphNode> endNodes = new HashSet<GraphNode>();
         for (NodeRecordBean node : nodes) {
@@ -153,9 +79,8 @@ public class GraphBuilder {
             nodesMap.put(node.getLid(), gn);
         }
         fillLinks(nodesMap, links);
-        List<GraphNode> roots =
-                endNodes.isEmpty() ? getRoots(nodesMap.values()) : getRoots(
-                        nodesMap.values(), endNodes);
+        List<GraphNode> roots = endNodes.isEmpty() ? getRoots(nodesMap.values())
+                : getRoots(nodesMap.values(), endNodes);
         if (DEBUG) {
             for (GraphNode node : nodesMap.values()) {
                 node.dump(System.out);
@@ -171,6 +96,60 @@ public class GraphBuilder {
                 + (System.currentTimeMillis() - t) + " ms "
                 + Thread.currentThread());
         return model;
+    }
+
+    /**
+     * <i>Description:</i> exclude switches that are unlikely to be leaf
+     * switches
+     *
+     * @param endNodes
+     */
+    protected Set<GraphNode> screenEndNodes(Set<GraphNode> endNodes) {
+        Set<GraphNode> leafSwitches = new HashSet<GraphNode>();
+        // get all leaf switch candidate
+        for (GraphNode node : endNodes) {
+            Set<GraphNode> nbr = node.getMiddleNeighbor();
+            for (GraphNode parent : nbr) {
+                if (!leafSwitches.contains(parent)) {
+                    leafSwitches.add(parent);
+                }
+            }
+        }
+
+        // special case - only two candidate
+        if (leafSwitches.size() <= 2) {
+            return endNodes;
+        }
+
+        // remove switches connect to another candidate and have less number of
+        // end nodes
+        Set<GraphNode> toRemove = new HashSet<GraphNode>();
+        for (GraphNode node : leafSwitches) {
+            Set<GraphNode> nbrs = node.getMiddleNeighbor();
+            int numHosts = node.getEndNeighbor().size();
+            for (GraphNode peer : nbrs) {
+                if (!leafSwitches.contains(peer) || toRemove.contains(peer)) {
+                    continue;
+                }
+
+                if (peer.getEndNeighbor().size() > numHosts) {
+                    toRemove.add(node);
+                    break;
+                } else {
+                    toRemove.add(peer);
+                }
+            }
+        }
+        leafSwitches.removeAll(toRemove);
+        Set<GraphNode> res = new HashSet<GraphNode>();
+        for (GraphNode node : leafSwitches) {
+            res.addAll(node.getEndNeighbor());
+        }
+        if (res.isEmpty()) {
+            return endNodes;
+        } else {
+            return res;
+        }
     }
 
     protected void fillLinks(Map<Integer, GraphNode> map,
@@ -202,7 +181,8 @@ public class GraphBuilder {
             Set<GraphNode> endNodes) {
         Set<GraphNode> workingNodes = new HashSet<GraphNode>(nodes);
         workingNodes.removeAll(endNodes);
-        Set<GraphNode> nextRef = new HashSet<GraphNode>(endNodes);
+        Set<GraphNode> nextRef =
+                new HashSet<GraphNode>(screenEndNodes(endNodes));
 
         boolean hasChange = true;
         while (!workingNodes.isEmpty() && hasChange) {
@@ -232,10 +212,10 @@ public class GraphBuilder {
     }
 
     /**
-     * 
+     *
      * Description: if a subnet has no end nodes, we try switches one by one to
      * figure out the root(s)
-     * 
+     *
      * @param nodes
      * @return
      */
@@ -256,7 +236,8 @@ public class GraphBuilder {
         return getRoots(nodes, refNodes);
     }
 
-    protected TopologyTreeModel fillGraph(TopGraph graph, List<GraphNode> roots) {
+    protected TopologyTreeModel fillGraph(TopGraph graph,
+            List<GraphNode> roots) {
         List<List<Integer>> ranks = new ArrayList<List<Integer>>();
         int maxRankSize = 0;
         int numNodes = 0;
@@ -318,9 +299,8 @@ public class GraphBuilder {
                 }
                 processed.addAll(workingNodes);
             }
-            TopologyTreeModel model =
-                    new TopologyTreeModel(ranks, maxRankSize,
-                            new ArrayList<Integer>(), numNodes);
+            TopologyTreeModel model = new TopologyTreeModel(ranks, maxRankSize,
+                    new ArrayList<Integer>(), numNodes);
             return model;
         } catch (Exception e) {
             e.printStackTrace();
@@ -335,13 +315,12 @@ public class GraphBuilder {
         NodeType type = NodeType.getNodeType(nbr.getType());
         int w = type == NodeType.HFI ? HFI_SIZE : SWITCH_SIZE;
         int h = type == NodeType.HFI ? HFI_SIZE : SWITCH_SIZE;
-        String style =
-                type == NodeType.HFI ? "shape=image;image="
-                        + UIImages.HFI_IMG.getFileName() : "shape=image;image="
+        String style = type == NodeType.HFI
+                ? "shape=image;image=" + UIImages.HFI_IMG.getFileName()
+                : "shape=image;image="
                         + UIImages.SWITCH_EXPANDED_IMG.getFileName();
-        Object vertex =
-                graph.insertVertex(parent, TopGraph.getVertexId(nbr.getLid()),
-                        nbr, 0, 0, w, h, style);
+        Object vertex = graph.insertVertex(parent,
+                TopGraph.getVertexId(nbr.getLid()), nbr, 0, 0, w, h, style);
         return (mxCell) vertex;
     }
 

@@ -1,9 +1,9 @@
 /**
  * Copyright (c) 2015, Intel Corporation
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  *     * Redistributions of source code must retain the above copyright notice,
  *       this list of conditions and the following disclaimer.
  *     * Redistributions in binary form must reproduce the above copyright
@@ -12,7 +12,7 @@
  *     * Neither the name of Intel Corporation nor the names of its contributors
  *       may be used to endorse or promote products derived from this software
  *       without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -24,42 +24,10 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-/*******************************************************************************
- *                       I N T E L   C O R P O R A T I O N
- * 
- *  Functional Group: Fabric Viewer Application
- * 
- *  File Name: AppDataUtils.java
- * 
- *  Archive Source: $Source$
- * 
- *  Archive Log: $Log$
- *  Archive Log: Revision 1.19  2015/11/18 21:08:22  fernande
- *  Archive Log: PR127008 - Allow a user delete DB files during uninstallation. Added code to invoke a script the first time the application is invoked.
- *  Archive Log:
- *  Archive Log: Revision 1.18  2015/08/17 18:49:06  jijunwan
- *  Archive Log: PR 129983 - Need to change file header's copyright text to BSD license txt
- *  Archive Log: - change backend files' headers
- *  Archive Log:
- *  Archive Log: Revision 1.17  2015/06/10 19:36:45  jijunwan
- *  Archive Log: PR 129153 - Some old files have no proper file header. They cannot record change logs.
- *  Archive Log: - wrote a tool to check and insert file header
- *  Archive Log: - applied on backend files
- *  Archive Log:
- * 
- *  Overview:
- * 
- *  @author: Fernando Fernandez
- * 
- ******************************************************************************/
-
 package com.intel.stl.common;
 
 /**
- * @author Fernando Fernandez
- *
  */
-
 import static com.intel.stl.common.STLMessages.STL10014_CANNOT_OVERRIDE_SETTING;
 import static com.intel.stl.common.STLMessages.STL10015_OVERRIDING_SETTING;
 import static com.intel.stl.common.STLMessages.STL10023_ERROR_READING_RESOURCE;
@@ -104,10 +72,10 @@ import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import com.intel.stl.configuration.AppSettings;
+
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.core.util.StatusPrinter;
-
-import com.intel.stl.configuration.AppSettings;
 
 public class AppDataUtils {
 
@@ -157,17 +125,16 @@ public class AppDataUtils {
         String osName = sysfunctions.getSystemProperty("os.name").toLowerCase();
         if (osName.indexOf("windows") != -1) {
             appDataPath = sysfunctions.getEnvironmentVariable(APPDATA_STR);
-            String osmaj =
-                    sysfunctions.getSystemProperty("os.version").split("\\.")[0];
+            String osmaj = sysfunctions.getSystemProperty("os.version")
+                    .split("\\.")[0];
             int osver = Integer.parseInt(osmaj);
             if (osver >= 5) {
                 // %APPDATA% locations
                 // Vista or later: C:\Users\<username>\AppData\Roaming
                 // XP or 2k3: C:\Documents and Settings\<username>\Application
                 // Data
-                appDataPath =
-                        sysfunctions.getEnvironmentVariable(APPDATA_STR)
-                                + File.separatorChar + INTEL_NAME;
+                appDataPath = sysfunctions.getEnvironmentVariable(APPDATA_STR)
+                        + File.separatorChar + INTEL_NAME;
             } else {
                 // too old
             }
@@ -175,14 +142,12 @@ public class AppDataUtils {
         } else if (osName.indexOf("mac") != -1) {
             // On Mac OS X, user data should be in
             // System.getProperty("user.home") + "/Library/" + "Your App Name"
-            appDataPath =
-                    sysfunctions.getSystemProperty("user.home")
-                            + File.separatorChar + "Library"
-                            + File.separatorChar + INTEL_NAME;
+            appDataPath = sysfunctions.getSystemProperty("user.home")
+                    + File.separatorChar + "Library" + File.separatorChar
+                    + INTEL_NAME;
         } else {
-            appDataPath =
-                    sysfunctions.getSystemProperty("user.dir")
-                            + File.separatorChar + "." + INTEL_NAME;
+            appDataPath = sysfunctions.getSystemProperty("user.home")
+                    + File.separatorChar + "." + INTEL_NAME;
         }
 
         return appDataPath;
@@ -234,14 +199,13 @@ public class AppDataUtils {
 
     public static AppSettings getApplicationSettings()
             throws InvalidPropertiesFormatException, IOException {
-        return new AppSettings(getApplicationSettings(
-                APPLICATION_SETTINGS_FILE, CONFIGURATION_URL,
-                getApplicationDataPath()));
+        return new AppSettings(getApplicationSettings(APPLICATION_SETTINGS_FILE,
+                CONFIGURATION_URL, getApplicationDataPath()));
     }
 
     protected static Properties getApplicationSettings(String settingsFilename,
             String settingsUrl, String settingsLocation)
-            throws InvalidPropertiesFormatException, IOException {
+                    throws InvalidPropertiesFormatException, IOException {
         log = LoggerFactory.getLogger(AppDataUtils.class);
         Properties settings = new Properties();
         URL settingsResource =
@@ -251,9 +215,8 @@ public class AppDataUtils {
             // found
             return settings;
         }
-        InputStream sis =
-                AppDataUtils.class.getResourceAsStream(settingsUrl
-                        + settingsFilename);
+        InputStream sis = AppDataUtils.class
+                .getResourceAsStream(settingsUrl + settingsFilename);
         try {
             settings.loadFromXML(sis);
         } finally {
@@ -290,11 +253,10 @@ public class AppDataUtils {
     }
 
     protected static Properties getCustomSettings(String settingsFilename,
-            String settingsLocation) throws InvalidPropertiesFormatException,
-            IOException {
-        File settingsFile =
-                new File(settingsLocation + File.separatorChar
-                        + settingsFilename);
+            String settingsLocation)
+                    throws InvalidPropertiesFormatException, IOException {
+        File settingsFile = new File(
+                settingsLocation + File.separatorChar + settingsFilename);
         Properties customSettings = new Properties();
         if (settingsFile.exists()) {
             InputStream ois = new FileInputStream(settingsFile);
@@ -321,17 +283,15 @@ public class AppDataUtils {
 
     protected static void saveCustomSettings(Properties customSettings,
             String settingsFilename, String settingsLocation)
-            throws IOException {
-        File settingsFile =
-                new File(settingsLocation + File.separatorChar
-                        + settingsFilename);
+                    throws IOException {
+        File settingsFile = new File(
+                settingsLocation + File.separatorChar + settingsFilename);
         FileOutputStream fileOut = new FileOutputStream(settingsFile);
         try {
             customSettings.storeToXML(fileOut, "Saved");
         } catch (IOException e) {
-            log.error(
-                    "Error saving custom settings to file '"
-                            + settingsFile.getAbsolutePath() + "'.", e);
+            log.error("Error saving custom settings to file '"
+                    + settingsFile.getAbsolutePath() + "'.", e);
             throw e;
         } finally {
             fileOut.close();
@@ -381,13 +341,11 @@ public class AppDataUtils {
     protected static void copyLogConfigurationIfNonExistent(
             String log4jPropertiesFilename, String log4PropertiesLocation,
             String settingsUrl) {
-        File log4jProps =
-                new File(log4PropertiesLocation + File.separatorChar
-                        + log4jPropertiesFilename);
+        File log4jProps = new File(log4PropertiesLocation + File.separatorChar
+                + log4jPropertiesFilename);
         if (!log4jProps.exists()) {
-            URL log4jResource =
-                    sysfunctions.getResource(settingsUrl
-                            + log4jPropertiesFilename);
+            URL log4jResource = sysfunctions
+                    .getResource(settingsUrl + log4jPropertiesFilename);
             if (log4jResource != null) {
                 copyResourceToFile(log4jResource, log4jProps);
             }
@@ -406,9 +364,8 @@ public class AppDataUtils {
                 line = in.readLine();
             }
         } catch (IOException e) {
-            String errMsg =
-                    STL10023_ERROR_READING_RESOURCE.getDescription(
-                            resource.getFile(), e.getMessage());
+            String errMsg = STL10023_ERROR_READING_RESOURCE
+                    .getDescription(resource.getFile(), e.getMessage());
             RuntimeException rte = new RuntimeException(errMsg, e);
             // LogLog.error(errMsg, e);
             throw rte;
@@ -429,7 +386,8 @@ public class AppDataUtils {
         }
     }
 
-    public static void writeFile(File file, String contents) throws IOException {
+    public static void writeFile(File file, String contents)
+            throws IOException {
         Writer output = new BufferedWriter(new FileWriter(file));
         try {
             output.write(contents);
@@ -446,9 +404,8 @@ public class AppDataUtils {
 
             return readResourceFile(resourceFile);
         } catch (IOException e) {
-            String errMsg =
-                    STL10023_ERROR_READING_RESOURCE.getDescription(
-                            resourceFile, e.getMessage());
+            String errMsg = STL10023_ERROR_READING_RESOURCE
+                    .getDescription(resourceFile, e.getMessage());
             log.error(errMsg, e);
             RuntimeException rte = new RuntimeException(errMsg, e);
             throw rte;
@@ -473,8 +430,7 @@ public class AppDataUtils {
                 }
                 return xmlFile.toString();
             } catch (IOException e) {
-                log.error(
-                        "IOException reading resource '" + resourceFile + "'",
+                log.error("IOException reading resource '" + resourceFile + "'",
                         e);
                 throw e;
             } finally {
@@ -483,15 +439,14 @@ public class AppDataUtils {
                 }
             }
         } else {
-            RuntimeException rte =
-                    new RuntimeException("Resource file '" + resourceFile
-                            + "' not found in classpath.");
+            RuntimeException rte = new RuntimeException("Resource file '"
+                    + resourceFile + "' not found in classpath.");
             throw rte;
         }
     }
 
-    public static final Element convertToDOM(String xml) throws IOException,
-            ParserConfigurationException, SAXException {
+    public static final Element convertToDOM(String xml)
+            throws IOException, ParserConfigurationException, SAXException {
         InputSource sourceXML = new InputSource(new StringReader(xml));
 
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -518,9 +473,8 @@ public class AppDataUtils {
 
     public static final String getPostSetupScript() {
         String fmguiJarPath = getAppInstallPath();
-        fmguiJarPath =
-                fmguiJarPath + File.separatorChar + UTIL_FOLDER_NAME
-                        + File.separatorChar;
+        fmguiJarPath = fmguiJarPath + File.separatorChar + UTIL_FOLDER_NAME
+                + File.separatorChar;
         String postSetupScript = null;
         String osName = sysfunctions.getSystemProperty("os.name").toLowerCase();
         if (osName.indexOf("windows") != -1) {
@@ -550,10 +504,8 @@ public class AppDataUtils {
         File copiedFile = new File(dataPath + File.separatorChar + cleanScript);
         if (copiedFile.exists()) {
             String fmguiJarPath = getAppInstallPath();
-            File origFile =
-                    new File(fmguiJarPath + File.separatorChar
-                            + UTIL_FOLDER_NAME + File.separatorChar
-                            + cleanScript);
+            File origFile = new File(fmguiJarPath + File.separatorChar
+                    + UTIL_FOLDER_NAME + File.separatorChar + cleanScript);
             if (origFile.exists()) {
                 if (copiedFile.lastModified() == origFile.lastModified()) {
                     needed = false;
@@ -566,9 +518,8 @@ public class AppDataUtils {
     private static String getAppInstallPath() {
         String fmguiJarPath = "";
         try {
-            fmguiJarPath =
-                    sysfunctions.getClass().getProtectionDomain()
-                            .getCodeSource().getLocation().toURI().getPath();
+            fmguiJarPath = sysfunctions.getClass().getProtectionDomain()
+                    .getCodeSource().getLocation().toURI().getPath();
             if (fmguiJarPath.endsWith(".jar")) {
                 File jarPath = new File(fmguiJarPath);
                 fmguiJarPath = jarPath.getParent();

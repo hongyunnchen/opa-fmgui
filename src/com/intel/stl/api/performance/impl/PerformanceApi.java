@@ -1,9 +1,9 @@
 /**
  * Copyright (c) 2015, Intel Corporation
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  *     * Redistributions of source code must retain the above copyright notice,
  *       this list of conditions and the following disclaimer.
  *     * Redistributions in binary form must reproduce the above copyright
@@ -12,7 +12,7 @@
  *     * Neither the name of Intel Corporation nor the names of its contributors
  *       may be used to endorse or promote products derived from this software
  *       without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -24,85 +24,6 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-/*******************************************************************************
- *                       I N T E L   C O R P O R A T I O N
- *  
- *  Functional Group: Fabric Viewer Application
- *
- *  File Name: PerformanceApi.java
- *
- *  Archive Source: $Source$
- *
- *  Archive Log:    $Log$
- *  Archive Log:    Revision 1.44  2015/12/17 21:51:09  jijunwan
- *  Archive Log:    PR 132124 - Newly created VF not displayed after reboot of SM
- *  Archive Log:    - improved the arch to do cache reset
- *  Archive Log:
- *  Archive Log:    Revision 1.43  2015/12/17 21:07:32  jijunwan
- *  Archive Log:    PR 132124 - Newly created VF not displayed after reboot of SM
- *  Archive Log:    - added code to clear vf and dg list cache
- *  Archive Log:
- *  Archive Log:    Revision 1.42  2015/08/17 18:49:03  jijunwan
- *  Archive Log:    PR 129983 - Need to change file header's copyright text to BSD license txt
- *  Archive Log:    - change backend files' headers
- *  Archive Log:
- *  Archive Log:    Revision 1.41  2015/08/10 17:04:46  robertja
- *  Archive Log:    PR128974 - Email notification functionality.
- *  Archive Log:
- *  Archive Log:    Revision 1.40  2015/07/31 21:04:21  fernande
- *  Archive Log:    PR 129631 - Ports table sometimes not getting performance related data. Translating a RequestCancelledException into a special PerformanceRequestCancelledException for UI consumption.
- *  Archive Log:
- *  Archive Log:    Revision 1.39  2015/07/30 13:15:07  fernande
- *  Archive Log:    PR 129437 - ImageInfo save issue. The code now update a previously saved ImageInfo record.
- *  Archive Log:
- *  Archive Log:    Revision 1.38  2015/07/10 20:44:35  fernande
- *  Archive Log:    PR 129522 - Notice is not written to database due to topology not found. Moved FE Helpers to the session object and changed the order of initialization for the SubnetContext.
- *  Archive Log:
- *  Archive Log:    Revision 1.37  2015/07/09 18:50:29  fernande
- *  Archive Log:    PR 129447 - Database size increases a lot over a short period of time. Added GroupInfoPurgeTask; it deletes GroupInfo records older that a retention time (default is 15 days) and with a certain frequency (default is daily). These values can be changed in the settings.xml file.
- *  Archive Log:
- *  Archive Log:    Revision 1.36  2015/05/26 15:34:45  fernande
- *  Archive Log:    PR 128897 - STLAdapter worker thread is in a continuous loop, even when there are no requests to service. A new FEAdapter is being added to handle requests through SubnetRequestDispatchers, which manage state for each connection to a subnet.
- *  Archive Log:
- *  Archive Log:    Revision 1.35  2015/04/17 16:41:38  jypak
- *  Archive Log:    Fix for this intermittent problem for PA short term history : For the group info trend charts, when a different short term history time scope(1h, 2h, 6h, 24h) is selected for like ten times, the time domain axis displays years (1970, 1980...) and chart doesn't update correctly. The fix is to return null for the history data bean in performance API when the image data for the bean is returned as null.  The image data was null because the FE request of the data was cancelled before any response was processed. Because this error occurs only when the request was cancelled, we can just return null history data to avoid adding '0' time stamp to group info chart. Same safeguard code lines were added for VFInfo/PortCounter/VFPortCounter history. The port counter history doesn't seem to have this intermittent problem for single port history query but multi port history request can have same problem in the future.
- *  Archive Log:
- *  Archive Log:    Revision 1.34  2015/04/09 03:29:24  jijunwan
- *  Archive Log:    updated to match FM 390
- *  Archive Log:
- *  Archive Log:    Revision 1.33  2015/03/02 15:28:05  jypak
- *  Archive Log:    History query has been done with current live image ID '0' which isn't correct. Updates here are:
- *  Archive Log:    1. Get the image ID from current image.
- *  Archive Log:    2. History queries are done with this image ID.
- *  Archive Log:
- *  Archive Log:    Revision 1.32  2015/02/23 22:24:36  jijunwan
- *  Archive Log:    added GroupConfCache
- *  Archive Log:
- *  Archive Log:    Revision 1.31  2015/02/12 19:31:26  jijunwan
- *  Archive Log:    1) improvement on get imagestamp from image info
- *  Archive Log:    2) fixed an mistake on group info history query
- *  Archive Log:
- *  Archive Log:    Revision 1.30  2015/02/10 21:26:02  jypak
- *  Archive Log:    1. Introduced SwingWorker for history query initialization for progress status updates.
- *  Archive Log:    2. Fixed the list of future for history query in TaskScheduler. Now it can have all the Future entries created.
- *  Archive Log:    3. When selecting history type, just cancel the history query not sheduled query.
- *  Archive Log:    4. The refresh rate is now from user settings not from the config api.
- *  Archive Log:
- *  Archive Log:    Revision 1.29  2015/02/09 21:29:58  jijunwan
- *  Archive Log:    added clean up to APIs that intend to close STLConections
- *  Archive Log:
- *  Archive Log:    Revision 1.28  2015/02/04 21:38:00  jijunwan
- *  Archive Log:    impoved to handle unsigned values
- *  Archive Log:     - we promote to a "bigger" data type
- *  Archive Log:     - port numbers are now short
- *  Archive Log:
- *
- *  Overview: 
- *
- *  @author: jijunwan
- *
- ******************************************************************************/
 
 package com.intel.stl.api.performance.impl;
 
@@ -167,8 +88,6 @@ import com.intel.stl.datamanager.DatabaseManager;
 import com.intel.stl.fecdriver.session.RequestCancelledByUserException;
 
 /**
- * @author jijunwan
- * 
  */
 public class PerformanceApi implements IPerformanceApi {
 
@@ -189,7 +108,7 @@ public class PerformanceApi implements IPerformanceApi {
     private static long GROUP_INFO_SAVE_THROTTLE = 20000;
 
     // Frequency between purges; in hours
-    private static int GROUP_INFO_PURGE_FREQUENCY = 24;
+    private static int GROUP_INFO_PURGE_FREQUENCY = 360;
 
     // Frequency between purges; in days
     private static int GROUP_INFO_RETENTION = 15;
@@ -242,17 +161,15 @@ public class PerformanceApi implements IPerformanceApi {
         this.dbServer = cacheMgr.getDatabaseManager();
         int imageinfoBufferSize =
                 getAppSetting(PERF_IMAGEINFO_CACHESIZE, IMAGE_INFO_BUFFER_SIZE);
-        this.imageInfoCache =
-                new CircularBuffer<ImageIdBean, ImageInfoBean>(
-                        imageinfoBufferSize);
+        this.imageInfoCache = new CircularBuffer<ImageIdBean, ImageInfoBean>(
+                imageinfoBufferSize);
         this.groupInfoSaveBuffer = new ConcurrentLinkedQueue<GroupInfoBean>();
         this.imageinfoBatchSize =
                 getAppSetting(PERF_IMAGEINFO_SAVEBATCH, IMAGE_INFO_SAVE_BATCH);
         this.groupinfoBatchSize =
                 getAppSetting(PERF_GROUPINFO_SAVEBATCH, GROUP_INFO_SAVE_BATCH);
-        this.groupinfoPurgeFrequency =
-                getAppSetting(PERF_GROUPINFO_PURGEFREQ,
-                        GROUP_INFO_PURGE_FREQUENCY) * MILISECONDS_PER_HOUR;
+        this.groupinfoPurgeFrequency = getAppSetting(PERF_GROUPINFO_PURGEFREQ,
+                GROUP_INFO_PURGE_FREQUENCY) * MILISECONDS_PER_HOUR;
         this.groupinfoRetention =
                 getAppSetting(PERF_GROUPINFO_RETENTION, GROUP_INFO_RETENTION)
                         * MILISECONDS_PER_DAY;
@@ -261,7 +178,7 @@ public class PerformanceApi implements IPerformanceApi {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.intel.stl.api.IRandomable#setSeed(long)
      */
     @Override
@@ -271,7 +188,7 @@ public class PerformanceApi implements IPerformanceApi {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.intel.stl.api.IRandomable#setRandom(boolean)
      */
     @Override
@@ -281,7 +198,7 @@ public class PerformanceApi implements IPerformanceApi {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.intel.hpc.stl.api.IPerformanceApi#getConnectionDescription()
      */
     @Override
@@ -291,7 +208,7 @@ public class PerformanceApi implements IPerformanceApi {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.intel.hpc.stl.api.IPerformanceApi#getImageInfoBean(long, int)
      */
     @Override
@@ -328,13 +245,9 @@ public class PerformanceApi implements IPerformanceApi {
             imageInfo = helper.getImageInfo(0L, 0);
             if (imageInfo != null) {
                 imageInfoCache.put(imageInfo.getImageId(), imageInfo);
-                if (imageInfoCache.getSaveQueueSize() > imageinfoBatchSize) {
-                    ImageInfoSaveTask saveTask =
-                            new ImageInfoSaveTask(helper, dbServer,
-                                    imageInfoCache);
-                    submitWithThrottle(saveTask, lastImageInfoSaveTask,
-                            IMAGE_INFO_SAVE_THROTTLE);
-                }
+                // PR 132646 Reduce disk space requirements since we are not
+                // using this information
+                // saveImageInfoCacheIfNeeded();
                 if (addRandom) {
                     randomizer.randomImageInfo(imageInfo, getNumNodes());
                 }
@@ -347,7 +260,7 @@ public class PerformanceApi implements IPerformanceApi {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.intel.hpc.stl.api.IPerformanceApi#getGroupList()
      */
     @Override
@@ -364,7 +277,7 @@ public class PerformanceApi implements IPerformanceApi {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.intel.hpc.stl.api.IPerformanceApi#getGroupInfo(java.lang.String)
      */
     @Override
@@ -372,7 +285,15 @@ public class PerformanceApi implements IPerformanceApi {
         try {
             GroupInfoBean groupInfo = helper.getGroupInfo(name);
             if (groupInfo != null) {
-                saveGroupInfo(groupInfo);
+                // PR 132646 Reduce the space requirements since we are not
+                // using this information
+                // saveGroupInfo(groupInfo);
+                // But we still need to set the timestamp
+                ImageIdBean imageId = groupInfo.getImageId();
+                ImageInfoBean imageInfo = getImageInfo(imageId);
+                if (imageInfo != null) {
+                    groupInfo.setTimestamp(imageInfo.getSweepStart());
+                }
                 if (addRandom) {
                     randomizer.randomGroupInfo(groupInfo);
                 }
@@ -395,9 +316,8 @@ public class PerformanceApi implements IPerformanceApi {
             if (groupInfo != null) {
                 ImageIdBean image = groupInfo.getImageId();
                 // we always get new unique image number, so directly query it
-                ImageInfoBean imageInfo =
-                        getImageInfo(image.getImageNumber(),
-                                image.getImageOffset());
+                ImageInfoBean imageInfo = getImageInfo(image.getImageNumber(),
+                        image.getImageOffset());
                 if (imageInfo != null) {
                     groupInfo.setTimestamp(imageInfo.getSweepStart());
                 } else {
@@ -424,9 +344,8 @@ public class PerformanceApi implements IPerformanceApi {
             dbServer.saveGroupConfig(getConnectionDescription().getName(),
                     groupName, ports);
         } catch (DatabaseException e) {
-            PerformanceException pe =
-                    getPerformanceException(STL30048_ERROR_SAVING_GROUP_CONFIG,
-                            e);
+            PerformanceException pe = getPerformanceException(
+                    STL30048_ERROR_SAVING_GROUP_CONFIG, e);
             throw pe;
         }
     }
@@ -438,9 +357,8 @@ public class PerformanceApi implements IPerformanceApi {
         try {
             dbServer.getGroupConfig(subnetName, groupName);
         } catch (DatabaseException e) {
-            PerformanceException pe =
-                    getPerformanceException(
-                            STL30049_ERROR_GETTING_GROUP_CONFIG, e);
+            PerformanceException pe = getPerformanceException(
+                    STL30049_ERROR_GETTING_GROUP_CONFIG, e);
             throw pe;
         }
         return groupConfigBean;
@@ -453,32 +371,30 @@ public class PerformanceApi implements IPerformanceApi {
         try {
             portConfigBeans = dbServer.getPortConfig(subnetName);
         } catch (DatabaseException e) {
-            PerformanceException pe =
-                    getPerformanceException(STL30050_ERROR_GETTING_PORT_CONFIG,
-                            e);
+            PerformanceException pe = getPerformanceException(
+                    STL30050_ERROR_GETTING_PORT_CONFIG, e);
             throw pe;
         }
         return portConfigBeans;
     }
 
     @Override
-    public List<GroupInfoBean> getGroupInfo(String subnetName,
-            String groupName, long startTime, long stopTime)
-            throws PerformanceDataNotFoundException {
+    public List<GroupInfoBean> getGroupInfo(String subnetName, String groupName,
+            long startTime, long stopTime)
+                    throws PerformanceDataNotFoundException {
         try {
             return dbServer.getGroupInfo(subnetName, groupName, startTime,
                     stopTime);
         } catch (DatabaseException e) {
-            PerformanceException pe =
-                    getPerformanceException(STL30052_ERROR_GETTING_GROUP_INFO,
-                            e);
+            PerformanceException pe = getPerformanceException(
+                    STL30052_ERROR_GETTING_GROUP_INFO, e);
             throw pe;
         }
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.intel.hpc.stl.api.IPerformanceApi#getGroupConfig(java.lang.String)
      */
@@ -494,7 +410,7 @@ public class PerformanceApi implements IPerformanceApi {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.intel.hpc.stl.api.IPerformanceApi#getDeviceGroup(int)
      */
     @Override
@@ -524,11 +440,12 @@ public class PerformanceApi implements IPerformanceApi {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.intel.hpc.stl.api.IPerformanceApi#getDeviceGroup(int, short)
      */
     @Override
-    public synchronized PortCountersBean getPortCounters(int lid, short portNum) {
+    public synchronized PortCountersBean getPortCounters(int lid,
+            short portNum) {
         try {
             PortCountersBean bean = helper.getPortCounter(lid, portNum);
             if (bean != null) {
@@ -553,15 +470,13 @@ public class PerformanceApi implements IPerformanceApi {
     public PortCountersBean getPortCountersHistory(int lid, short portNum,
             long imageID, int imageOffset) {
         try {
-            PortCountersBean bean =
-                    helper.getPortCounterHistory(lid, portNum, imageID,
-                            imageOffset);
+            PortCountersBean bean = helper.getPortCounterHistory(lid, portNum,
+                    imageID, imageOffset);
             if (bean != null) {
                 // we always get new unique image number, so directly query it
                 ImageIdBean image = bean.getImageId();
-                ImageInfoBean imageInfo =
-                        getImageInfo(image.getImageNumber(),
-                                image.getImageOffset());
+                ImageInfoBean imageInfo = getImageInfo(image.getImageNumber(),
+                        image.getImageOffset());
                 if (imageInfo != null) {
                     bean.setTimestamp(imageInfo.getSweepStart());
                 } else {
@@ -579,7 +494,7 @@ public class PerformanceApi implements IPerformanceApi {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.intel.stl.api.performance.IPerformanceApi#getFocusPorts(java.lang
      * .String, com.intel.stl.fecdriver.messages.command.InputFocus.Selection,
@@ -602,7 +517,7 @@ public class PerformanceApi implements IPerformanceApi {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.intel.hpc.stl.api.IPerformanceApi#getTopBandwidth(String, int)
      */
     @Override
@@ -612,7 +527,7 @@ public class PerformanceApi implements IPerformanceApi {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.intel.hpc.stl.api.IPerformanceApi#getTopCongestion(java.lang.String,
      * int)
@@ -624,7 +539,7 @@ public class PerformanceApi implements IPerformanceApi {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.intel.stl.api.performance.IPerformanceApi#getVFList()
      */
     @Override
@@ -641,7 +556,7 @@ public class PerformanceApi implements IPerformanceApi {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.intel.stl.api.performance.IPerformanceApi#getVFInfo(java.lang.String)
      */
@@ -668,7 +583,7 @@ public class PerformanceApi implements IPerformanceApi {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.intel.stl.api.performance.IPerformanceApi#getVFInfo(java.lang.String,
      * int)
@@ -703,10 +618,9 @@ public class PerformanceApi implements IPerformanceApi {
 
     /*
      * (non-Javadoc)
-     * 
-     * @see
-     * com.intel.stl.api.performance.IPerformanceApi#getVFConfig(java.lang.String
-     * )
+     *
+     * @see com.intel.stl.api.performance.IPerformanceApi#getVFConfig(java.lang.
+     * String )
      */
     @Override
     public List<VFConfigRspBean> getVFConfig(String name) {
@@ -720,7 +634,7 @@ public class PerformanceApi implements IPerformanceApi {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.intel.stl.api.performance.IPerformanceApi#getVfNames(int)
      */
     @Override
@@ -750,7 +664,7 @@ public class PerformanceApi implements IPerformanceApi {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.intel.stl.api.performance.IPerformanceApi#getVFFocusPorts(java.lang
      * .String, com.intel.stl.api.subnet.Selection, int)
@@ -773,7 +687,7 @@ public class PerformanceApi implements IPerformanceApi {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.intel.stl.api.performance.IPerformanceApi#getVFPortCounters(String,
      * int, short)
@@ -801,7 +715,7 @@ public class PerformanceApi implements IPerformanceApi {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * com.intel.stl.api.performance.IPerformanceApi#getVFPortCounters(java.
      * lang.String, int, short, int)
@@ -810,9 +724,8 @@ public class PerformanceApi implements IPerformanceApi {
     public VFPortCountersBean getVFPortCountersHistory(String vfName, int lid,
             short portNum, long imageID, int imageOffset) {
         try {
-            VFPortCountersBean bean =
-                    helper.getVFPortCounterHistory(vfName, lid, portNum,
-                            imageID, imageOffset);
+            VFPortCountersBean bean = helper.getVFPortCounterHistory(vfName,
+                    lid, portNum, imageID, imageOffset);
             if (bean != null) {
                 ImageInfoBean imageInfo = getImageInfo(bean.getImageId());
                 if (imageInfo != null) {
@@ -854,9 +767,8 @@ public class PerformanceApi implements IPerformanceApi {
             }
             if (groupInfoSaveBuffer.size() > groupinfoBatchSize) {
                 // Start background task to save to database
-                GroupInfoSaveTask saveTask =
-                        new GroupInfoSaveTask(helper, dbServer,
-                                groupInfoSaveBuffer);
+                GroupInfoSaveTask saveTask = new GroupInfoSaveTask(helper,
+                        dbServer, groupInfoSaveBuffer);
                 submitWithThrottle(saveTask, lastGroupInfoSaveTask,
                         GROUP_INFO_SAVE_THROTTLE);
             }
@@ -865,9 +777,8 @@ public class PerformanceApi implements IPerformanceApi {
             if (now > purgeTime) {
                 // In case the purge fails, we retry after this amount of time
                 long nextTry = now + GROUP_INFO_PURGE_FIRST;
-                boolean swapped =
-                        nextGroupInfoPurgeTask
-                                .compareAndSet(purgeTime, nextTry);
+                boolean swapped = nextGroupInfoPurgeTask
+                        .compareAndSet(purgeTime, nextTry);
                 if (swapped) {
                     long ago = now - groupinfoRetention;
                     GroupInfoPurgeTask task =
@@ -884,11 +795,11 @@ public class PerformanceApi implements IPerformanceApi {
                                     try {
                                         int deleted = result.get();
                                         resetNextGroupInfoPurgeTime();
-                                        log.info(
-                                                "{} GroupInfo records purged.",
+                                        log.info("{} GroupInfo records purged.",
                                                 deleted);
                                     } catch (InterruptedException e) {
-                                        log.error("GroupInfo purge task was interrupted");
+                                        log.error(
+                                                "GroupInfo purge task was interrupted");
                                     } catch (ExecutionException e) {
                                         log.error(
                                                 "GroupInfo purge task had an error",
@@ -898,6 +809,15 @@ public class PerformanceApi implements IPerformanceApi {
                             });
                 }
             }
+        }
+    }
+
+    private void saveImageInfoCacheIfNeeded() {
+        if (imageInfoCache.getSaveQueueSize() > imageinfoBatchSize) {
+            ImageInfoSaveTask saveTask =
+                    new ImageInfoSaveTask(helper, dbServer, imageInfoCache);
+            submitWithThrottle(saveTask, lastImageInfoSaveTask,
+                    IMAGE_INFO_SAVE_THROTTLE);
         }
     }
 
@@ -924,8 +844,8 @@ public class PerformanceApi implements IPerformanceApi {
 
     private PerformanceException getPerformanceException(STLMessages msg,
             Exception e) {
-        PerformanceException pe =
-                new PerformanceException(msg, e, StringUtils.getErrorMessage(e));
+        PerformanceException pe = new PerformanceException(msg, e,
+                StringUtils.getErrorMessage(e));
         log.error(StringUtils.getErrorMessage(pe), e);
         return pe;
     }
@@ -935,9 +855,8 @@ public class PerformanceApi implements IPerformanceApi {
         if (e instanceof RequestCancelledByUserException) {
             pe = new PerformanceRequestCancelledException();
         } else {
-            pe =
-                    new PerformanceException(STL60003_PERFORMANCE_DATA_FAILURE,
-                            e, StringUtils.getErrorMessage(e));
+            pe = new PerformanceException(STL60003_PERFORMANCE_DATA_FAILURE, e,
+                    StringUtils.getErrorMessage(e));
             log.error(StringUtils.getErrorMessage(pe), e);
         }
         return pe;
@@ -965,21 +884,20 @@ public class PerformanceApi implements IPerformanceApi {
         if (dbProps == null) {
             // There is no reference point, create one after the application has
             // initialized
-            nextGroupInfoPurgeTask.set(System.currentTimeMillis()
-                    + GROUP_INFO_PURGE_FIRST);
+            nextGroupInfoPurgeTask
+                    .set(System.currentTimeMillis() + GROUP_INFO_PURGE_FIRST);
         } else {
             SubnetDescription subnet = subnetContext.getSubnetDescription();
-            String lastPurge =
-                    dbProps.getProperty(LAST_GROUPINFO_PURGE
-                            + subnet.getSubnetId());
+            String lastPurge = dbProps
+                    .getProperty(LAST_GROUPINFO_PURGE + subnet.getSubnetId());
             if (lastPurge == null) {
-                nextGroupInfoPurgeTask.set(System.currentTimeMillis()
-                        + GROUP_INFO_PURGE_FIRST);
+                nextGroupInfoPurgeTask.set(
+                        System.currentTimeMillis() + GROUP_INFO_PURGE_FIRST);
             } else {
                 try {
                     long lastPurgeTS = Long.parseLong(lastPurge);
-                    nextGroupInfoPurgeTask.set(lastPurgeTS
-                            + groupinfoPurgeFrequency);
+                    nextGroupInfoPurgeTask
+                            .set(lastPurgeTS + groupinfoPurgeFrequency);
                 } catch (NumberFormatException e) {
                     nextGroupInfoPurgeTask.set(System.currentTimeMillis()
                             + GROUP_INFO_PURGE_FIRST);
@@ -1021,7 +939,7 @@ public class PerformanceApi implements IPerformanceApi {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.intel.stl.api.performance.IPerformanceApi#reset()
      */
     @Override
@@ -1033,7 +951,7 @@ public class PerformanceApi implements IPerformanceApi {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.intel.stl.api.performance.IPerformanceApi#cleanup()
      */
     @Override

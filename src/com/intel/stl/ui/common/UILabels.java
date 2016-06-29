@@ -1,9 +1,9 @@
 /**
  * Copyright (c) 2015, Intel Corporation
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  *     * Redistributions of source code must retain the above copyright notice,
  *       this list of conditions and the following disclaimer.
  *     * Redistributions in binary form must reproduce the above copyright
@@ -12,7 +12,7 @@
  *     * Neither the name of Intel Corporation nor the names of its contributors
  *       may be used to endorse or promote products derived from this software
  *       without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -24,107 +24,6 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-/*******************************************************************************
- *                       I N T E L   C O R P O R A T I O N
- * 
- *  Functional Group: Fabric Viewer Application
- * 
- *  File Name: UILabels.java
- * 
- *  Archive Source: $Source$
- * 
- *  Archive Log: $Log$
- *  Archive Log: Revision 1.75  2015/12/03 14:56:28  jypak
- *  Archive Log: PR 131817 - FM GUI, the status Column to the right requires a header/title.
- *  Archive Log:
- *  Archive Log: Revision 1.74  2015/11/18 23:56:28  rjtierne
- *  Archive Log: PR 130965 - ESM support on Log Viewer
- *  Archive Log: - Added constant STL50215, and STL50217-STL50219 for supporting ESM Log Viewer
- *  Archive Log:
- *  Archive Log: Revision 1.73  2015/10/19 22:30:33  jijunwan
- *  Archive Log: PR 131091 - On an unsuccessful Failover, the Admin | Applications doesn't show the login window
- *  Archive Log: - added resources
- *  Archive Log:
- *  Archive Log: Revision 1.72  2015/10/09 17:48:13  fernande
- *  Archive Log: PR130753 - XML parse errors when new VF is created from FM GUI. Added check during validation of opaconfig.xml to make sure the "All" application is not added if a PKey is especified.
- *  Archive Log:
- *  Archive Log: Revision 1.71  2015/10/06 15:54:01  rjtierne
- *  Archive Log: PR 130390 - Windows FM GUI - Admin tab->Logs side-tab - unable to login to switch SM for log access
- *  Archive Log: - Added constants STL50215-STL50216 for Log Viewer error messages
- *  Archive Log:
- *  Archive Log: Revision 1.70  2015/09/25 20:50:52  fernande
- *  Archive Log: PR129920 - revisit health score calculation. Changed formula to include several factors (or attributes) within the calculation as well as user-defined weights (for now are hard coded).
- *  Archive Log:
- *  Archive Log: Revision 1.69  2015/09/25 13:58:13  rjtierne
- *  Archive Log: PR 130011 - Enhance SM Log Viewer to include Standard and Advanced requirements
- *  Archive Log: - Tweaked STL50206 to match text
- *  Archive Log: - Added new label STL50214 for invalid log users
- *  Archive Log:
- *  Archive Log: Revision 1.68  2015/08/17 18:54:12  jijunwan
- *  Archive Log: PR 129983 - Need to change file header's copyright text to BSD license txt
- *  Archive Log: - changed frontend files' headers
- *  Archive Log:
- *  Archive Log: Revision 1.67  2015/08/17 18:34:36  jijunwan
- *  Archive Log: PR 128973 - Deploy FM conf changes on all SMs
- *  Archive Log: - improved to ask confirmation when we intend to leave deploy panel while we are deploying FM confs.
- *  Archive Log:
- *  Archive Log: Revision 1.66  2015/08/17 17:35:51  jijunwan
- *  Archive Log: PR 128973 - Deploy FM conf changes on all SMs
- *  Archive Log: - added resources
- *  Archive Log:
- *  Archive Log: Revision 1.65  2015/08/17 14:22:43  rjtierne
- *  Archive Log: PR 128979 - SM Log display
- *  Archive Log: This is the first version of the Log Viewer which displays select lines of text from the remote SM log file. Updates include searchable raw text from file, user-defined number of lines to display, refreshing end of file, and paging. This PR is now closed and further updates can be found by referencing PR 130011 - "Enhance SM Log Viewer to include Standard and Advanced requirements".
- *  Archive Log:
- *  Archive Log: Revision 1.64  2015/08/10 17:31:01  robertja
- *  Archive Log: PR 128974 - Email notification functionality.
- *  Archive Log:
- *  Archive Log: Revision 1.63  2015/07/23 18:12:38  jijunwan
- *  Archive Log: PR 129645 - Tree search enhancement
- *  Archive Log: - display message when search is canceled or return empty result
- *  Archive Log: - fixed an issue that hides result tree by mistake
- *  Archive Log: - changed name search field to SafeTextField, so the name rules, such as cannot start with digit, do not apply here. We are doing text match in search, so any rules are unnecessary except the valid characters.
- *  Archive Log: - fixed value setting issue when we change the search field's formatter
- *  Archive Log:
- *  Archive Log: Revision 1.62  2015/07/16 21:22:52  jijunwan
- *  Archive Log: PR 129528 - input validation improvement
- *  Archive Log: - extended SafeTextField to apply rules in name check
- *  Archive Log: - moved valid chars to UIConstants
- *  Archive Log: - made FieldPair more generic and flexible
- *  Archive Log:
- *  Archive Log: Revision 1.61  2015/07/14 20:32:55  rjtierne
- *  Archive Log: PR 129545 - Klocwork and FindBugs fixes
- *  Archive Log: Added label STL50202 for logging an error message if the port column of the
- *  Archive Log: connectivity table is null
- *  Archive Log:
- *  Archive Log: Revision 1.60  2015/07/14 17:06:58  jijunwan
- *  Archive Log: PR 129541 - Should forbid save or deploy when there is invalid edit on management panel
- *  Archive Log: - display warning message when a user intends to save or deploy while there is invalid edit
- *  Archive Log:
- *  Archive Log: Revision 1.59  2015/07/13 16:22:42  jijunwan
- *  Archive Log: PR 129528 - input validation improvement
- *  Archive Log: - new resources
- *  Archive Log:
- *  Archive Log: Revision 1.58  2015/06/30 22:28:02  jijunwan
- *  Archive Log: PR 129215 - Need short chart name to support pin capability
- *  Archive Log: - added new resources to support short name and full name
- *  Archive Log:
- *  Archive Log: Revision 1.57  2015/06/25 19:08:56  jijunwan
- *  Archive Log: Bug 126755 - Pin Board functionality is not working in FV
- *  Archive Log: - new resources to support pin capability
- *  Archive Log:
- *  Archive Log: Revision 1.56  2015/06/10 19:58:58  jijunwan
- *  Archive Log: PR 129120 - Some old files have no proper file header. They cannot record change logs.
- *  Archive Log: - wrote a tool to check and insert file header
- *  Archive Log: - applied on backend files
- *  Archive Log:
- * 
- *  Overview:
- * 
- *  @author: Fernando Fernandez
- * 
- ******************************************************************************/
-
 package com.intel.stl.ui.common;
 
 import java.text.MessageFormat;
@@ -145,9 +44,7 @@ import com.intel.stl.api.IMessage;
  * component STL40001-STL40999: Messages related to the UI component Add ranges
  * as more components are added. Don't forget to add the actual message in the
  * messages.properties file.
- * 
- * @author Fernando Fernandez
- * 
+ *
  */
 public enum UILabels implements IMessage {
 
@@ -202,6 +99,11 @@ public enum UILabels implements IMessage {
     STL10220_SHORT_TOPN_SECURE(10220),
     STL10221_SHORT_TOPN_ROUTING(10221),
 
+    STL10225_GROUP_PMA_FAILURE(10225),
+    STL10226_GROUP_TOPO_FAILURE(10226),
+    STL10227_VF_PMA_FAILURE(10227),
+    STL10228_VF_TOPO_FAILURE(10228),
+
     STL10300_NUM_SWITCHES(10300),
     STL10301_NUM_HFIS(10301),
     STL10302_NUM_ISLINKS(10302),
@@ -231,6 +133,7 @@ public enum UILabels implements IMessage {
     STL40011_VFPORTCOUNTERS_TASK(40011),
     STL40012_DEVICE_STATES(40012),
     STL40013_FATAL_FAILURE(40013),
+    STL40014_BILL_NEIGHBOR(40014),
 
     // RenameEventDialog
     STL50001_EVENT_VALID(50001),
@@ -376,6 +279,7 @@ public enum UILabels implements IMessage {
     STL50217_FILE_ACCESS_DENIED(50217),
     STL50218_EMPTY_LOG_FILE(50218),
     STL50219_ESM_SYSLOG_NOTE(50219),
+    STL50220_FM_CONFIG_NOTE(50220),
 
     // Event messages
     STL60001_TOPO_CHANGE(60001),
@@ -423,6 +327,7 @@ public enum UILabels implements IMessage {
     STL81022_RANGE2_VALIDATION(81022),
     STL81023_RANGE3_VALIDATION(81023),
     STL81024_RANGE4_VALIDATION(81024),
+    STL81025_SWEEP_INTERVAL_VALIDATION(81025),
 
     STL81050_DG_DEVICES_DESC(81050),
     STL81051_DG_SELECT_DESC(81051),
@@ -464,11 +369,11 @@ public enum UILabels implements IMessage {
 
     private static final String STL_MESSAGES_ENCODING = "UTF-8";
 
-    private static final Control STL_CONTROL = new UTFControl(
-            STL_MESSAGES_ENCODING);
+    private static final Control STL_CONTROL =
+            new UTFControl(STL_MESSAGES_ENCODING);
 
-    private static final ResourceBundle STL_MESSAGES = ResourceBundle
-            .getBundle(STL_MESSAGES_BUNDLE, STL_CONTROL);
+    private static final ResourceBundle STL_MESSAGES =
+            ResourceBundle.getBundle(STL_MESSAGES_BUNDLE, STL_CONTROL);
 
     private static Logger log = LoggerFactory.getLogger(UILabels.class);
 
