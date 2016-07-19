@@ -42,7 +42,7 @@
 
 Name:           opa-fmgui
 Version:        10.1.0.0
-Release:        1%{?dist}
+Release:        112%{?dist}
 Summary:        Intel Omni-Path Architecture Fabric Manager Graphical User Interface
 Group:          Applications/System
 License:        BSD and LGPLv2+
@@ -184,6 +184,9 @@ fi
 %config(noreplace) %{_sysconfdir}/profile.d/fmguivars.sh
 
 %changelog
+* Tue Jul 19 2016 Rick Tierney <rick.tierney@intel.com> 10.1.0.0-112
+- Update the release number to match opa-fmgui release
+
 * Thu Jul 14 2016 Rick Tierney <rick.tierney@intel.com> 10.1.0.0-1
 - Updated buildlinks to include symbolic links to license files
 - Updated revision number to match opa-fmgui version
