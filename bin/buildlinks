@@ -27,7 +27,6 @@
 
 OPA_DIR=/usr/share/java/opa-fmgui
 TARGET_DIR=${OPA_DIR}/lib
-LICENSE_DIR=/usr/share/licenses/opa-fmgui
 
 declare -a arr=(
 	/usr/share/java/antlr.jar
@@ -73,12 +72,6 @@ createLinks() {
       ln -s $f `basename $f`
    done
    ln -s ../gritty/gritty.jar gritty.jar
-
-   #Create symbolic links to the license files in the application and gritty folders
-   cd $OPA_DIR
-   ln -s ${LICENSE_DIR}/LICENSE LICENSE
-   cd gritty
-   ln -s ${LICENSE_DIR}/gritty_license.txt gritty_license.txt
 }
 
 
@@ -116,3 +109,4 @@ else
    echo ERROR: Unknown argument $1
    echo "Usage: `basename $0` [link | unlink]"
 fi
+
