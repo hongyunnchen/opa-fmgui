@@ -184,8 +184,10 @@ fi
 %config(noreplace) %{_sysconfdir}/profile.d/fmguivars.sh
 
 %changelog
-* Tue Jul 19 2016 Rick Tierney <rick.tierney@intel.com> 10.1.0.0-112
+* Wed Jul 20 2016 Rick Tierney <rick.tierney@intel.com> 10.1.0.0-112
 - Update the release number to match opa-fmgui release
+- Backout changes to buildlinks; symlinks violate Filesystem Hierachy Standard 
+- Correct type in README file
 
 * Thu Jul 14 2016 Rick Tierney <rick.tierney@intel.com> 10.1.0.0-1
 - Updated buildlinks to include symbolic links to license files
