@@ -42,13 +42,14 @@
 
 Name:           opa-fmgui
 Version:        10.1.0.0
-Release:        112a%{?dist}
+Release:        114%{?dist}
 Summary:        Intel Omni-Path Architecture Fabric Manager Graphical User Interface
 Group:          Applications/System
 License:        BSD and LGPLv2+
 URL:            https://github.com/01org/opa-fmgui
 Source0:        %{name}-%{version}.tar.gz 
 BuildArch:      noarch
+Patch1:         stl-14927-jgraphx-update.patch
 
 BuildRequires: gradle-local
 BuildRequires: maven-local
@@ -117,14 +118,13 @@ FMGUI is the Intel Omni-Path Architecture Fabric Manager Graphical User
 Interface. It can be run by invoking the Bourne shell script opa-fmgui.
 
 %prep
-%autosetup -n %{name}-%{version}
-%setup  -q
+%autosetup -p1 -n %{name}-%{version}
 
 %build
 %if 0%{?fedora} >= 24
     %gradle_build -i copyDeps
 %else
-    gradle --offline copyDeps build
+    gradle copyDeps build
 %endif
 
 %install
@@ -184,6 +184,13 @@ fi
 %config(noreplace) %{_sysconfdir}/profile.d/fmguivars.sh
 
 %changelog
+* Tue Mar 07 2017 Rick Tierney <rick.tierney@intel.com> 10.1.0.0-114
+- Updated TopGraphComponent to be compatible with the new JGraphX 3.6.0.0
+[+stl-14927-jgraphx-update.patch]
+
+* Sat Feb 11 2017 Fedora Release Engineering <releng@fedoraproject.org> - 10.1.0.0-113
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_26_Mass_Rebuild
+
 * Wed Jul 20 2016 Rick Tierney <rick.tierney@intel.com> 10.1.0.0-112
 - Update the release number to match opa-fmgui release
 - Backout changes to buildlinks; symlinks violate Filesystem Hierachy Standard 
