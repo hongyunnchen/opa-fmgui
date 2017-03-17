@@ -36,7 +36,7 @@ checkJava() {
 if [ $DEBUG -eq 1 ]; then 
     echo Checking JVM $2
 fi
-JVER=`$2 -version 2>&1 | grep "java version" | awk '{print substr($3, 2, 3);}' | sed -e 's;\.;0;g'`
+JVER=`$2 -version 2>&1 | grep "version" | awk '{print substr($3, 2, 3);}' | sed -e 's;\.;0;g'`
 if [ $JVER ]; then
     if [ $JVER -ge $JAVA_REQ ]; then
         if [ $DEBUG -eq 1 ]; then
