@@ -42,14 +42,17 @@
 
 Name:           opa-fmgui
 Version:        10.1.0.0
-Release:        114%{?dist}
+Release:        115%{?dist}
 Summary:        Intel Omni-Path Architecture Fabric Manager Graphical User Interface
 Group:          Applications/System
 License:        BSD and LGPLv2+
 URL:            https://github.com/01org/opa-fmgui
 Source0:        %{name}-%{version}.tar.gz 
 BuildArch:      noarch
+
+#Update ui/network/TopGraphComponent to be compatible with JGraphX 3.6.0.0
 Patch1:         stl-14927-jgraphx-update.patch
+Patch2:         manifest-version.patch
 
 BuildRequires: gradle-local
 BuildRequires: maven-local
@@ -184,6 +187,13 @@ fi
 %config(noreplace) %{_sysconfdir}/profile.d/fmguivars.sh
 
 %changelog
+* Sun Mar 19 2017 Rick Tierney <rick.tierney@intel.com> 10.1.0.0-115
+- Fix the gradle build file and 3rd party help file to specify the use of
+  JGraphX version 3.6.0.0
+- Changed jgraphx patch to no longer update the manifest file
+- Added new patch to update the manifest file for new version 10.1.0.0-115
+[+manifest-version.patch]
+
 * Tue Mar 07 2017 Rick Tierney <rick.tierney@intel.com> 10.1.0.0-114
 - Updated TopGraphComponent to be compatible with the new JGraphX 3.6.0.0
 [+stl-14927-jgraphx-update.patch]
